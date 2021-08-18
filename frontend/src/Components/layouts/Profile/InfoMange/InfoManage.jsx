@@ -105,7 +105,7 @@ function InfoManage(props) {
         </div>
         <div className="info-form-item">
           <TextInput
-            label="Real Name"
+            label="Name"
             icon={<RiFolderUserLine />}
             // error={form.errors.email && "Please specify valid email"}
             value={form.values.realName}
@@ -129,7 +129,7 @@ function InfoManage(props) {
         </div>
         <div className="info-form-item">
           <TextInput
-            label="phoneNumber"
+            label="Phone Number"
             icon={<BiPhoneCall />}
             error={form.errors.phoneNumber && "Please specify valid phone number (number only)!"}
             value={form.values.phoneNumber}

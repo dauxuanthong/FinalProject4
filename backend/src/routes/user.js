@@ -30,4 +30,7 @@ router.patch("/uploadAvatar", authenticationController.identifyUser, userControl
 // /user/updateInfo
 router.patch("/updateInfo", authenticationController.identifyUser, userController.updateInfo);
 
+// /user/allInfo
+router.get("/allInfo", authenticationController.identifyUser, userController.allInfo);
+
 module.exports = router;

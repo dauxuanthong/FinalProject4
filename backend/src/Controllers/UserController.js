@@ -32,12 +32,18 @@ class UserController {
       if (checkUserName || checkUserEmail) {
         return res.json({ errMessage });
       } else {
-        //return data
         const user = await prisma.user.create({
           data: {
             email: req.body.email,
             userName: req.body.userName,
             password: await bcrypt.hash(req.body.password, bcryptNum),
+            setting: {
+              create: {
+                realName: false,
+                address: false,
+                phoneNumber: false,
+              },
+            },
           },
         });
         return res.json(user);
@@ -114,6 +120,13 @@ class UserController {
             email: email,
             userName: name,
             password: null,
+            setting: {
+              create: {
+                realName: false,
+                address: false,
+                phoneNumber: false,
+              },
+            },
           },
         });
       }
@@ -231,7 +244,7 @@ class UserController {
       });
       // upload avatar
       let uploadFile = multer({
-        storage: storage
+        storage: storage,
       }).single("file");
       let uploadFileMiddleware = util.promisify(uploadFile);
       await uploadFileMiddleware(req, res);
@@ -239,19 +252,20 @@ class UserController {
       //remove old avatar file
       const oldAvatar = await prisma.user.findUnique({
         where: { id: userId },
-        select: {avatar: true},
+        select: { avatar: true },
       });
-      if(oldAvatar.avatar){
-        const oldAvatarUrl = __basedir + "/public/" + oldAvatar.avatar.slice(baseUrl.length,oldAvatar.avatar.length);
+      if (oldAvatar.avatar) {
+        const oldAvatarUrl =
+          __basedir + "/public/" + oldAvatar.avatar.slice(baseUrl.length, oldAvatar.avatar.length);
         fs.unlinkSync(oldAvatarUrl);
       }
 
       //Update new information data base
       await prisma.user.update({
-        where: {id: userId},
+        where: { id: userId },
         data: {
           avatar: avatarUrl,
-        }
+        },
       });
       return res.sendStatus(200);
     } catch (error) {
@@ -264,19 +278,35 @@ class UserController {
     const userId = req.session.userId;
     try {
       await prisma.user.update({
-        where: {id: userId},
+        where: { id: userId },
         data: {
-          realName: req.body.realName,
-          address: req.body.address,
-          phoneNumber: req.body.phoneNumber,
-        }
+          realName: req.body.realName || null,
+          address: req.body.address || null,
+          phoneNumber: req.body.phoneNumber || null,
+        },
       });
       return res.sendStatus(200);
     } catch (error) {
       console.log(error);
-      return res.sendStatus(404)
+      return res.sendStatus(404);
     }
-  }
+  };
+
+  allInfo = async(req, res) => {
+    const userId = req.session.userId;
+    try {
+      const userInfo = await prisma.user.findUnique({
+        where: { id : userId },
+        include: {
+          setting: true
+        }
+      });
+      return res.json(userInfo);
+    } catch (error) {
+      console.log(error);
+      return res.sendStatus(404);
+    }
+  };
 }
 
 module.exports = new UserController();

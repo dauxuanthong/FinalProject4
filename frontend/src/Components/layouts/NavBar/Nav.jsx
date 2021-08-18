@@ -41,14 +41,13 @@ function Nav(props) {
   return (
     <div className="nav-div">
       <Link className="home-page" to="/">
-        HOME PAGE
       </Link>
       {userStatus === "signIn" ? (
         <div className="nav-item-div-sign-in">
           <Menu
             trigger="hover"
             delay={200}
-            control={<Avatar size="md" radius="md" src={avatar || null} />}
+            control={<Avatar size={50} radius="md" src={avatar || null} />}
             controlRefProp="ref"
             transition="slide-down"
             transitionDuration={400}

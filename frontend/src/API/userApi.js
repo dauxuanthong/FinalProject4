@@ -64,6 +64,13 @@ const userApi = {
       withCredentials: true,
     });
   },
+
+  allInfo: ()=>{
+    const url = "/user/allInfo";
+    return axiosClient.get(url,{
+      withCredentials: true,
+    });
+  }
 };
 
 export default userApi;
