@@ -5,7 +5,7 @@ import { Avatar } from "@mantine/core";
 import { Menu, MenuItem, MenuLabel, Divider } from "@mantine/core";
 import userApi from "../../../API/userApi";
 import { ImProfile, ImExit } from "react-icons/im";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 function Nav(props) {
   //STATE
@@ -27,21 +27,20 @@ function Nav(props) {
       getInfoNav();
     }
   }, [userStatus]);
-  
-  //EVENT 
+
+  //EVENT
   const logout = async () => {
-    console.log("onClick")
+    console.log("onClick");
     const logoutRes = await userApi.logout();
     console.log(logoutRes);
     Cookies.remove("refreshToken");
     localStorage.clear();
     window.location = "/";
-  }
+  };
 
   return (
     <div className="nav-div">
-      <Link className="home-page" to="/">
-      </Link>
+      <Link className="home-page" to="/"></Link>
       {userStatus === "signIn" ? (
         <div className="nav-item-div-sign-in">
           <Menu
@@ -52,7 +51,14 @@ function Nav(props) {
             transition="slide-down"
             transitionDuration={400}
             transitionTimingFunction="ease"
-            menuPosition={{ bottom: -133, right: -79 }}
+            menuPosition={{ bottom: -134, right: -74 }}
+            styles={{
+              label : {fontSize: '16px', textAlign: 'center'}
+            }}
+            // classNames={{
+            //   label: 'label-of-menu',
+            //   itemLabel: 'item-label-of-menu'
+            // }}
           >
             <MenuLabel>{userName}</MenuLabel>
             <Divider />
@@ -63,7 +69,6 @@ function Nav(props) {
               </div>
             </MenuItem>
             <MenuItem>
-            
               <div className="logout" onClick={logout}>
                 <ImExit style={{ fontSize: "20px", color: "rgb(134, 142, 150)" }} />
                 <p>Logout</p>
@@ -71,7 +76,7 @@ function Nav(props) {
             </MenuItem>
           </Menu>
         </div>
-      ):(
+      ) : (
         <div className="nav-item-div">
           <Link to="login">Login</Link>
           <Link to="register">Register</Link>

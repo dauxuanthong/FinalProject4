@@ -9,6 +9,7 @@ import {HiOutlineMail} from "react-icons/hi";
 import {BiHome, BiUser} from "react-icons/bi";
 import {MdPhoneAndroid} from "react-icons/md"
 import { Divider } from '@mantine/core';
+import {RiShieldKeyholeLine} from "react-icons/ri";
 
 function Profile(props) {
   const [allInfo, setAllInfo] = useState({
@@ -54,19 +55,40 @@ function Profile(props) {
             <p>{allInfo.email}</p>
           </div>
           <Divider size="sm"/>
-          <div className="private-profile-item">
-            <BiUser/>
-            <p>{allInfo.realName}</p>
+          <div className="private-profile-item-protected">
+            <div className="left-item">
+              <BiUser/>
+              <p>{allInfo.realName}</p>
+            </div>
+            {allInfo.realNameSetting === true && (
+              <div className="right-icon">
+                <RiShieldKeyholeLine/>
+              </div>
+            )}
           </div>
           <Divider size="sm"/>
-          <div className="private-profile-item">
-            <BiHome/>
-            <p>{allInfo.address}</p>
+          <div className="private-profile-item-protected">
+            <div className="left-item">
+              <BiHome/>
+              <p>{allInfo.address}</p>
+            </div>
+            {allInfo.addressSetting === true && (
+              <div className="right-icon">
+                <RiShieldKeyholeLine/>
+              </div>
+            )}
           </div>
           <Divider size="sm"/>
-          <div className="private-profile-item">
-            <MdPhoneAndroid/>
-            <p>{allInfo.phoneNumber}</p>
+          <div className="private-profile-item-protected">
+            <div className="left-item">
+              <MdPhoneAndroid/>
+              <p>{allInfo.phoneNumber}</p>
+            </div>
+            {allInfo.addressSetting === true && (
+              <div className="right-icon">
+                <RiShieldKeyholeLine/>
+              </div>
+            )}
           </div>
           <Divider size="sm"/>
         </div>
@@ -86,7 +108,7 @@ function Profile(props) {
             <InfoManage allInfo={allInfo}/>
           </Tab>
           <Tab label="Manage Account">
-            <AccountManage />
+            <AccountManage/>
           </Tab>
         </Tabs>
       </div>

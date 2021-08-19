@@ -283,6 +283,13 @@ class UserController {
           realName: req.body.realName || null,
           address: req.body.address || null,
           phoneNumber: req.body.phoneNumber || null,
+          setting: {
+            update: {
+              realName: req.body.realNameSetting,
+              address: req.body.addressSetting,
+              phoneNumber: req.body.phoneNumberSetting,
+            }
+          }
         },
       });
       return res.sendStatus(200);

@@ -6,7 +6,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  background-color: #6E85AD;
+  background-color: #6e85ad;
 }
 
 .home-page,
@@ -71,12 +71,18 @@
   /* border: 1px solid; */
 }
 
-.nav-item-div-sign-in .label-d2-0-2-17 {
+/* .label-of-menu {
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 16px;
+  font-weight: 500;
+  color: rgb(134, 142, 150);
 }
+
+.item-label-of-menu{
+  
+} */
 
 .profile {
   display: flex;

@@ -47,7 +47,11 @@
   width: 350px;
   height: fit-content;
   margin-top: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
+
 .info-button-root {
   margin-top: 20px;
 }
