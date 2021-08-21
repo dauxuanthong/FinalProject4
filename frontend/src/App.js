@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 import Nav from "./Components/layouts/NavBar/Nav";
 import Side from "./Components/layouts/SideBar/Side";
-import Home from "./Components/Home";
+import Home from "./Components/Home/Home";
 import Register from "./Components/Register/Register.jsx";
 import Login from "./Components/Login/Login.jsx";
 import userApi from "./API/userApi";
@@ -13,6 +13,7 @@ function App() {
   const [updateTK, setUpdateTK] = useState({
     value: 1,
   });
+  const [userStatus, setUserStatus] = useState("");
   //EFFECT
   useEffect(() => {
     refresh();
@@ -28,6 +29,15 @@ function App() {
       }
     }, [600000]); // 10 minutes
   }, [updateTK]);
+
+  useEffect(()=>{
+    const status = localStorage.getItem("status");
+    if (!status) {
+      setUserStatus("");
+    }else {
+      setUserStatus(status);
+    }
+  })
 
   //Function
   const refresh = async () => {
@@ -48,6 +58,9 @@ function App() {
               <Route exact path="/" component={Home} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
+              {userStatus !== "signIn" && (
+                <Redirect to="/login"/>
+              )}
               <Route exact path="/profile" component={Profile} />
             </Switch>
           </div>
