@@ -8,6 +8,7 @@ import Register from "./Components/Register/Register.jsx";
 import Login from "./Components/Login/Login.jsx";
 import userApi from "./API/userApi";
 import Profile from "./Components/layouts/Profile/Profile";
+import PostDetails from "./Components/PostDetail/PostDetail.jsx";
 function App() {
   //STATE
   const [updateTK, setUpdateTK] = useState({
@@ -30,14 +31,14 @@ function App() {
     }, [600000]); // 10 minutes
   }, [updateTK]);
 
-  useEffect(()=>{
+  useEffect(() => {
     const status = localStorage.getItem("status");
     if (!status) {
       setUserStatus("");
-    }else {
+    } else {
       setUserStatus(status);
     }
-  })
+  });
 
   //Function
   const refresh = async () => {
@@ -55,12 +56,11 @@ function App() {
           <Nav />
           <div className="main-container">
             <Switch>
+              <Route exact path="/postDetail" component={PostDetails} />
               <Route exact path="/" component={Home} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
-              {userStatus !== "signIn" && (
-                <Redirect to="/login"/>
-              )}
+              {userStatus !== "signIn" && <Redirect to="/login" />}
               <Route exact path="/profile" component={Profile} />
             </Switch>
           </div>
