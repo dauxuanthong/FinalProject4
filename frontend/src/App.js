@@ -9,6 +9,7 @@ import Login from "./Components/Login/Login.jsx";
 import userApi from "./API/userApi";
 import Profile from "./Components/layouts/Profile/Profile";
 import PostDetails from "./Components/PostDetail/PostDetail.jsx";
+
 function App() {
   //STATE
   const [updateTK, setUpdateTK] = useState({
