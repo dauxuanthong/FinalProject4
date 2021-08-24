@@ -1,14 +1,13 @@
-.post-detail-container {
+/* .post-detail-container {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
-  /* align-items: center; */
   width: 100%;
-}
+} */
 
 /******************IMG-AREA***********************/
-.img-area {
+/* .img-area {
   margin-top: 30px;
   width: 500px;
   display: flex;
@@ -41,12 +40,12 @@
   height: 70px;
   object-fit: cover;
   border-radius: 5px;
-}
+} */
 
 /*____________________________________________________*/
 
 /************************INFO-AREA****************************/
-.info-area {
+/* .info-area {
   margin-left: 20px;
   width: 500px;
   display: flex;
@@ -91,4 +90,4 @@
 .product-function {
   width: 100%;
   height: 50px;
-}
+} */

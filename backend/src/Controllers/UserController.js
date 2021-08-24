@@ -288,8 +288,8 @@ class UserController {
               realName: req.body.realNameSetting,
               address: req.body.addressSetting,
               phoneNumber: req.body.phoneNumberSetting,
-            }
-          }
+            },
+          },
         },
       });
       return res.sendStatus(200);
@@ -299,14 +299,14 @@ class UserController {
     }
   };
 
-  allInfo = async(req, res) => {
+  allInfo = async (req, res) => {
     const userId = req.session.userId;
     try {
       const userInfo = await prisma.user.findUnique({
-        where: { id : userId },
+        where: { id: userId },
         include: {
-          setting: true
-        }
+          setting: true,
+        },
       });
       return res.json(userInfo);
     } catch (error) {

@@ -8,14 +8,14 @@ import Register from "./Components/Register/Register.jsx";
 import Login from "./Components/Login/Login.jsx";
 import userApi from "./API/userApi";
 import Profile from "./Components/layouts/Profile/Profile";
-import PostDetails from "./Components/PostDetail/PostDetail.jsx";
-
+import PostDetails from "./Components/Post/PostDetail.jsx";
+import Post from "./Components/Post/Post.jsx";
 function App() {
   //STATE
   const [updateTK, setUpdateTK] = useState({
     value: 1,
   });
-  const [userStatus, setUserStatus] = useState("");
+  const [userStatus, setUserStatus] = useState();
   //EFFECT
   useEffect(() => {
     refresh();
@@ -33,20 +33,14 @@ function App() {
   }, [updateTK]);
 
   useEffect(() => {
-    const status = localStorage.getItem("status");
-    if (!status) {
-      setUserStatus("");
-    } else {
-      setUserStatus(status);
-    }
-  });
+    setUserStatus(localStorage.getItem("status") || "");
+  }, []);
 
   //Function
   const refresh = async () => {
     const newToken = await userApi.refreshToken();
     localStorage.setItem("accessToken", JSON.stringify(newToken));
   };
-
   return (
     <Router>
       <div className="main-display">
@@ -57,11 +51,12 @@ function App() {
           <Nav />
           <div className="main-container">
             <Switch>
-              <Route exact path="/postDetail" component={PostDetails} />
               <Route exact path="/" component={Home} />
+              <Route exact path="/post" component={Post} />
+              <Route exact path="/postDetail" component={PostDetails} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
-              {userStatus !== "signIn" && <Redirect to="/login" />}
+              {userStatus === "" && <Redirect to="/login" />}
               <Route exact path="/profile" component={Profile} />
             </Switch>
           </div>

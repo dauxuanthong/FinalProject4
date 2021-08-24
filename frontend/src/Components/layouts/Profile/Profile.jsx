@@ -5,11 +5,11 @@ import { Avatar } from "@mantine/core";
 import AccountManage from "./AccountMange/AccountManage.jsx";
 import InfoManage from "./InfoMange/InfoManage.jsx";
 import userApi from "../../../API/userApi";
-import {HiOutlineMail} from "react-icons/hi";
-import {BiHome, BiUser} from "react-icons/bi";
-import {MdPhoneAndroid} from "react-icons/md"
-import { Divider } from '@mantine/core';
-import {RiShieldKeyholeLine} from "react-icons/ri";
+import { HiOutlineMail } from "react-icons/hi";
+import { BiHome, BiUser } from "react-icons/bi";
+import { MdPhoneAndroid } from "react-icons/md";
+import { Divider } from "@mantine/core";
+import { RiShieldKeyholeLine } from "react-icons/ri";
 
 function Profile(props) {
   const [allInfo, setAllInfo] = useState({
@@ -25,7 +25,7 @@ function Profile(props) {
   });
 
   useEffect(() => {
-    const getAllInfo = async() => {
+    const getAllInfo = async () => {
       const getAllInfoRes = await userApi.allInfo();
       setAllInfo({
         userName: getAllInfoRes.userName,
@@ -46,51 +46,51 @@ function Profile(props) {
     <div className="profile-container">
       <div className="profile-display">
         <div className="public-profile">
-          <Avatar size={150} radius="md" src={allInfo.avatar}/>
+          <Avatar size={150} radius="md" src={allInfo.avatar} />
           <p>{allInfo.userName}</p>
         </div>
         <div className="private-profile">
           <div className="private-profile-item">
-            <HiOutlineMail/>
+            <HiOutlineMail />
             <p>{allInfo.email}</p>
           </div>
-          <Divider size="sm"/>
+          <Divider size="sm" />
           <div className="private-profile-item-protected">
             <div className="left-item">
-              <BiUser/>
+              <BiUser />
               <p>{allInfo.realName}</p>
             </div>
             {allInfo.realNameSetting === true && (
               <div className="right-icon">
-                <RiShieldKeyholeLine/>
+                <RiShieldKeyholeLine />
               </div>
             )}
           </div>
-          <Divider size="sm"/>
+          <Divider size="sm" />
           <div className="private-profile-item-protected">
             <div className="left-item">
-              <BiHome/>
+              <BiHome />
               <p>{allInfo.address}</p>
             </div>
             {allInfo.addressSetting === true && (
               <div className="right-icon">
-                <RiShieldKeyholeLine/>
+                <RiShieldKeyholeLine />
               </div>
             )}
           </div>
-          <Divider size="sm"/>
+          <Divider size="sm" />
           <div className="private-profile-item-protected">
             <div className="left-item">
-              <MdPhoneAndroid/>
+              <MdPhoneAndroid />
               <p>{allInfo.phoneNumber}</p>
             </div>
-            {allInfo.addressSetting === true && (
+            {allInfo.phoneNumberSetting === true && (
               <div className="right-icon">
-                <RiShieldKeyholeLine/>
+                <RiShieldKeyholeLine />
               </div>
             )}
           </div>
-          <Divider size="sm"/>
+          <Divider size="sm" />
         </div>
       </div>
       <div className="profile-function">
@@ -105,10 +105,10 @@ function Profile(props) {
           variant="pills"
         >
           <Tab label="Manage Profile">
-            <InfoManage allInfo={allInfo}/>
+            <InfoManage allInfo={allInfo} />
           </Tab>
           <Tab label="Manage Account">
-            <AccountManage/>
+            <AccountManage />
           </Tab>
         </Tabs>
       </div>

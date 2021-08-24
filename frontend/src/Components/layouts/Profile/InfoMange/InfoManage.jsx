@@ -24,7 +24,6 @@ function InfoManage(props) {
   //STATE
   const [file, setFile] = useState(null);
   const [fileUrl, setFileUrl] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [realNameChecked, setRealNameChecked] = useState(false);
   const [addressChecked, setAddressChecked] = useState(false);
   const [phoneNumberChecked, setPhoneNumberChecked] = useState(false);
@@ -136,12 +135,12 @@ function InfoManage(props) {
           <Switch
             styles={{
               root: { paddingTop: "20px" },
-              label: { fontSize: "19px", marginTop: "2.5px", paddingLeft: "5px"},
+              label: { fontSize: "19px", marginTop: "2.5px", paddingLeft: "5px" },
             }}
             radius="lg"
             color="cyan"
             label={<BiCheckShield />}
-            checked={realNameChecked} 
+            checked={realNameChecked}
             onChange={(event) => setRealNameChecked(event.currentTarget.checked)}
           />
         </div>
@@ -156,12 +155,12 @@ function InfoManage(props) {
           <Switch
             styles={{
               root: { paddingTop: "20px" },
-              label: { fontSize: "19px", marginTop: "2.5px", paddingLeft: "5px"},
+              label: { fontSize: "19px", marginTop: "2.5px", paddingLeft: "5px" },
             }}
             radius="lg"
             color="cyan"
             label={<BiCheckShield />}
-            checked={addressChecked} 
+            checked={addressChecked}
             onChange={(event) => setAddressChecked(event.currentTarget.checked)}
           />
         </div>
@@ -180,12 +179,12 @@ function InfoManage(props) {
           <Switch
             styles={{
               root: { paddingTop: "20px" },
-              label: { fontSize: "19px", marginTop: "2.5px", paddingLeft: "5px"},
+              label: { fontSize: "19px", marginTop: "2.5px", paddingLeft: "5px" },
             }}
             radius="lg"
             color="cyan"
             label={<BiCheckShield />}
-            checked={phoneNumberChecked} 
+            checked={phoneNumberChecked}
             onChange={(event) => setPhoneNumberChecked(event.currentTarget.checked)}
           />
         </div>

@@ -53,7 +53,7 @@ function Nav(props) {
             transitionTimingFunction="ease"
             menuPosition={{ bottom: -134, right: -74 }}
             styles={{
-              label : {fontSize: '16px', textAlign: 'center'}
+              label: { fontSize: "16px", textAlign: "center" },
             }}
             // classNames={{
             //   label: 'label-of-menu',
