@@ -40,11 +40,10 @@
 }
 
 .card:hover .post-line-ellipsis,
-.card:hover .bottom-side
-{
+.card:hover .bottom-side {
   opacity: 0;
 }
-.card:hover .post-container{
+.card:hover .post-container {
   box-shadow: none;
 }
 
@@ -69,7 +68,7 @@
   align-items: center;
 }
 
-.bottom-side{
+.bottom-side {
   width: 250px;
 }
 
@@ -130,7 +129,7 @@
   color: white;
   font-size: 17px;
 }
-.post-function button:hover{
+.post-function button:hover {
   border: solid 2px white;
 }
 

@@ -4,7 +4,6 @@ import { Tabs, Tab } from "@mantine/core";
 import { BsFilePost } from "react-icons/bs";
 import { RiAuctionLine } from "react-icons/ri";
 import NormalPost from "./PostType/NormalPost";
-
 function Post(props) {
   return (
     <div className="post-component-container">
