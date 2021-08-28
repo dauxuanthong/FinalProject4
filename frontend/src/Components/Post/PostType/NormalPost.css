@@ -47,6 +47,46 @@
   color: rgba(20, 61, 150, 0.747);
 }
 
+.add-img-normal-post {
+  width: 340px;
+}
+.add-img-normal-post-label {
+  /* border: solid 1px; */
+  height: 19.2px;
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+}
+.add-img-normal-post-toolTips-icon {
+  width: 20px;
+  height: 100%;
+  margin-left: 170px;
+}
+.add-img-normal-post-dropZone {
+  width: 100%;
+  height: 80px;
+  border: dashed 2px;
+  border-radius: 10px;
+  border-color: rgb(206, 212, 218);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.add-img-normal-post-dropZone p {
+  font-size: 13px;
+  color: #212529;
+}
+.add-img-normal-post-dropZone:hover {
+  border: dashed 3px;
+  border-color: rgba(194, 198, 202, 0.863);
+}
+.add-img-normal-post-dropZone-error {
+  margin-top: 5px;
+  font-size: 13px;
+  color: #f03e3e;
+}
 /******************IMG******************/
 .normal-post-img-area {
   margin-left: 30px;
@@ -62,7 +102,18 @@
   object-fit: cover;
 }
 .normal-post-sub-img {
-  width: 350px;
+  width: 330px;
   height: 100px;
-  border: solid 1px;
+}
+
+.normal-post-sub-img-slider-item {
+  margin-left: 15px;
+  margin-top: 5px;
+  width: 80px;
+  height: 80px;
+  background-color: blue;
+}
+.normal-post-sub-img .slick-prev,
+.normal-post-sub-img .slick-next {
+  color: black;
 }

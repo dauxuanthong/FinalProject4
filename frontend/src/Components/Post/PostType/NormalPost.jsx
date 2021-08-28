@@ -17,6 +17,9 @@ import { GiMoneyStack } from "react-icons/gi";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import { useDropzone } from "react-dropzone";
+import { useNotifications } from "@mantine/notifications";
 
 function NormalPost(props) {
   //STATE
@@ -30,6 +33,10 @@ function NormalPost(props) {
     { value: "Repair tools", label: "Repair tools" },
     { value: "AnotherType", label: "Another type" },
   ]);
+
+  const [imgListFile, setImgListFile] = useState([]);
+  const [imgListUrl, setImgListUrl] = useState([]);
+  const [opacityAddImgError, setOpacityAddImgError] = useState(0);
 
   //USE-FORM
   const form = useForm({
@@ -52,6 +59,9 @@ function NormalPost(props) {
     },
   });
 
+  //USE-NOTIFICATION
+  const notifications = useNotifications();
+
   //TOOL-TIP
   const productNameTip = (
     <Tooltip
@@ -66,21 +76,62 @@ function NormalPost(props) {
 
   //SLIDER
   const settings = {
-    dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 2,
-    slidesToScroll: 2,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    arrows: true,
+    nextArrow: <MdKeyboardArrowRight />,
+    prevArrow: <MdKeyboardArrowLeft />,
   };
 
+  //DROP-ZONE
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+    accept: "image/jpeg, image/png, image/jpg",
+    onDropAccepted: async (files) => {
+      //add file to ImgListFile
+      setImgListFile((prev) => {
+        prev.push(files[0]);
+        return [...prev];
+      });
+      //Reset error
+      setOpacityAddImgError(0);
+      //File reader handle
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setImgListUrl((prev) => {
+            prev.push(reader.result);
+          });
+          setMainImgUrl(reader.result);
+        }
+      };
+      // console.log(imgListFile);
+      // console.log(typeof file);
+      // console.log(file[0].name);
+      return reader.readAsDataURL(files[0]);
+    },
+    onDropRejected: (file) => {
+      notifications.showNotification({
+        color: "red",
+        title: "Load file failed",
+        message: `File type is not accepted (.jpg/.jpeg/.png only)`,
+        autoClose: 5000,
+      });
+    },
+  });
   //EVENT
   const handleSubmit = async (value) => {
+    if (imgListFile.length < 4 || imgListFile.length > 8) {
+      return setOpacityAddImgError(1);
+    }
     const data = {
       productName: value.productName,
       productType: value.productType,
       typeDetail: value.productType.some((item) => item === "AnotherType") ? value.typeDetail : "",
       productQuantity: value.productQuantity,
       productPrice: value.cost,
+      imgListFile: imgListFile,
     };
     console.log(data);
   };
@@ -149,7 +200,7 @@ function NormalPost(props) {
                 label="Product quantity available"
                 icon={<FiArchive />}
                 min={1}
-                step={1}
+                hideControls
                 error={form.errors.productQuantity && "Enter product quantity available"}
                 onChange={(event) => form.setFieldValue("productQuantity", event)}
               />
@@ -162,7 +213,7 @@ function NormalPost(props) {
                   placeholder="Price your product (price only applies for 1 product)"
                   icon={<GiMoneyStack />}
                   min={1000}
-                  step={100000}
+                  hideControls
                   onChange={(event) => form.setFieldValue("cost", event)}
                 />
               </div>
@@ -170,25 +221,66 @@ function NormalPost(props) {
                 <p>vnd</p>
               </div>
             </div>
+            <div className="add-img-normal-post">
+              <div className="add-img-normal-post-label">
+                <p style={{ fontSize: 14, color: "#212529" }}>Add product images</p>
+                <p style={{ fontSize: 14, width: 11.36, color: "#F03E3E", marginLeft: 3 }}>*</p>
+                <div className="add-img-normal-post-toolTips-icon">
+                  <Tooltip
+                    wrapLines
+                    width={300}
+                    withArrow
+                    position="bottom"
+                    transition="slide-up"
+                    placement="end"
+                    transitionDuration={200}
+                    label="Please provide images of your product (minimum 4 images, maximum 8 images)"
+                  >
+                    <BsInfoCircle />
+                  </Tooltip>
+                </div>
+              </div>
+              <div {...getRootProps({ className: "add-img-normal-post-dropZone" })}>
+                <input {...getInputProps()} />
+                <p>
+                  Drag 'n' drop here ,or click to select some images. Only accept .jpg/.jpeg/.png
+                  files type
+                </p>
+              </div>
+              <p
+                style={{ opacity: opacityAddImgError }}
+                className="add-img-normal-post-dropZone-error"
+              >
+                Please provide a minimum of 4 images or a maximum of 8 images
+              </p>
+            </div>
           </div>
           <div className="normal-post-img-area">
             <img className="normal-post-main-img" src={mainImgUrl}></img>
             <div className="normal-post-sub-img">
               <Slider {...settings}>
                 <div>
-                  <p>1</p>
+                  <div className="normal-post-sub-img-slider-item">
+                    <p>1</p>
+                  </div>
                 </div>
                 <div>
-                  <p>2</p>
+                  <div className="normal-post-sub-img-slider-item">
+                    <p>2</p>
+                  </div>
                 </div>
                 <div>
-                  <p>3</p>
+                  <div className="normal-post-sub-img-slider-item">
+                    <p>3</p>
+                  </div>
+                </div>
+                <div>
+                  <div className="normal-post-sub-img-slider-item">
+                    <p>4</p>
+                  </div>
                 </div>
               </Slider>
             </div>
-            {/* <div>
-              <input type="file" />
-            </div> */}
           </div>
         </div>
         <Button type="submit">Post</Button>
