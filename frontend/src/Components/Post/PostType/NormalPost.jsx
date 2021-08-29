@@ -33,7 +33,8 @@ function NormalPost(props) {
     { value: "Repair tools", label: "Repair tools" },
     { value: "AnotherType", label: "Another type" },
   ]);
-
+  const [imgIndex, setImgIndex] = useState(1);
+  const [numOfImg, setNumOfImg] = useState(0);
   const [imgListFile, setImgListFile] = useState([]);
   const [imgListUrl, setImgListUrl] = useState([]);
   const [opacityAddImgError, setOpacityAddImgError] = useState(0);
@@ -75,10 +76,10 @@ function NormalPost(props) {
   );
 
   //SLIDER
-  const settings = {
+  let settings = {
     infinite: true,
     speed: 500,
-    slidesToShow: 3,
+    slidesToShow: numOfImg < 3 ? numOfImg : 3,
     slidesToScroll: 1,
     arrows: true,
     nextArrow: <MdKeyboardArrowRight />,
@@ -91,7 +92,7 @@ function NormalPost(props) {
     onDropAccepted: async (files) => {
       //add file to ImgListFile
       setImgListFile((prev) => {
-        prev.push(files[0]);
+        prev.push({ index: imgIndex, imgFile: files[0] });
         return [...prev];
       });
       //Reset error
@@ -101,17 +102,18 @@ function NormalPost(props) {
       reader.onload = () => {
         if (reader.readyState === 2) {
           setImgListUrl((prev) => {
-            prev.push(reader.result);
+            prev?.push({ index: imgIndex, imgUrl: reader.result });
+            console.log("1prev ", prev);
           });
           setMainImgUrl(reader.result);
         }
       };
-      // console.log(imgListFile);
-      // console.log(typeof file);
-      // console.log(file[0].name);
-      return reader.readAsDataURL(files[0]);
+      reader.readAsDataURL(files[0]);
+      setNumOfImg(numOfImg + 1);
+      console.log(imgListUrl);
+      return setImgIndex(imgIndex + 1);
     },
-    onDropRejected: (file) => {
+    onDropRejected: () => {
       notifications.showNotification({
         color: "red",
         title: "Load file failed",
@@ -120,18 +122,23 @@ function NormalPost(props) {
       });
     },
   });
+
   //EVENT
   const handleSubmit = async (value) => {
     if (imgListFile.length < 4 || imgListFile.length > 8) {
       return setOpacityAddImgError(1);
     }
+    let listFile = [];
+    imgListFile.map((item) => {
+      listFile.push(item.imgFile);
+    });
     const data = {
       productName: value.productName,
       productType: value.productType,
       typeDetail: value.productType.some((item) => item === "AnotherType") ? value.typeDetail : "",
       productQuantity: value.productQuantity,
       productPrice: value.cost,
-      imgListFile: imgListFile,
+      imgListFile: listFile,
     };
     console.log(data);
   };
@@ -259,26 +266,13 @@ function NormalPost(props) {
             <img className="normal-post-main-img" src={mainImgUrl}></img>
             <div className="normal-post-sub-img">
               <Slider {...settings}>
-                <div>
-                  <div className="normal-post-sub-img-slider-item">
-                    <p>1</p>
+                {imgListUrl?.map((item) => (
+                  <div key={item.index}>
+                    <div className="normal-post-sub-img-slider-item">
+                      <img src={item.imgUrl}></img>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <div className="normal-post-sub-img-slider-item">
-                    <p>2</p>
-                  </div>
-                </div>
-                <div>
-                  <div className="normal-post-sub-img-slider-item">
-                    <p>3</p>
-                  </div>
-                </div>
-                <div>
-                  <div className="normal-post-sub-img-slider-item">
-                    <p>4</p>
-                  </div>
-                </div>
+                ))}
               </Slider>
             </div>
           </div>

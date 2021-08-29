@@ -111,7 +111,8 @@
   margin-top: 5px;
   width: 80px;
   height: 80px;
-  background-color: blue;
+  object-fit: cover;
+  background-color: #f03e3e;
 }
 .normal-post-sub-img .slick-prev,
 .normal-post-sub-img .slick-next {
