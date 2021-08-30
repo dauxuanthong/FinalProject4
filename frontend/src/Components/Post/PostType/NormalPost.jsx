@@ -20,6 +20,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { useDropzone } from "react-dropzone";
 import { useNotifications } from "@mantine/notifications";
+import { TiDeleteOutline } from "react-icons/ti";
 
 function NormalPost(props) {
   //STATE
@@ -34,7 +35,7 @@ function NormalPost(props) {
     { value: "AnotherType", label: "Another type" },
   ]);
   const [imgIndex, setImgIndex] = useState(1);
-  const [numOfImg, setNumOfImg] = useState(0);
+  // const [numOfImg, setNumOfImg] = useState(0);
   const [imgListFile, setImgListFile] = useState([]);
   const [imgListUrl, setImgListUrl] = useState([]);
   const [opacityAddImgError, setOpacityAddImgError] = useState(0);
@@ -79,7 +80,7 @@ function NormalPost(props) {
   let settings = {
     infinite: true,
     speed: 500,
-    slidesToShow: numOfImg < 3 ? numOfImg : 3,
+    slidesToShow: imgListUrl.length < 3 ? imgListUrl.length : 3,
     slidesToScroll: 1,
     arrows: true,
     nextArrow: <MdKeyboardArrowRight />,
@@ -101,17 +102,14 @@ function NormalPost(props) {
       const reader = new FileReader();
       reader.onload = () => {
         if (reader.readyState === 2) {
-          setImgListUrl((prev) => {
-            prev?.push({ index: imgIndex, imgUrl: reader.result });
-            console.log("1prev ", prev);
-          });
+          setImgListUrl((prevArr) => [...prevArr, { index: imgIndex, imgUrl: reader.result }]);
           setMainImgUrl(reader.result);
         }
       };
-      reader.readAsDataURL(files[0]);
-      setNumOfImg(numOfImg + 1);
+      // setNumOfImg(numOfImg + 1);
       console.log(imgListUrl);
-      return setImgIndex(imgIndex + 1);
+      setImgIndex(imgIndex + 1);
+      return reader.readAsDataURL(files[0]);
     },
     onDropRejected: () => {
       notifications.showNotification({
@@ -142,6 +140,24 @@ function NormalPost(props) {
     };
     console.log(data);
   };
+
+  const deleteImg = (index) => {
+    //delete file in imgListFile
+    const file = imgListFile.find((item) => item.index === index);
+    const fileIndex = imgListFile.indexOf(file);
+    imgListFile.splice(fileIndex, 1);
+    //delete url in imgListUrl
+    const url = imgListUrl.find((item) => item.index === index);
+    const urlIndex = imgListUrl.indexOf(url);
+    //change main img
+    url.imgUrl === mainImgUrl &&
+      setMainImgUrl(
+        imgListUrl[0].imgUrl ||
+          "https://thailamlandscape.vn/wp-content/uploads/2017/10/no-image.png"
+      );
+    imgListUrl.splice(urlIndex, 1);
+  };
+
   return (
     <div className="normal-post-container">
       <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -268,8 +284,21 @@ function NormalPost(props) {
               <Slider {...settings}>
                 {imgListUrl?.map((item) => (
                   <div key={item.index}>
-                    <div className="normal-post-sub-img-slider-item">
+                    <div
+                      className="normal-post-sub-img-slider-item"
+                      onClick={() => {
+                        setMainImgUrl(item.imgUrl);
+                      }}
+                    >
                       <img src={item.imgUrl}></img>
+                      <div
+                        className="normal-post-sub-img-slider-icon"
+                        onClick={() => {
+                          deleteImg(item.index);
+                        }}
+                      >
+                        <TiDeleteOutline />
+                      </div>
                     </div>
                   </div>
                 ))}

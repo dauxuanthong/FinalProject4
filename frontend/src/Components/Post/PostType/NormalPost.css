@@ -113,8 +113,30 @@
   height: 80px;
   object-fit: cover;
   background-color: #f03e3e;
+  position: relative;
 }
+.normal-post-sub-img-slider-item img {
+  width: 100%;
+  height: 100%;
+}
+
 .normal-post-sub-img .slick-prev,
 .normal-post-sub-img .slick-next {
   color: black;
+}
+
+.normal-post-sub-img-slider-icon {
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  top: -2px;
+  left: 62px;
+  font-size: 18px;
+  color: black;
+  opacity: 0;
+}
+
+.normal-post-sub-img-slider-item:hover .normal-post-sub-img-slider-icon {
+  opacity: 1;
+  cursor: pointer;
 }
