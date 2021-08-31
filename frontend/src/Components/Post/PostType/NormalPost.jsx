@@ -8,20 +8,17 @@ import {
   Tooltip,
   MultiSelect,
   NumberInput,
+  Modal,
+  Overlay,
 } from "@mantine/core";
 import { BsInfoCircle } from "react-icons/bs";
 import { AiOutlineTags } from "react-icons/ai";
-import { RiProductHuntLine } from "react-icons/ri";
+import { RiProductHuntLine, RiEyeLine } from "react-icons/ri";
 import { FiArchive } from "react-icons/fi";
 import { GiMoneyStack } from "react-icons/gi";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { useDropzone } from "react-dropzone";
 import { useNotifications } from "@mantine/notifications";
-import { TiDeleteOutline } from "react-icons/ti";
-
+import { IoCloseSharp } from "react-icons/io5";
 function NormalPost(props) {
   //STATE
   const [mainImgUrl, setMainImgUrl] = useState(
@@ -35,10 +32,11 @@ function NormalPost(props) {
     { value: "AnotherType", label: "Another type" },
   ]);
   const [imgIndex, setImgIndex] = useState(1);
-  // const [numOfImg, setNumOfImg] = useState(0);
   const [imgListFile, setImgListFile] = useState([]);
   const [imgListUrl, setImgListUrl] = useState([]);
   const [opacityAddImgError, setOpacityAddImgError] = useState(0);
+  const [opened, setOpened] = useState(false);
+  const [modalImg, setModalImg] = useState("");
 
   //USE-FORM
   const form = useForm({
@@ -76,17 +74,6 @@ function NormalPost(props) {
     </Tooltip>
   );
 
-  //SLIDER
-  let settings = {
-    infinite: true,
-    speed: 500,
-    slidesToShow: imgListUrl.length < 3 ? imgListUrl.length : 3,
-    slidesToScroll: 1,
-    arrows: true,
-    nextArrow: <MdKeyboardArrowRight />,
-    prevArrow: <MdKeyboardArrowLeft />,
-  };
-
   //DROP-ZONE
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: "image/jpeg, image/png, image/jpg",
@@ -107,7 +94,6 @@ function NormalPost(props) {
         }
       };
       // setNumOfImg(numOfImg + 1);
-      console.log(imgListUrl);
       setImgIndex(imgIndex + 1);
       return reader.readAsDataURL(files[0]);
     },
@@ -141,21 +127,22 @@ function NormalPost(props) {
     console.log(data);
   };
 
-  const deleteImg = (index) => {
-    //delete file in imgListFile
-    const file = imgListFile.find((item) => item.index === index);
-    const fileIndex = imgListFile.indexOf(file);
-    imgListFile.splice(fileIndex, 1);
-    //delete url in imgListUrl
-    const url = imgListUrl.find((item) => item.index === index);
-    const urlIndex = imgListUrl.indexOf(url);
-    //change main img
-    url.imgUrl === mainImgUrl &&
-      setMainImgUrl(
-        imgListUrl[0].imgUrl ||
-          "https://thailamlandscape.vn/wp-content/uploads/2017/10/no-image.png"
-      );
-    imgListUrl.splice(urlIndex, 1);
+  const removeImg = (index) => {
+    //remove url
+    setImgListUrl((prev) => {
+      const filter = prev.filter((image) => image.index !== index);
+      return filter;
+    });
+    //remove file
+    setImgListFile((prev) => {
+      const filter = prev.filter((image) => image.index !== index);
+      return filter;
+    });
+  };
+
+  const showImg = (url) => {
+    setModalImg(url);
+    setOpened(true);
   };
 
   return (
@@ -244,6 +231,8 @@ function NormalPost(props) {
                 <p>vnd</p>
               </div>
             </div>
+          </div>
+          <div className="normal-post-img-area">
             <div className="add-img-normal-post">
               <div className="add-img-normal-post-label">
                 <p style={{ fontSize: 14, color: "#212529" }}>Add product images</p>
@@ -277,37 +266,47 @@ function NormalPost(props) {
                 Please provide a minimum of 4 images or a maximum of 8 images
               </p>
             </div>
-          </div>
-          <div className="normal-post-img-area">
-            <img className="normal-post-main-img" src={mainImgUrl}></img>
-            <div className="normal-post-sub-img">
-              <Slider {...settings}>
-                {imgListUrl?.map((item) => (
-                  <div key={item.index}>
-                    <div
-                      className="normal-post-sub-img-slider-item"
-                      onClick={() => {
-                        setMainImgUrl(item.imgUrl);
-                      }}
-                    >
-                      <img src={item.imgUrl}></img>
-                      <div
-                        className="normal-post-sub-img-slider-icon"
-                        onClick={() => {
-                          deleteImg(item.index);
-                        }}
-                      >
-                        <TiDeleteOutline />
-                      </div>
-                    </div>
+            <div className="normal-post-show-img-list-div">
+              {imgListUrl?.map((item) => (
+                <div key={item.index} className="normal-post-show-img-list-div-item">
+                  <img src={item.imgUrl}></img>
+                  <div className="normal-post-show-img-list-background">
+                    <p></p>
                   </div>
-                ))}
-              </Slider>
+                  <div
+                    onClick={() => showImg(item.imgUrl)}
+                    className="normal-post-show-img-list-view-button"
+                  >
+                    <RiEyeLine />
+                  </div>
+                  <div
+                    onClick={() => removeImg(item.index)}
+                    className="normal-post-show-img-list-delete-button"
+                  >
+                    <IoCloseSharp />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
         <Button type="submit">Post</Button>
       </form>
+      {opened === true && (
+        <div>
+          <div className="normal-post-modal-background">
+            <p></p>
+          </div>
+          <div
+            className="normal-post-modal"
+            onClick={() => {
+              setOpened(false);
+            }}
+          >
+            <img className="normal-post-img-modal" src={modalImg}></img>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
