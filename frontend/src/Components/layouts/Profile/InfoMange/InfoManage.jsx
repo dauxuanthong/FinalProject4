@@ -13,9 +13,6 @@ import { Switch } from "@mantine/core";
 InfoManage.propTypes = {
   allInfo: PropTypes.object.isRequired,
 };
-// InfoManage.defaultProps = {
-//   allInfo: {},
-// };
 
 function InfoManage(props) {
   //PROP

@@ -19,6 +19,9 @@ import { GiMoneyStack } from "react-icons/gi";
 import { useDropzone } from "react-dropzone";
 import { useNotifications } from "@mantine/notifications";
 import { IoCloseSharp } from "react-icons/io5";
+import { Editor } from "@tinymce/tinymce-react";
+import postApi from "../../../API/postApi";
+
 function NormalPost(props) {
   //STATE
   const [mainImgUrl, setMainImgUrl] = useState(
@@ -37,6 +40,8 @@ function NormalPost(props) {
   const [opacityAddImgError, setOpacityAddImgError] = useState(0);
   const [opened, setOpened] = useState(false);
   const [modalImg, setModalImg] = useState("");
+  const [description, setDescription] = useState("");
+  const [opacityDescription, setOpacityDescription] = useState(0);
 
   //USE-FORM
   const form = useForm({
@@ -109,8 +114,17 @@ function NormalPost(props) {
 
   //EVENT
   const handleSubmit = async (value) => {
+    let errCount = 0;
     if (imgListFile.length < 4 || imgListFile.length > 8) {
-      return setOpacityAddImgError(1);
+      setOpacityAddImgError(1);
+      errCount = errCount + 1;
+    }
+    if (description.length <= 0) {
+      setOpacityDescription(1);
+      errCount = errCount + 1;
+    }
+    if (errCount > 0) {
+      return;
     }
     let listFile = [];
     imgListFile.map((item) => {
@@ -123,8 +137,31 @@ function NormalPost(props) {
       productQuantity: value.productQuantity,
       productPrice: value.cost,
       imgListFile: listFile,
+      description: description,
     };
     console.log(data);
+    try {
+      //UPLOAD IMG
+      let formData = new FormData();
+      formData.append("listFile", file);
+      //UPLOAD INFO
+      const uploadListImgRes = await postApi.normalPostImg(formData);
+      const mainData = {
+        productName: value.productName,
+        productType: value.productType,
+        typeDetail: value.productType.some((item) => item === "AnotherType")
+          ? value.typeDetail
+          : "",
+        productQuantity: value.productQuantity,
+        productPrice: value.cost,
+        imgListFile: uploadListImgRes.fileUrl,
+        description: description,
+      };
+      const uploadAllInfo = await postApi.normalPostInfo(mainData);
+      console.log("mainData: ", mainData);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const removeImg = (index) => {
@@ -143,6 +180,11 @@ function NormalPost(props) {
   const showImg = (url) => {
     setModalImg(url);
     setOpened(true);
+  };
+
+  const editorOnChange = (value) => {
+    setDescription(value);
+    setOpacityDescription(0);
   };
 
   return (
@@ -290,7 +332,47 @@ function NormalPost(props) {
             </div>
           </div>
         </div>
-        <Button type="submit">Post</Button>
+        <div className="normal-post-description-div">
+          <div className="normal-post-description-label-div">
+            <p style={{ fontSize: 14, color: "#212529" }}>Description</p>
+            <p style={{ fontSize: 14, width: 11.36, color: "#F03E3E", marginLeft: 3 }}>*</p>
+          </div>
+          <div style={{ width: 920 }}>
+            <Editor
+              onEditorChange={editorOnChange}
+              outputFormat="html"
+              init={{
+                resize: false,
+                height: 400,
+                menubar: false,
+                branding: false,
+                plugins: [
+                  "advlist autolink lists link image charmap print preview anchor",
+                  "searchreplace visualblocks code fullscreen",
+                  "insertdatetime media table paste code help wordcount",
+                  "lists link image paste help wordcount",
+                ],
+                toolbar:
+                  "undo redo | formatselect | " +
+                  "bold italic underline backcolor | alignleft aligncenter " +
+                  "alignright alignjustify | bullist numlist outdent indent | " +
+                  "removeformat | help",
+                content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+              }}
+            />
+          </div>
+          <div style={{ width: 920 }}>
+            <p style={{ opacity: opacityDescription }} className="normal-post-description-error">
+              Please describe your product
+            </p>
+          </div>
+          <Button
+            style={{ fontSize: 16, height: 50, width: 300, marginTop: 10, marginBottom: 40 }}
+            type="submit"
+          >
+            Post
+          </Button>
+        </div>
       </form>
       {opened === true && (
         <div>
