@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./NormalPost.css";
 import { useForm } from "@mantine/hooks";
 import {
@@ -21,19 +21,16 @@ import { useNotifications } from "@mantine/notifications";
 import { IoCloseSharp } from "react-icons/io5";
 import { Editor } from "@tinymce/tinymce-react";
 import postApi from "../../../API/postApi";
+import PropTypes from "prop-types";
+
+NormalPost.propTypes = {
+  types: PropTypes.array.isRequired,
+};
 
 function NormalPost(props) {
+  //PROPS
+  const { types } = props;
   //STATE
-  const [mainImgUrl, setMainImgUrl] = useState(
-    "https://thailamlandscape.vn/wp-content/uploads/2017/10/no-image.png"
-  );
-  const [productType, setProductType] = useState([
-    { value: "SmartPhone", label: "SmartPhone" },
-    { value: "Kitchen tools", label: "Kitchen tools" },
-    { value: "Technological", label: "Technological" },
-    { value: "Repair tools", label: "Repair tools" },
-    { value: "AnotherType", label: "Another type" },
-  ]);
   const [imgIndex, setImgIndex] = useState(1);
   const [imgListFile, setImgListFile] = useState([]);
   const [imgListUrl, setImgListUrl] = useState([]);
@@ -56,7 +53,7 @@ function NormalPost(props) {
       productName: (value) => value.trim().length >= 1 && value.trim().length <= 50,
       productType: (value) => value.length > 0,
       typeDetail: (value) => {
-        if (form.values.productType.some((item) => item === "AnotherType")) {
+        if (form.values.productType.some((item) => item === 5)) {
           return value.trim().length >= 1 ? true : false;
         }
         return true;
@@ -84,10 +81,7 @@ function NormalPost(props) {
     accept: "image/jpeg, image/png, image/jpg",
     onDropAccepted: async (files) => {
       //add file to ImgListFile
-      setImgListFile((prev) => {
-        prev.push({ index: imgIndex, imgFile: files[0] });
-        return [...prev];
-      });
+      setImgListFile((prevArr) => [...prevArr, { index: imgIndex, imgFile: files[0] }]);
       //Reset error
       setOpacityAddImgError(0);
       //File reader handle
@@ -95,7 +89,6 @@ function NormalPost(props) {
       reader.onload = () => {
         if (reader.readyState === 2) {
           setImgListUrl((prevArr) => [...prevArr, { index: imgIndex, imgUrl: reader.result }]);
-          setMainImgUrl(reader.result);
         }
       };
       // setNumOfImg(numOfImg + 1);
@@ -133,7 +126,7 @@ function NormalPost(props) {
     const data = {
       productName: value.productName,
       productType: value.productType,
-      typeDetail: value.productType.some((item) => item === "AnotherType") ? value.typeDetail : "",
+      typeDetail: value.productType.some((item) => item === 5) ? value.typeDetail : "",
       productQuantity: value.productQuantity,
       productPrice: value.cost,
       imgListFile: listFile,
@@ -143,22 +136,30 @@ function NormalPost(props) {
     try {
       //UPLOAD IMG
       let formData = new FormData();
-      formData.append("listFile", file);
+      const listFile = [...imgListFile];
+      listFile.map((item) => {
+        formData.append("listFile", item.imgFile);
+      });
       //UPLOAD INFO
       const uploadListImgRes = await postApi.normalPostImg(formData);
+      console.log("uploadListImgRes", uploadListImgRes);
       const mainData = {
         productName: value.productName,
         productType: value.productType,
-        typeDetail: value.productType.some((item) => item === "AnotherType")
-          ? value.typeDetail
-          : "",
+        typeDetail: value.productType.some((item) => item === 5) ? value.typeDetail : "",
         productQuantity: value.productQuantity,
-        productPrice: value.cost,
-        imgListFile: uploadListImgRes.fileUrl,
+        productPrice: value.cost.toString(),
+        imgListFile: uploadListImgRes,
         description: description,
       };
       const uploadAllInfo = await postApi.normalPostInfo(mainData);
-      console.log("mainData: ", mainData);
+      if (uploadAllInfo.successMessage) {
+        return notifications.showNotification({
+          color: "green",
+          title: uploadAllInfo.successMessage,
+          autoClose: 5000,
+        });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -213,7 +214,7 @@ function NormalPost(props) {
                 required
                 label="Product type"
                 icon={<AiOutlineTags />}
-                data={productType}
+                data={types}
                 multiline="false"
                 clearButtonLabel="Clear selection"
                 clearable
@@ -235,7 +236,7 @@ function NormalPost(props) {
             {/*AnotherType*/}
             <div className="normal-post-info-item">
               <TextInput
-                disabled={!form.values.productType.some((item) => item === "AnotherType")}
+                disabled={!form.values.productType.some((item) => item === 5)}
                 required="true"
                 label="Type detail"
                 icon={<AiOutlineTags />}

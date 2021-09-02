@@ -1,6 +1,11 @@
 import axiosClient from "./axiosClient";
 
 const postApi = {
+  getType: () => {
+    const url = "/post/getType";
+    return axiosClient.get(url, { withCredentials: true });
+  },
+
   normalPostImg: (data) => {
     const url = "/post/normalUploadImg";
     return axiosClient.post(url, data, {

@@ -5,7 +5,7 @@ import "./InfoManage.css";
 import { useNotifications } from "@mantine/notifications";
 import { RiFolderUserLine } from "react-icons/ri";
 import { TiHomeOutline } from "react-icons/ti";
-import { BiPhoneCall, BiChevronDownCircle, BiCheckShield } from "react-icons/bi";
+import { BiPhoneCall, BiCheckShield } from "react-icons/bi";
 import userApi from "../../../../API/userApi";
 import PropTypes from "prop-types";
 import { Switch } from "@mantine/core";
@@ -109,7 +109,7 @@ function InfoManage(props) {
           autoClose: 10000,
         });
       }
-      return (window.location = "/profile");
+      // return (window.location = "/profile");
     } catch (error) {
       console.log(error);
     }
