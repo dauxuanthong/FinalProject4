@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./NormalPost.css";
+import "./AuctionPost.css";
 import { useForm } from "@mantine/hooks";
 import {
   TextInput,
@@ -21,12 +21,13 @@ import { IoCloseSharp } from "react-icons/io5";
 import { Editor } from "@tinymce/tinymce-react";
 import postApi from "../../../API/postApi";
 import PropTypes from "prop-types";
+import DateTimePicker from "react-datetime-picker";
 
-NormalPost.propTypes = {
+AuctionPost.propTypes = {
   types: PropTypes.array.isRequired,
 };
 
-function NormalPost(props) {
+function AuctionPost(props) {
   //PROPS
   const { types } = props;
   //STATE
@@ -47,6 +48,7 @@ function NormalPost(props) {
       typeDetail: "",
       productQuantity: 1,
       cost: 1000,
+      stepCost: 1000,
     },
     validationRules: {
       productName: (value) => value.trim().length >= 1 && value.trim().length <= 50,
@@ -74,6 +76,10 @@ function NormalPost(props) {
       <BsInfoCircle />
     </Tooltip>
   );
+
+  //DATETIME-PICKER
+  console.log(Date().toLocaleString());
+  const [value, onChange] = useState(new Date());
 
   //DROP-ZONE
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
@@ -106,61 +112,20 @@ function NormalPost(props) {
 
   //EVENT
   const handleSubmit = async (value) => {
+    //check err
     let errCount = 0;
+    //check num of img
     if (imgListFile.length < 4 || imgListFile.length > 8) {
       setOpacityAddImgError(1);
       errCount = errCount + 1;
     }
+    //check description
     if (description.length <= 0) {
       setOpacityDescription(1);
       errCount = errCount + 1;
     }
     if (errCount > 0) {
       return;
-    }
-    let listFile = [];
-    imgListFile.map((item) => {
-      listFile.push(item.imgFile);
-    });
-    // const data = {
-    //   productName: value.productName,
-    //   productType: value.productType,
-    //   typeDetail: value.productType.some((item) => item === 5) ? value.typeDetail : "",
-    //   productQuantity: value.productQuantity,
-    //   productPrice: value.cost,
-    //   imgListFile: listFile,
-    //   description: description,
-    // };
-    // console.log(data);
-    try {
-      //UPLOAD IMG
-      let formData = new FormData();
-      const listFile = [...imgListFile];
-      listFile.map((item) => {
-        formData.append("listFile", item.imgFile);
-      });
-      //UPLOAD INFO
-      const uploadListImgRes = await postApi.normalPostImg(formData);
-      console.log("uploadListImgRes", uploadListImgRes);
-      const mainData = {
-        productName: value.productName,
-        productType: value.productType,
-        typeDetail: value.productType.some((item) => item === 5) ? value.typeDetail : "",
-        productQuantity: value.productQuantity,
-        productPrice: value.cost.toString(),
-        imgListFile: uploadListImgRes,
-        description: description,
-      };
-      const uploadAllInfo = await postApi.normalPostInfo(mainData);
-      if (uploadAllInfo.successMessage) {
-        return notifications.showNotification({
-          color: "green",
-          title: uploadAllInfo.successMessage,
-          autoClose: 5000,
-        });
-      }
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -188,12 +153,12 @@ function NormalPost(props) {
   };
 
   return (
-    <div className="normal-post-container">
+    <div className="auction-post-container">
       <form onSubmit={form.onSubmit(handleSubmit)}>
-        <div className="first-part-div">
-          <div className="normal-post-info-area">
+        <div className="auction-post-first-part-div">
+          <div className="auction-post-info-area">
             {/*Product name*/}
-            <div className="normal-post-info-item">
+            <div className="auction-post-info-item">
               <TextInput
                 required="true"
                 label="Product name"
@@ -208,7 +173,7 @@ function NormalPost(props) {
               />
             </div>
             {/*Product type*/}
-            <div className="normal-post-info-item">
+            <div className="auction-post-info-item">
               <MultiSelect
                 required
                 label="Product type"
@@ -233,7 +198,7 @@ function NormalPost(props) {
               />
             </div>
             {/*AnotherType*/}
-            <div className="normal-post-info-item">
+            <div className="auction-post-info-item">
               <TextInput
                 disabled={!form.values.productType.some((item) => item === 5)}
                 required="true"
@@ -263,7 +228,7 @@ function NormalPost(props) {
               <div className="currency-input">
                 <NumberInput
                   required="true"
-                  label="Product value"
+                  label="First price"
                   placeholder="Price your product (price only applies for 1 product)"
                   icon={<GiMoneyStack />}
                   min={1000}
@@ -275,13 +240,49 @@ function NormalPost(props) {
                 <p>vnd</p>
               </div>
             </div>
+            <div className="currency-area">
+              <div className="currency-input">
+                <NumberInput
+                  required="true"
+                  label="Step price"
+                  placeholder="Minimum price per step"
+                  icon={<GiMoneyStack />}
+                  min={1000}
+                  hideControls
+                  onChange={(event) => form.setFieldValue("stepCost", event)}
+                />
+              </div>
+              <div className="currency-unit">
+                <p>vnd</p>
+              </div>
+            </div>
+            <div className="auction-post-datetime-area">
+              <div className="auction-post-datetime-label">
+                <p style={{ fontSize: 14, color: "#212529" }}>Auction starts at</p>
+                <p style={{ fontSize: 14, width: 11.36, color: "#F03E3E", marginLeft: 3 }}>*</p>
+              </div>
+              <div className="auction-post-datetime-input">
+                <DateTimePicker
+                  className="auction-post-datetime-input"
+                  required="true"
+                  disableClock="false"
+                  onChange={onChange}
+                  value={value}
+                />
+              </div>
+              <div style={{ width: 920 }}>
+                <p style={{ opacity: 1 }} className="auction-post-datetime-error">
+                  Please select the valid datetime conduct an auction
+                </p>
+              </div>
+            </div>
           </div>
-          <div className="normal-post-img-area">
-            <div className="add-img-normal-post">
-              <div className="add-img-normal-post-label">
+          <div className="auction-post-img-area">
+            <div className="add-img-auction-post">
+              <div className="add-img-auction-post-label">
                 <p style={{ fontSize: 14, color: "#212529" }}>Add product images</p>
                 <p style={{ fontSize: 14, width: 11.36, color: "#F03E3E", marginLeft: 3 }}>*</p>
-                <div className="add-img-normal-post-toolTips-icon">
+                <div className="add-img-auction-post-toolTips-icon">
                   <Tooltip
                     wrapLines
                     width={300}
@@ -296,7 +297,7 @@ function NormalPost(props) {
                   </Tooltip>
                 </div>
               </div>
-              <div {...getRootProps({ className: "add-img-normal-post-dropZone" })}>
+              <div {...getRootProps({ className: "add-img-auction-post-dropZone" })}>
                 <input {...getInputProps()} />
                 <p>
                   Drag 'n' drop here ,or click to select some images. Only accept .jpg/.jpeg/.png
@@ -305,27 +306,27 @@ function NormalPost(props) {
               </div>
               <p
                 style={{ opacity: opacityAddImgError }}
-                className="add-img-normal-post-dropZone-error"
+                className="add-img-auction-post-dropZone-error"
               >
                 Please provide a minimum of 4 images or a maximum of 8 images
               </p>
             </div>
-            <div className="normal-post-show-img-list-div">
+            <div className="auction-post-show-img-list-div">
               {imgListUrl?.map((item) => (
-                <div key={item.index} className="normal-post-show-img-list-div-item">
+                <div key={item.index} className="auction-post-show-img-list-div-item">
                   <img src={item.imgUrl}></img>
-                  <div className="normal-post-show-img-list-background">
+                  <div className="auction-post-show-img-list-background">
                     <p></p>
                   </div>
                   <div
                     onClick={() => showImg(item.imgUrl)}
-                    className="normal-post-show-img-list-view-button"
+                    className="auction-post-show-img-list-view-button"
                   >
                     <RiEyeLine />
                   </div>
                   <div
                     onClick={() => removeImg(item.index)}
-                    className="normal-post-show-img-list-delete-button"
+                    className="auction-post-show-img-list-delete-button"
                   >
                     <IoCloseSharp />
                   </div>
@@ -334,8 +335,8 @@ function NormalPost(props) {
             </div>
           </div>
         </div>
-        <div className="normal-post-description-div">
-          <div className="normal-post-description-label-div">
+        <div className="auction-post-description-div">
+          <div className="auction-post-description-label-div">
             <p style={{ fontSize: 14, color: "#212529" }}>Description</p>
             <p style={{ fontSize: 14, width: 11.36, color: "#F03E3E", marginLeft: 3 }}>*</p>
           </div>
@@ -364,7 +365,7 @@ function NormalPost(props) {
             />
           </div>
           <div style={{ width: 920 }}>
-            <p style={{ opacity: opacityDescription }} className="normal-post-description-error">
+            <p style={{ opacity: opacityDescription }} className="auction-post-description-error">
               Please describe your product
             </p>
           </div>
@@ -378,16 +379,16 @@ function NormalPost(props) {
       </form>
       {opened === true && (
         <div>
-          <div className="normal-post-modal-background">
+          <div className="auction-post-modal-background">
             <p></p>
           </div>
           <div
-            className="normal-post-modal"
+            className="auction-post-modal"
             onClick={() => {
               setOpened(false);
             }}
           >
-            <img className="normal-post-img-modal" src={modalImg}></img>
+            <img className="auction-post-img-modal" src={modalImg}></img>
           </div>
         </div>
       )}
@@ -395,4 +396,4 @@ function NormalPost(props) {
   );
 }
 
-export default NormalPost;
+export default AuctionPost;

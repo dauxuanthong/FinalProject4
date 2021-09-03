@@ -5,6 +5,7 @@ import { BsFilePost } from "react-icons/bs";
 import { RiAuctionLine } from "react-icons/ri";
 import NormalPost from "./PostType/NormalPost";
 import postApi from "../../API/postApi";
+import AuctionPost from "./PostType/AuctionPost";
 function Post(props) {
   //STATE
   const [types, setTypes] = useState([]);
@@ -42,7 +43,7 @@ function Post(props) {
             <NormalPost types={types} />
           </Tab>
           <Tab label="Auction Post" icon={<RiAuctionLine />}>
-            Auction Post
+            <AuctionPost types={types} />
           </Tab>
         </Tabs>
       </div>
