@@ -39,6 +39,7 @@ function AuctionPost(props) {
   const [modalImg, setModalImg] = useState("");
   const [description, setDescription] = useState("");
   const [opacityDescription, setOpacityDescription] = useState(0);
+  const [datetime, setDatetime] = useState(new Date());
 
   //USE-FORM
   const form = useForm({
@@ -48,7 +49,7 @@ function AuctionPost(props) {
       typeDetail: "",
       productQuantity: 1,
       cost: 1000,
-      stepCost: 1000,
+      stepPrice: 1000,
     },
     validationRules: {
       productName: (value) => value.trim().length >= 1 && value.trim().length <= 50,
@@ -78,8 +79,8 @@ function AuctionPost(props) {
   );
 
   //DATETIME-PICKER
-  console.log(Date().toLocaleString());
-  const [value, onChange] = useState(new Date());
+  const currentDatetime = Date().toLocaleString();
+  const current = { Date: new Date() };
 
   //DROP-ZONE
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
@@ -126,6 +127,22 @@ function AuctionPost(props) {
     }
     if (errCount > 0) {
       return;
+    }
+    try {
+      const data = {
+        productName: value.productName,
+        productType: value.productType,
+        typeDetail: value.productType.some((item) => item === 5) ? value.typeDetail : "",
+        productQuantity: value.productQuantity,
+        productPrice: value.cost.toString(),
+        imgListFile: imgListFile,
+        description: description,
+        stepPrice: value.stepPrice.toString(),
+        auctionDatetime: datetime,
+      };
+      console.log(data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -249,13 +266,14 @@ function AuctionPost(props) {
                   icon={<GiMoneyStack />}
                   min={1000}
                   hideControls
-                  onChange={(event) => form.setFieldValue("stepCost", event)}
+                  onChange={(event) => form.setFieldValue("stepPrice", event)}
                 />
               </div>
               <div className="currency-unit">
                 <p>vnd</p>
               </div>
             </div>
+            {/* DATETIME */}
             <div className="auction-post-datetime-area">
               <div className="auction-post-datetime-label">
                 <p style={{ fontSize: 14, color: "#212529" }}>Auction starts at</p>
@@ -264,16 +282,14 @@ function AuctionPost(props) {
               <div className="auction-post-datetime-input">
                 <DateTimePicker
                   className="auction-post-datetime-input"
-                  required="true"
-                  disableClock="false"
-                  onChange={onChange}
-                  value={value}
+                  required={true}
+                  disableClock={false}
+                  onChange={setDatetime}
+                  value={datetime}
                 />
               </div>
-              <div style={{ width: 920 }}>
-                <p style={{ opacity: 1 }} className="auction-post-datetime-error">
-                  Please select the valid datetime conduct an auction
-                </p>
+              <div style={{ width: 920, height: 50 }}>
+                <p></p>
               </div>
             </div>
           </div>

@@ -61,11 +61,6 @@
   flex-wrap: nowrap;
   justify-content: flex-start;
 }
-.auction-post-datetime-error {
-  margin-top: 5px;
-  font-size: 13px;
-  color: #f03e3e;
-}
 
 .auction-post-datetime-input {
   width: 440px;
@@ -138,7 +133,7 @@
 
 .auction-post-show-img-list-div {
   width: 440px;
-  height: 310px;
+  height: 485.5px;
   border: solid 1px;
   border-color: rgb(206, 212, 218);
   border-radius: 4px;

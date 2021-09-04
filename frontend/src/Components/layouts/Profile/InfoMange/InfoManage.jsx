@@ -109,7 +109,7 @@ function InfoManage(props) {
           autoClose: 10000,
         });
       }
-      // return (window.location = "/profile");
+      return (window.location = "/profile");
     } catch (error) {
       console.log(error);
     }
