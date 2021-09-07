@@ -36,6 +36,7 @@ model User {
   token Token?
   setting Setting?
   post Post[]
+  auctionPost AuctionPost[]
 }
 
 model Token {
@@ -70,4 +71,19 @@ model Post{
   price String
   imageUrl String[]
   description String
+}
+
+model AuctionPost{
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id])
+  userId String 
+  productName String 
+  typeId Int[]
+  typeDetail String?
+  quantity Int
+  firstPrice String
+  imageUrl String[]
+  description String
+  stepPrice String
+  auctionDatetime String
 }

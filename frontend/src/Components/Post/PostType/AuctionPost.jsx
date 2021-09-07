@@ -78,10 +78,6 @@ function AuctionPost(props) {
     </Tooltip>
   );
 
-  //DATETIME-PICKER
-  const currentDatetime = Date().toLocaleString();
-  const current = { Date: new Date() };
-
   //DROP-ZONE
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: "image/jpeg, image/png, image/jpg",
@@ -128,19 +124,37 @@ function AuctionPost(props) {
     if (errCount > 0) {
       return;
     }
+    let listFile = [];
+    imgListFile.map((item) => {
+      listFile.push(item.imgFile);
+    });
     try {
+      //UPLOAD IMG
+      let formData = new FormData();
+      const listFile = [...imgListFile];
+      listFile.map((item) => {
+        formData.append("listFile", item.imgFile);
+      });
+      const uploadListImgRes = await postApi.normalPostImg(formData);
       const data = {
         productName: value.productName,
         productType: value.productType,
         typeDetail: value.productType.some((item) => item === 5) ? value.typeDetail : "",
         productQuantity: value.productQuantity,
-        productPrice: value.cost.toString(),
-        imgListFile: imgListFile,
+        firstPrice: value.cost.toString(),
+        imgListFile: uploadListImgRes,
         description: description,
         stepPrice: value.stepPrice.toString(),
-        auctionDatetime: datetime,
+        auctionDatetime: datetime.toString(),
       };
-      console.log(data);
+      const uploadAllInfo = await postApi.auctionPostInfo(data);
+      if (uploadAllInfo.successMessage) {
+        return notifications.showNotification({
+          color: "green",
+          title: uploadAllInfo.successMessage,
+          autoClose: 5000,
+        });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -283,7 +297,8 @@ function AuctionPost(props) {
                 <DateTimePicker
                   className="auction-post-datetime-input"
                   required={true}
-                  disableClock={false}
+                  disableClock={true}
+                  minDate={new Date()}
                   onChange={setDatetime}
                   value={datetime}
                 />

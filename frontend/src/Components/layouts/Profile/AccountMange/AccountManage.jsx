@@ -6,7 +6,6 @@ import "./AccountManage.css";
 import userApi from "../../../../API/userApi";
 import { useNotifications } from "@mantine/notifications";
 
-
 function AccountManage(props) {
   //STATE
   const [loading, setLoading] = useState(false);
@@ -31,6 +30,7 @@ function AccountManage(props) {
   //EVENT
   const handleSubmit = async (value) => {
     setLoading(true);
+    console.log(pass);
     try {
       //change account
       const changeAccountRes = await userApi.changeAccount(value);
@@ -50,7 +50,7 @@ function AccountManage(props) {
           title: "Change password status",
           message: changeAccountRes.successMessage,
           autoClose: 3000,
-          icon: <BiChevronDownCircle/>
+          icon: <BiChevronDownCircle />,
         });
       }
     } catch (error) {
@@ -107,7 +107,6 @@ function AccountManage(props) {
             value={form.values.confirmNewPassword}
             onChange={(event) => {
               form.setFieldValue("confirmNewPassword", event.currentTarget.value);
-              setPass(event.currentTarget.value);
             }}
             onFocus={() => form.setFieldError("confirmNewPassword", false)}
             error={form.errors.confirmNewPassword && "Confirm password is not match"}

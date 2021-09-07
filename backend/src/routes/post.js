@@ -20,4 +20,11 @@ router.post(
   postController.normalUploadInfo
 );
 
+// /post/auctionUploadInfo
+// router.post(
+//   "/auctionUploadInfo",
+//   authenticationController.identifyUser,
+//   postController.auctionUploadInfo
+// );
+
 module.exports = router;

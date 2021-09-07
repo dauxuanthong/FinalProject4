@@ -22,6 +22,13 @@ const postApi = {
       withCredentials: true,
     });
   },
+
+  auctionPostInfo: (data) => {
+    const url = "/post/auctionUploadInfo";
+    return axiosClient.post(url, data, {
+      withCredentials: true,
+    });
+  },
 };
 
 export default postApi;

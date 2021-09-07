@@ -139,9 +139,8 @@ function NormalPost(props) {
       listFile.map((item) => {
         formData.append("listFile", item.imgFile);
       });
-      //UPLOAD INFO
       const uploadListImgRes = await postApi.normalPostImg(formData);
-      console.log("uploadListImgRes", uploadListImgRes);
+      //UPLOAD INFO
       const mainData = {
         productName: value.productName,
         productType: value.productType,
