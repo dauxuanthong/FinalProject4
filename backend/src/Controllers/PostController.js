@@ -73,6 +73,30 @@ class PostController {
       console.log(error);
     }
   };
+
+  auctionUploadInfo = async (req, res, next) => {
+    const userId = req.session.userId;
+    // uploadInfo
+    try {
+      await prisma.auctionPost.create({
+        data: {
+          userId: userId,
+          productName: req.body.productName,
+          typeId: req.body.productType,
+          typeDetail: req.body.typeDetail,
+          quantity: req.body.productQuantity,
+          firstPrice: req.body.firstPrice,
+          imageUrl: req.body.imgListFile,
+          description: req.body.description,
+          stepPrice: req.body.stepPrice,
+          auctionDatetime: req.body.auctionDatetime,
+        },
+      });
+      return res.json({ successMessage: "Post successfully" });
+    } catch (error) {
+      return next(error);
+    }
+  };
 }
 
 module.exports = new PostController();

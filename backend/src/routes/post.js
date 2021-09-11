@@ -21,10 +21,10 @@ router.post(
 );
 
 // /post/auctionUploadInfo
-// router.post(
-//   "/auctionUploadInfo",
-//   authenticationController.identifyUser,
-//   postController.auctionUploadInfo
-// );
+router.post(
+  "/auctionUploadInfo",
+  authenticationController.identifyUser,
+  postController.auctionUploadInfo
+);
 
 module.exports = router;
