@@ -1,0 +1,124 @@
+.PostManage-container {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+}
+.PostManage-component {
+  margin-top: 40px;
+  width: 1000px;
+  height: fit-content;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+}
+/****************POSTS ITEM*************************/
+.PostManage-list {
+  border-radius: 10px;
+  background-color: #ffffff;
+  width: 800px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.PostManage-post-list {
+  width: 800px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+}
+
+.PostManage-post-list-item {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: row;
+}
+.PostManage-post-list-item-img {
+  width: 200px;
+  height: 170px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.PostManage-post-list-item-img img {
+  width: 80%;
+  height: 80%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.PostManage-post-list-item-info {
+  width: 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.PostManage-post-list-item-info p {
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-bottom: solid 0.5px rgb(206, 212, 218);
+}
+.PostManage-post-list-item-ellipsis {
+  width: 480px;
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-bottom: solid 0.5px rgb(206, 212, 218);
+}
+
+.PostManage-post-list-item-button {
+  width: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /*  */
+  color: rgb(187, 76, 76);
+}
+.PostManage-post-list-item-button button {
+  width: 90px;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 550;
+  text-align: center;
+  color: whitesmoke;
+  margin: 3px 0 3px 0;
+}
+.PostManage-post-list-item-button button:hover {
+  cursor: pointer;
+}
+/*________________________________________________*/
+
+/****************STATISTIC*************************/
+
+.PostManage-statistic {
+  width: 200px;
+  height: 193px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border-radius: 10px;
+  background-color: #ffffff;
+  position: absolute;
+  top: 0;
+  left: 840px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+}
+.PostManage-statistic-title p {
+  width: 200px;
+  text-align: center;
+  font-size: 18px;
+  color: rgba(20, 61, 150, 0.747);
+  font-weight: 600;
+}
+
+.PostManage-statistic-item p {
+  margin-top: 10px;
+  margin-left: 10px;
+  width: 100%;
+  font-size: 15px;
+}

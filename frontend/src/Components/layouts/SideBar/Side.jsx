@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Side.css";
 import { RiContactsBookUploadLine } from "react-icons/ri";
+import { BsFilePost } from "react-icons/bs";
 import { useHistory } from "react-router-dom";
 
 function Side(props) {
@@ -17,17 +18,32 @@ function Side(props) {
   return (
     <div className="side-container">
       {userStatus === "signIn" ? (
-        <div
-          className="item"
-          onClick={() => {
-            history.push("/post");
-          }}
-        >
-          <div className="icon-item">
-            <RiContactsBookUploadLine style={{ color: "#353d5f" }} />
+        <div>
+          <div
+            className="item"
+            onClick={() => {
+              history.push("/post");
+            }}
+          >
+            <div className="icon-item">
+              <RiContactsBookUploadLine style={{ color: "#353d5f" }} />
+            </div>
+            <div className="description-item-side">
+              <p>New post</p>
+            </div>
           </div>
-          <div className="description-item-side">
-            <p>New post</p>
+          <div
+            className="item"
+            onClick={() => {
+              history.push("/postManage");
+            }}
+          >
+            <div className="icon-item">
+              <BsFilePost style={{ color: "#353d5f" }} />
+            </div>
+            <div className="description-item-side">
+              <p>My post</p>
+            </div>
           </div>
         </div>
       ) : (

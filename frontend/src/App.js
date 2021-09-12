@@ -10,6 +10,7 @@ import userApi from "./API/userApi";
 import Profile from "./Components/layouts/Profile/Profile";
 import PostDetails from "./Components/Post/PostDetail.jsx";
 import Post from "./Components/Post/Post.jsx";
+import PostManage from "./Components/Post/PostManage/PostManage";
 function App() {
   //STATE
   const [updateTK, setUpdateTK] = useState({
@@ -52,12 +53,13 @@ function App() {
           <div className="main-container">
             <Switch>
               <Route exact path="/" component={Home} />
-              <Route exact path="/post" component={Post} />
               <Route exact path="/postDetail" component={PostDetails} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
               {userStatus === "" && <Redirect to="/login" />}
               <Route exact path="/profile" component={Profile} />
+              <Route exact path="/post" component={Post} />
+              <Route exact path="/postManage" component={PostManage} />
             </Switch>
           </div>
         </div>
