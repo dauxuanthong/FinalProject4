@@ -71,6 +71,8 @@ model Post{
   price String
   imageUrl String[]
   description String
+  createAt DateTime @default(now())
+  updateAt DateTime?
 }
 
 model AuctionPost{
@@ -85,5 +87,7 @@ model AuctionPost{
   imageUrl String[]
   description String
   stepPrice String
-  auctionDatetime String
+  auctionDatetime DateTime
+  createAt DateTime @default(now())
+  updateAt DateTime?
 }

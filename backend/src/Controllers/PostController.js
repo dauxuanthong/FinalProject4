@@ -97,6 +97,77 @@ class PostController {
       return next(error);
     }
   };
+
+  getMyPost = async (req, res, next) => {
+    const userId = req.session.userId;
+    try {
+      //get normal post
+      const myNormalPost = await prisma.post.findMany({
+        where: { userId: userId },
+        select: {
+          id: true,
+          productName: true,
+          createAt: true,
+          imageUrl: true,
+        },
+      });
+
+      const myNormalPostArr = [];
+      myNormalPost.map((item) => {
+        myNormalPostArr.push({
+          postId: item.id,
+          productName: item.productName,
+          postType: "Post",
+          status: "Active",
+          imageUrl: item.imageUrl[0],
+        });
+      });
+
+      //get auction post
+      const myAuctionPost = await prisma.auctionPost.findMany({
+        where: { userId: userId },
+        select: {
+          id: true,
+          productName: true,
+          createAt: true,
+          auctionDatetime: true,
+          imageUrl: true,
+        },
+      });
+
+      const myAuctionPostArr = [];
+      myAuctionPost.map((item) => {
+        myAuctionPostArr.push({
+          postId: item.id,
+          productName: item.productName,
+          postType: "Auction post",
+          imageUrl: item.imageUrl[0],
+          status: item.auctionDatetime > Date.now() ? "Active" : "Expired",
+        });
+      });
+
+      //Sum all post
+      let allPost = myNormalPostArr.concat(myAuctionPostArr);
+      const allMyPost = allPost.sort((a, b) => {
+        return new Date(b.uploadAt) - new Date(a.uploadAt);
+      });
+
+      //Statistic
+      const sumPost = allMyPost.length;
+      const expiredPost = allMyPost.filter((item) => {
+        item.status === "Expired";
+      }).length;
+
+      const statistic = {
+        posts: sumPost,
+        expired: expiredPost,
+      };
+      console.log("PASSED");
+      return res.json({ allMyPost, statistic });
+    } catch (error) {
+      return next(error);
+    }
+  };
 }
 
 module.exports = new PostController();

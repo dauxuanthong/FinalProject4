@@ -29,6 +29,13 @@ const postApi = {
       withCredentials: true,
     });
   },
+
+  getMyPost: (data) => {
+    const url = "/post/myPost";
+    return axiosClient.get(url, {
+      withCredentials: true,
+    });
+  },
 };
 
 export default postApi;

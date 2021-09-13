@@ -145,7 +145,7 @@ function AuctionPost(props) {
         imgListFile: uploadListImgRes,
         description: description,
         stepPrice: value.stepPrice.toString(),
-        auctionDatetime: datetime.toString(),
+        auctionDatetime: datetime,
       };
       const uploadAllInfo = await postApi.auctionPostInfo(data);
       if (uploadAllInfo.successMessage) {
@@ -183,6 +183,7 @@ function AuctionPost(props) {
     setOpacityDescription(0);
   };
 
+  console.log(datetime);
   return (
     <div className="auction-post-container">
       <form onSubmit={form.onSubmit(handleSubmit)}>

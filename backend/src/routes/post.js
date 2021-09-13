@@ -27,4 +27,6 @@ router.post(
   postController.auctionUploadInfo
 );
 
+router.get("/myPost", authenticationController.identifyUser, postController.getMyPost);
+
 module.exports = router;
