@@ -22,6 +22,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
 }
 .PostManage-post-list {
   width: 800px;
@@ -77,6 +78,7 @@
   align-items: center;
   opacity: 0;
 }
+
 .PostManage-post-list-item:hover .PostManage-post-list-item-button {
   opacity: 1;
 }
@@ -124,4 +126,31 @@
   margin-left: 10px;
   width: 100%;
   font-size: 15px;
+}
+/*_________________________________________*/
+/*****************DELETE Modal***************/
+.delete-modal-div {
+  width: 100%;
+  height: fit-content;
+}
+.delete-modal-div p {
+  font-size: 14px;
+  display: block;
+}
+.delete-modal-button {
+  margin-top: 20px;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.delete-modal-button button {
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 4px;
+  width: 90px;
+  height: 40px;
+  font-size: 14px;
+  color: whitesmoke;
 }

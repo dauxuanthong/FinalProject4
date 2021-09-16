@@ -30,9 +30,15 @@ const postApi = {
     });
   },
 
-  getMyPost: (data) => {
+  getMyPost: () => {
     const url = "/post/myPost";
     return axiosClient.get(url, {
+      withCredentials: true,
+    });
+  },
+  deletePost: (data) => {
+    const url = "/post/delete";
+    return axiosClient.delete(url, data, {
       withCredentials: true,
     });
   },

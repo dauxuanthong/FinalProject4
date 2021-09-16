@@ -120,6 +120,7 @@ class PostController {
           postType: "Post",
           status: "Active",
           imageUrl: item.imageUrl[0],
+          uploadAt: item.createAt,
         });
       });
 
@@ -143,6 +144,7 @@ class PostController {
           postType: "Auction post",
           imageUrl: item.imageUrl[0],
           status: item.auctionDatetime > Date.now() ? "Active" : "Expired",
+          uploadAt: item.createAt,
         });
       });
 
@@ -164,6 +166,22 @@ class PostController {
       };
       console.log("PASSED");
       return res.json({ allMyPost, statistic });
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  delete = async (req, res, next) => {
+    //remove file in folder
+    const files = await prisma.post.findMany({
+      where: { id: req.body.postId },
+      select: { imageUrl: true },
+    });
+    files.imageUrl.map((item) => {
+      let fileName = item.slice(baseUrl.length);
+    });
+    try {
+      return console.log("");
     } catch (error) {
       return next(error);
     }

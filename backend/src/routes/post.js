@@ -27,6 +27,9 @@ router.post(
   postController.auctionUploadInfo
 );
 
+// /post/myPost
 router.get("/myPost", authenticationController.identifyUser, postController.getMyPost);
 
+// /post/delete
+router.delete("/delete", authenticationController.identifyUser, postController.delete);
 module.exports = router;

@@ -3,15 +3,19 @@ import "./PostManage.css";
 import { Divider } from "@mantine/core";
 import LinesEllipsis from "react-lines-ellipsis";
 import postApi from "../../../API/postApi";
+import { Modal } from "@mantine/core";
 
 function PostManage(props) {
   //STATE
   const [statistic, setStatistic] = useState({});
   const [postItem, setPostItem] = useState([]);
+  const [postFocusId, setPostFocusId] = useState(Number);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [productFocusName, setProductFocusName] = useState("");
+  const [postFocusType, setPostFocusType] = useState("");
 
   //USE-EFFECT
   useEffect(() => {
-    console.log("TESTTTTTT");
     const getMyPost = async () => {
       const myPostRes = await postApi.getMyPost();
       setStatistic(myPostRes.statistic);
@@ -21,7 +25,18 @@ function PostManage(props) {
   }, []);
 
   //EVENT
-  const deletePost = () => {};
+  const deletePost = async (data) => {
+    // try {
+    //   await postApi.deletePost(postId);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    // //remove post in state list
+    // const newPostItem = postItem.filter((item) => {
+    //   item.postId != postId;
+    // });
+    // setPostItem(newPostItem);
+  };
   return (
     <div className="PostManage-container">
       <div className="PostManage-component">
@@ -49,7 +64,9 @@ function PostManage(props) {
                     />
                     <p>{`Post type: ${item.postType}`}</p>
                     <p>{`Status: ${item.status}`}</p>
-                    <p>{`Upload at: ${item.uploadAt}`}</p>
+                    <p>{`Upload at: ${new Date(new Date(item.uploadAt))
+                      .toLocaleString()
+                      .replace(",", "")}`}</p>
                   </div>
                   <div className="PostManage-post-list-item-button">
                     <button style={{ backgroundColor: "rgb(86, 173, 133)" }}>Detail</button>
@@ -57,7 +74,10 @@ function PostManage(props) {
                     <button
                       style={{ backgroundColor: "#FF4D4F" }}
                       onClick={() => {
-                        deletePost(item.postId);
+                        setPostFocusId(item.postId);
+                        setDeleteModal(true);
+                        setProductFocusName(item.productName);
+                        setPostFocusType(item.postType);
                       }}
                     >
                       Delete
@@ -79,6 +99,37 @@ function PostManage(props) {
           </div>
         </div>
       </div>
+      {/*Delete modal */}
+      <Modal
+        hideCloseButton
+        opened={deleteModal}
+        onClose={() => setDeleteModal(false)}
+        title="Remove your post!"
+      >
+        <div className="delete-modal-div">
+          <p>Are you sure to delete the post of {productFocusName} product?</p>
+          <div className="delete-modal-button">
+            <button
+              style={{ backgroundColor: "#228BE6" }}
+              onClick={() => {
+                setPostFocusId(0);
+                setDeleteModal(false);
+                setProductFocusName("");
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              style={{ backgroundColor: "#FF4D4F" }}
+              onClick={() => {
+                deletePost({ postFocusId, postFocusType });
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
