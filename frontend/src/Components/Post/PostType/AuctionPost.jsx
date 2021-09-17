@@ -22,6 +22,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import postApi from "../../../API/postApi";
 import PropTypes from "prop-types";
 import DateTimePicker from "react-datetime-picker";
+import { useHistory } from "react-router-dom";
 
 AuctionPost.propTypes = {
   types: PropTypes.array.isRequired,
@@ -62,6 +63,9 @@ function AuctionPost(props) {
       },
     },
   });
+
+  //USE HISTORY
+  const history = useHistory();
 
   //USE-NOTIFICATION
   const notifications = useNotifications();
@@ -129,6 +133,7 @@ function AuctionPost(props) {
       listFile.push(item.imgFile);
     });
     try {
+      console.log("submit");
       //UPLOAD IMG
       let formData = new FormData();
       const listFile = [...imgListFile];
@@ -149,12 +154,13 @@ function AuctionPost(props) {
       };
       const uploadAllInfo = await postApi.auctionPostInfo(data);
       if (uploadAllInfo.successMessage) {
-        return notifications.showNotification({
+        notifications.showNotification({
           color: "green",
           title: uploadAllInfo.successMessage,
           autoClose: 5000,
         });
       }
+      return history.push("/postManage");
     } catch (error) {
       console.log(error);
     }
@@ -183,7 +189,6 @@ function AuctionPost(props) {
     setOpacityDescription(0);
   };
 
-  console.log(datetime);
   return (
     <div className="auction-post-container">
       <form onSubmit={form.onSubmit(handleSubmit)}>

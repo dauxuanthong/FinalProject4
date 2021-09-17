@@ -172,16 +172,38 @@ class PostController {
   };
 
   delete = async (req, res, next) => {
-    //remove file in folder
-    const files = await prisma.post.findMany({
-      where: { id: req.body.postId },
-      select: { imageUrl: true },
-    });
-    files.imageUrl.map((item) => {
-      let fileName = item.slice(baseUrl.length);
-    });
     try {
-      return console.log("");
+      //get file
+      let files = [];
+      if (req.body.postType === "Post") {
+        const fileList = await prisma.post.findUnique({
+          where: { id: req.body.postID },
+          select: { imageUrl: true },
+        });
+        files = fileList.imageUrl;
+      } else {
+        const fileList = await prisma.auctionPost.findUnique({
+          where: { id: req.body.postID },
+          select: { imageUrl: true },
+        });
+        files = fileList.imageUrl;
+      }
+      //delete file
+      files.map((item) => {
+        const fileName = __basedir + "/public" + item.slice(baseUrl.length);
+        fs.unlinkSync(fileName);
+      });
+      //delete post
+      if (req.body.postType === "Post") {
+        await prisma.post.delete({
+          where: { id: req.body.postID },
+        });
+      } else {
+        await prisma.auctionPost.delete({
+          where: { id: req.body.postID },
+        });
+      }
+      return res.sendStatus(200);
     } catch (error) {
       return next(error);
     }

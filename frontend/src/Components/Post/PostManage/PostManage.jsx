@@ -25,17 +25,40 @@ function PostManage(props) {
   }, []);
 
   //EVENT
-  const deletePost = async (data) => {
-    // try {
-    //   await postApi.deletePost(postId);
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    // //remove post in state list
-    // const newPostItem = postItem.filter((item) => {
-    //   item.postId != postId;
-    // });
-    // setPostItem(newPostItem);
+  const deletePost = async () => {
+    try {
+      const data = {
+        postID: postFocusId,
+        postType: postFocusType,
+      };
+      const deletePostRes = await postApi.deletePost({ data });
+      console.log(deletePostRes);
+      console.log(typeof deletePostRes);
+      if (deletePostRes === "OK") {
+        //remove post in state list
+        const newPostItem = postItem.filter((item) => item.postId != postFocusId);
+        setPostItem(newPostItem);
+        //update statistic
+        const postFocus = postItem.find((item) => item.postId == postFocusId);
+        console.log(postFocus);
+        if (postFocus?.status === "Expired") {
+          console.log("Expired");
+          setStatistic({
+            posts: statistic.posts - 1,
+            expired: statistic.expired - 1 == 0 ? 0 : statistic.expired - 1,
+          });
+        } else {
+          console.log("Active");
+          setStatistic({
+            posts: statistic.posts - 1,
+            expired: statistic.expired,
+          });
+        }
+      }
+      setDeleteModal(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="PostManage-container">
@@ -122,7 +145,7 @@ function PostManage(props) {
             <button
               style={{ backgroundColor: "#FF4D4F" }}
               onClick={() => {
-                deletePost({ postFocusId, postFocusType });
+                deletePost();
               }}
             >
               Delete

@@ -154,3 +154,7 @@
   font-size: 14px;
   color: whitesmoke;
 }
+
+.delete-modal-button button:hover {
+  cursor: pointer;
+}

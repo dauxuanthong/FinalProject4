@@ -21,6 +21,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import { Editor } from "@tinymce/tinymce-react";
 import postApi from "../../../API/postApi";
 import PropTypes from "prop-types";
+import { useHistory } from "react-router-dom";
 
 NormalPost.propTypes = {
   types: PropTypes.array.isRequired,
@@ -59,6 +60,9 @@ function NormalPost(props) {
       },
     },
   });
+
+  //USE HISTORY
+  const history = useHistory();
 
   //USE-NOTIFICATION
   const notifications = useNotifications();
@@ -122,16 +126,6 @@ function NormalPost(props) {
     imgListFile.map((item) => {
       listFile.push(item.imgFile);
     });
-    // const data = {
-    //   productName: value.productName,
-    //   productType: value.productType,
-    //   typeDetail: value.productType.some((item) => item === 5) ? value.typeDetail : "",
-    //   productQuantity: value.productQuantity,
-    //   productPrice: value.cost,
-    //   imgListFile: listFile,
-    //   description: description,
-    // };
-    // console.log(data);
     try {
       //UPLOAD IMG
       let formData = new FormData();
@@ -152,12 +146,13 @@ function NormalPost(props) {
       };
       const uploadAllInfo = await postApi.normalPostInfo(mainData);
       if (uploadAllInfo.successMessage) {
-        return notifications.showNotification({
+        notifications.showNotification({
           color: "green",
           title: uploadAllInfo.successMessage,
           autoClose: 5000,
         });
       }
+      return history.push("/postManage");
     } catch (error) {
       console.log(error);
     }
