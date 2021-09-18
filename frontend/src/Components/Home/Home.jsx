@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Home.css";
 import { Grid, Col } from "@mantine/core";
 import LinesEllipsis from "react-lines-ellipsis";
 import { Divider } from "@mantine/core";
+import postApi from "../../API/postApi";
 
 function Home(props) {
+  //USE-STATE
+  const [allPost, setAllPost] = useState({});
+  const [auctionPost, setAuctionPost] = useState({});
+  //USE-EFFECT
+  useEffect(() => {
+    const getAllPost = async () => {
+      const getAllPostRes = await postApi.getAllPost();
+      setAllPost(getAllPostRes.allNormalPost);
+      setAuctionPost(getAllPostRes.allAuctionPost);
+    };
+    getAllPost();
+  }, []);
+
   return (
     <div className="home-container">
       {/*header home page*/}
@@ -48,74 +62,46 @@ function Home(props) {
         <div className="new-product-div">
           <div className="new-product-title">NEW PRODUCT</div>
           <div className="new-product-item-div">
-            <Grid justify="space-between" gutter={10} columns={25} style={{ margin: 0 }}>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card">
-                  <div className="new-product-card-content">
-                    <img src="https://i.natgeofe.com/n/3861de2a-04e6-45fd-aec8-02e7809f9d4e/02-cat-training-NationalGeographic_1484324.jpg"></img>
-                    <LinesEllipsis
-                      className="new-product-card-content-ellipsis"
-                      text="Product name Product name Product name Product name Product name"
-                      maxLine="2"
-                      ellipsis="..."
-                      trimRight
-                      basedOn="letters"
-                    />
-                    <div className="new-product-card-content-bottom">
-                      <p style={{ fontSize: 20, fontWeight: 560 }}>100.000.000</p>
-                      <p style={{ fontSize: 15, marginLeft: 2 }}>vnd</p>
-                    </div>
+            {allPost.length ? (
+              <Grid justify="space-between" gutter={10} columns={25} style={{ margin: 0 }}>
+                {allPost?.map((item) => (
+                  <div key={item.id}>
+                    <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
+                      <div className="new-product-card">
+                        <div className="new-product-card-content">
+                          <img src="https://i.natgeofe.com/n/3861de2a-04e6-45fd-aec8-02e7809f9d4e/02-cat-training-NationalGeographic_1484324.jpg"></img>
+                          <LinesEllipsis
+                            className="new-product-card-content-ellipsis"
+                            text={item.productName}
+                            maxLine="2"
+                            ellipsis="..."
+                            trimRight
+                            basedOn="letters"
+                          />
+                          <div className="new-product-card-content-bottom">
+                            <p style={{ fontSize: 20, fontWeight: 560 }}>
+                              {new Intl.NumberFormat("vi", {
+                                style: "currency",
+                                currency: "VND",
+                              })
+                                .format(item.price)
+                                .split("₫")}
+                            </p>
+                            <p style={{ fontSize: 15 }}>₫</p>
+                          </div>
+                        </div>
+                        <div className="new-product-card-button">
+                          <button>Contact</button>
+                          <button>Detail</button>
+                        </div>
+                      </div>
+                    </Col>
                   </div>
-                  <div className="new-product-card-button">
-                    <button>Contact</button>
-                    <button>Detail</button>
-                  </div>
-                </div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card"></div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card">
-                  <p></p>
-                </div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card">
-                  <p></p>
-                </div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card">
-                  <p></p>
-                </div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card">
-                  <p></p>
-                </div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card">
-                  <p></p>
-                </div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card">
-                  <p></p>
-                </div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card">
-                  <p></p>
-                </div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card">
-                  <p></p>
-                </div>
-              </Col>
-            </Grid>
+                ))}
+              </Grid>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>
@@ -132,90 +118,74 @@ function Home(props) {
         <div className="new-product-div">
           <div className="new-product-title">AUCTION PRODUCT</div>
           <div className="new-product-item-div">
-            <Grid justify="space-between" gutter={10} columns={25} style={{ margin: 0 }}>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="auction-product-card">
-                  <div className="new-product-card-content">
-                    <img src="https://i.natgeofe.com/n/3861de2a-04e6-45fd-aec8-02e7809f9d4e/02-cat-training-NationalGeographic_1484324.jpg"></img>
-                    <LinesEllipsis
-                      className="auction-product-card-content-ellipsis"
-                      text="Product name Product name Product name Product name Product name"
-                      maxLine="2"
-                      ellipsis="..."
-                      trimRight
-                      basedOn="letters"
-                    />
-                    <div className="auction-product-card-content-bottom">
-                      <p className="auction-product-card-content-title">Auction at</p>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "flex-end",
-                          height: "fit-content",
-                        }}
-                      >
-                        <p style={{ fontSize: 16, fontWeight: 560 }}>12/02/1975</p>
-                        <p style={{ fontSize: 14, marginLeft: 5, paddingBottom: 1 }}>12h15m</p>
+            {auctionPost.length ? (
+              <Grid justify="space-between" gutter={10} columns={25} style={{ margin: 0 }}>
+                {auctionPost.map((item) => (
+                  <div key={item.id}>
+                    <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
+                      <div className="auction-product-card">
+                        <div className="new-product-card-content">
+                          <img src="https://i.natgeofe.com/n/3861de2a-04e6-45fd-aec8-02e7809f9d4e/02-cat-training-NationalGeographic_1484324.jpg"></img>
+                          <LinesEllipsis
+                            className="auction-product-card-content-ellipsis"
+                            text={item.productName}
+                            maxLine="2"
+                            ellipsis="..."
+                            trimRight
+                            basedOn="letters"
+                          />
+                          <div className="auction-product-card-content-bottom">
+                            <p className="auction-product-card-content-title">Auction at</p>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                alignItems: "flex-end",
+                                height: "fit-content",
+                              }}
+                            >
+                              <p style={{ fontSize: 16, fontWeight: 560 }}>
+                                {
+                                  new Date(new Date(item.auctionDatetime))
+                                    .toLocaleString()
+                                    .split(",")[0]
+                                }
+                              </p>
+                              <p style={{ fontSize: 14, marginLeft: 5, paddingBottom: 0.5 }}>
+                                {
+                                  new Date(new Date(item.auctionDatetime))
+                                    .toLocaleString()
+                                    .split(",")[1]
+                                }
+                              </p>
+                            </div>
+                            <p className="auction-product-card-content-title">First price</p>
+                            <div className="auction-product-card-content-price">
+                              <p style={{ fontSize: 20, fontWeight: 560 }}>
+                                {new Intl.NumberFormat("vi", {
+                                  style: "currency",
+                                  currency: "VND",
+                                })
+                                  .format(item.firstPrice)
+                                  .split("₫")}
+                              </p>
+                              <p style={{ fontSize: 15 }}>₫</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="auction-product-card-button">
+                          <button>Contact</button>
+                          <button>Detail</button>
+                          <button>Bet</button>
+                        </div>
                       </div>
-                      <p className="auction-product-card-content-title">First price</p>
-                      <div className="auction-product-card-content-price">
-                        <p style={{ fontSize: 20, fontWeight: 560 }}>100.000.000</p>
-                        <p style={{ fontSize: 15, marginLeft: 2 }}>vnd</p>
-                      </div>
-                    </div>
+                    </Col>
                   </div>
-                  <div className="auction-product-card-button">
-                    <button>Contact</button>
-                    <button>Detail</button>
-                    <button>Bet</button>
-                  </div>
-                </div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card"></div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card">
-                  <p></p>
-                </div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card">
-                  <p></p>
-                </div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card">
-                  <p></p>
-                </div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card">
-                  <p></p>
-                </div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card">
-                  <p></p>
-                </div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card">
-                  <p></p>
-                </div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card">
-                  <p></p>
-                </div>
-              </Col>
-              <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
-                <div className="new-product-card">
-                  <p></p>
-                </div>
-              </Col>
-            </Grid>
+                ))}
+              </Grid>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>

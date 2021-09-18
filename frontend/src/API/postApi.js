@@ -36,11 +36,17 @@ const postApi = {
       withCredentials: true,
     });
   },
+
   deletePost: (data) => {
     const url = "/post/delete";
     return axiosClient.delete(url, data, {
       withCredentials: true,
     });
+  },
+
+  getAllPost: () => {
+    const url = "/post/allPost";
+    return axiosClient.get(url);
   },
 };
 

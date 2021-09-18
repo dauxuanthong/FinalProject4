@@ -11,6 +11,7 @@ import Profile from "./Components/layouts/Profile/Profile";
 import PostDetails from "./Components/Post/PostDetail.jsx";
 import Post from "./Components/Post/Post.jsx";
 import PostManage from "./Components/Post/PostManage/PostManage";
+import Conversation from "./Components/Conversation/Conversation";
 function App() {
   //STATE
   const [updateTK, setUpdateTK] = useState({
@@ -60,6 +61,7 @@ function App() {
               <Route exact path="/profile" component={Profile} />
               <Route exact path="/post" component={Post} />
               <Route exact path="/postManage" component={PostManage} />
+              <Route exact path="/Message" component={Conversation} />
             </Switch>
           </div>
         </div>

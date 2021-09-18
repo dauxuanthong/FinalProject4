@@ -3,7 +3,7 @@ import "./Side.css";
 import { RiContactsBookUploadLine } from "react-icons/ri";
 import { BsFilePost } from "react-icons/bs";
 import { useHistory } from "react-router-dom";
-
+import { IoChatboxEllipsesOutline } from "react-icons/io5";
 function Side(props) {
   //STATE
   const [userStatus, setUserStatus] = useState();
@@ -43,6 +43,19 @@ function Side(props) {
             </div>
             <div className="description-item-side">
               <p>My post</p>
+            </div>
+          </div>
+          <div
+            className="item"
+            onClick={() => {
+              history.push("/message");
+            }}
+          >
+            <div className="icon-item">
+              <IoChatboxEllipsesOutline style={{ color: "#353d5f" }} />
+            </div>
+            <div className="description-item-side">
+              <p>Message</p>
             </div>
           </div>
         </div>

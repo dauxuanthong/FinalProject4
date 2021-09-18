@@ -208,6 +208,35 @@ class PostController {
       return next(error);
     }
   };
+
+  getAllPost = async (req, res, next) => {
+    try {
+      //Normal post
+      const allNormalPost = await prisma.post.findMany({
+        take: 20,
+        select: {
+          id: true,
+          productName: true,
+          price: true,
+        },
+        orderBy: { createAt: "desc" },
+      });
+      //Auction post
+      const allAuctionPost = await prisma.auctionPost.findMany({
+        take: 20,
+        select: {
+          id: true,
+          productName: true,
+          firstPrice: true,
+          auctionDatetime: true,
+        },
+        orderBy: { createAt: "desc" },
+      });
+      return res.json({ allNormalPost, allAuctionPost });
+    } catch (error) {
+      return next(error);
+    }
+  };
 }
 
 module.exports = new PostController();
