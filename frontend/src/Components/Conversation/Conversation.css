@@ -9,13 +9,15 @@
   min-width: fit-content;
   height: 100%;
   display: flex;
-  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 .conversation-detail-container {
   height: 100%;
   width: 55%;
   min-width: 500px;
-  background-color: rgb(233, 151, 151);
+  display: flex;
+  justify-content: center;
 }
 .conversation-media-container {
   width: 25%;
