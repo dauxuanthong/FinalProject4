@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const postController = require("../Controllers/PostController");
 const authenticationController = require("../Controllers/AuthenticateController");
-const PostController = require("../Controllers/PostController");
 
 //post/getType
 router.get("/getType", authenticationController.identifyUser, postController.getType);
@@ -32,7 +31,7 @@ router.post(
 router.get("/myPost", authenticationController.identifyUser, postController.getMyPost);
 
 // /post/allPost
-router.get("/allPost", PostController.getAllPost);
+router.get("/allPost", postController.getAllPost);
 
 // /post/delete
 router.delete("/delete", authenticationController.identifyUser, postController.delete);

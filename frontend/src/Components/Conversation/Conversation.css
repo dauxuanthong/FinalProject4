@@ -19,6 +19,23 @@
   display: flex;
   justify-content: center;
 }
+.null-conversation-detail {
+  margin-top: 20px;
+  width: 95%;
+  height: 690px;
+  background-color: white;
+  box-shadow: rgba(151, 150, 150, 0.1) 0px 10px 50px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+}
+.null-conversation-detail p {
+  margin-top: 100px;
+  font-size: 20px;
+  opacity: 0.7;
+  color: #6e85ad;
+}
+
 .conversation-media-container {
   width: 25%;
   min-width: fit-content;

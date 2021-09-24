@@ -4,6 +4,8 @@ import { Grid, Col } from "@mantine/core";
 import LinesEllipsis from "react-lines-ellipsis";
 import { Divider } from "@mantine/core";
 import postApi from "../../API/postApi";
+import conversationApi from "../../API/conversationApi";
+import { useNotifications } from "@mantine/notifications";
 
 function Home(props) {
   //USE-STATE
@@ -19,6 +21,30 @@ function Home(props) {
     getAllPost();
   }, []);
 
+  //USE-NOTIFICATION
+  const notifications = useNotifications();
+
+  //Event
+  const contact = async (id, type) => {
+    const data = {
+      postId: id,
+      postType: type,
+    };
+    try {
+      const contactRes = await conversationApi.contact(data);
+      if (contactRes.message === "duplicated userId") {
+        return notifications.showNotification({
+          color: "red",
+          title: "This post belong to you",
+          message: `you can't contact with yourself!`,
+          autoClose: 3000,
+        });
+      }
+      console.log(contactRes);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="home-container">
       {/*header home page*/}
@@ -69,7 +95,7 @@ function Home(props) {
                     <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
                       <div className="new-product-card">
                         <div className="new-product-card-content">
-                          <img src="https://i.natgeofe.com/n/3861de2a-04e6-45fd-aec8-02e7809f9d4e/02-cat-training-NationalGeographic_1484324.jpg"></img>
+                          <img src={item.imageUrl[0]}></img>
                           <LinesEllipsis
                             className="new-product-card-content-ellipsis"
                             text={item.productName}
@@ -91,7 +117,13 @@ function Home(props) {
                           </div>
                         </div>
                         <div className="new-product-card-button">
-                          <button>Contact</button>
+                          <button
+                            onClick={() => {
+                              contact(item.id, "Post");
+                            }}
+                          >
+                            Contact
+                          </button>
                           <button>Detail</button>
                         </div>
                       </div>
@@ -125,7 +157,7 @@ function Home(props) {
                     <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
                       <div className="auction-product-card">
                         <div className="new-product-card-content">
-                          <img src="https://i.natgeofe.com/n/3861de2a-04e6-45fd-aec8-02e7809f9d4e/02-cat-training-NationalGeographic_1484324.jpg"></img>
+                          <img src={item.imageUrl[0]}></img>
                           <LinesEllipsis
                             className="auction-product-card-content-ellipsis"
                             text={item.productName}
@@ -174,7 +206,13 @@ function Home(props) {
                           </div>
                         </div>
                         <div className="auction-product-card-button">
-                          <button>Contact</button>
+                          <button
+                            onClick={() => {
+                              contact(item.id, "Auction");
+                            }}
+                          >
+                            Contact
+                          </button>
                           <button>Detail</button>
                           <button>Bet</button>
                         </div>

@@ -25,6 +25,7 @@
   font-size: 16px;
   font-weight: 550;
 }
+
 /*__________________________________________________*/
 /*******************MESSAGE**************************/
 .DetailConversation-message-div {
@@ -36,19 +37,75 @@
   align-items: center;
   flex-wrap: nowrap;
 }
+
 /*********************DISPLAY-MESSAGE***************************/
 .DetailConversation-display-message {
   width: 100%;
   height: fit-content;
   overflow-y: auto;
+  padding: 10px 20px 10px 20px;
+  margin-bottom: 10px;
+}
+.DetailConversation-display-message::-webkit-scrollbar {
+  width: 4px;
+}
+.DetailConversation-display-message::-webkit-scrollbar-track {
+  background: rgb(201, 186, 216);
+  border-radius: 10px;
+}
+.DetailConversation-display-message::-webkit-scrollbar-thumb {
+  background: rgb(8, 63, 146);
+  border-radius: 10px;
 }
 
-/*********************TEXT***************************/
+.DetailConversation-display-message-item-div {
+  width: 100%;
+  display: flex;
+  margin-top: 5px;
+}
+.DetailConversation-display-message-item {
+  width: fit-content;
+  height: fit-content;
+  min-width: 11px;
+  border-radius: 10px;
+  background-color: #89a1ca;
+  padding: 6px 10px 6px 10px;
+  max-width: 350px;
+}
+
+.DetailConversation-display-message-item p {
+  font-size: 14px;
+  color: white;
+}
+
+/*********************SEND-MESSAGE***************************/
 .DetailConversation-send-message {
-  width: 90%;
+  width: 95%;
   height: fit-content;
   display: flex;
   flex-wrap: nowrap;
+  justify-content: space-between;
+  border-radius: 10px;
+  background-color: blue;
+  padding: 5px 5px 5px 5px;
+  margin-bottom: 15px;
+}
+
+.DetailConversation-send-message-textarea-root {
+  width: 93.5%;
+  height: fit-content;
+  padding: 0 0 0 0;
+}
+.DetailConversation-send-message-textarea-root div {
+  width: 100%;
+  height: fit-content;
+}
+.DetailConversation-send-message-textarea-input {
+  height: fit-content;
+}
+
+.DetailConversation-send-message-textarea-input::-webkit-scrollbar {
+  display: none;
 }
 
 .DetailConversation-send-message button {

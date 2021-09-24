@@ -218,6 +218,7 @@ class PostController {
           id: true,
           productName: true,
           price: true,
+          imageUrl: true,
         },
         orderBy: { createAt: "desc" },
       });
@@ -229,6 +230,7 @@ class PostController {
           productName: true,
           firstPrice: true,
           auctionDatetime: true,
+          imageUrl: true,
         },
         orderBy: { createAt: "desc" },
       });

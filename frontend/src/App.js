@@ -62,6 +62,7 @@ function App() {
               <Route exact path="/post" component={Post} />
               <Route exact path="/postManage" component={PostManage} />
               <Route exact path="/Message" component={Conversation} />
+              <Route exact path="/Message/:conversationId" component={Conversation} />
             </Switch>
           </div>
         </div>

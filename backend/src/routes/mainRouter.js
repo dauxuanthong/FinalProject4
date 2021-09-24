@@ -1,8 +1,6 @@
 const user = require("./user");
 const post = require("./post");
-// const auth = require("./auth");
-// const post = require("./post");
-// const messenger = require("./messenger");
+const conversation = require("./conversation");
 
 function router(app) {
   // /user
@@ -10,5 +8,8 @@ function router(app) {
 
   // /post
   app.use("/post", post);
+
+  // /conversation
+  app.use("/conversation", conversation);
 }
 module.exports = router;

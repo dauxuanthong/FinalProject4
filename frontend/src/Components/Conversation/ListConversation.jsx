@@ -4,9 +4,20 @@ import "./ListConversation.css";
 import { Input } from "@mantine/core";
 import { IoMdSearch } from "react-icons/io";
 import LinesEllipsis from "react-lines-ellipsis";
+import { Avatar } from "@mantine/core";
+import { useHistory } from "react-router";
 
-ListConversation.propTypes = {};
+ListConversation.propTypes = {
+  conversationList: PropTypes.array,
+};
+
 function ListConversation(props) {
+  //PROP
+  const { conversationList } = props;
+  //STATE
+  //USE-history
+  const history = useHistory();
+
   return (
     <>
       <div className="ListConversation-search-input">
@@ -16,90 +27,49 @@ function ListConversation(props) {
         <p style={{ fontSize: 15, fontWeight: 600, color: "#6E85AD" }}>Last contact</p>
       </div>
       <div className="ListConversation-item-div">
-        <div className="ListConversation-item">
-          <img src="https://images.unsplash.com/photo-1615807713086-bfc4975801d0?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8Y2F0JTIwZmFjZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80" />
-          <div className="ListConversation-item-detail">
-            <div>
-              <LinesEllipsis
-                className="ListConversation-LinesEllipsis-userName"
-                text="User 1 "
-                maxLine="1"
-                ellipsis="..."
-                trimRight
-                basedOn="letters"
-              />
+        {conversationList?.map((item) => (
+          <div
+            onClick={() => {
+              history.push(`/Message/${item.conversationId}`);
+            }}
+            className="ListConversation-item"
+            key={item.conversationId}
+          >
+            <Avatar
+              src={item.partnerAvatar}
+              classNames={{
+                image: "ListConversation-item-avatar-image",
+                placeholder: "ListConversation-item-avatar-placeholder",
+              }}
+              size={50}
+            />
+            <div className="ListConversation-item-detail">
+              <div>
+                <LinesEllipsis
+                  className="ListConversation-LinesEllipsis-userName"
+                  text={item.partnerName ? item.partnerName : ""}
+                  maxLine="1"
+                  ellipsis="..."
+                  trimRight
+                  basedOn="letters"
+                />
+              </div>
+              <div>
+                <LinesEllipsis
+                  className="ListConversation-LinesEllipsis-lastMessage"
+                  text={item.lastMessage ? item.lastMessage : "No message"}
+                  maxLine="1"
+                  ellipsis="..."
+                  trimRight
+                  basedOn="letters"
+                />
+              </div>
             </div>
-            <div>
-              <LinesEllipsis
-                className="ListConversation-LinesEllipsis-lastMessage"
-                text="Last message"
-                maxLine="1"
-                ellipsis="..."
-                trimRight
-                basedOn="letters"
-              />
-            </div>
-          </div>
-          <div className="ListConversation-item-dateTime">
-            <p>10:23</p>
-          </div>
-        </div>
-        <div className="ListConversation-item">
-          <img src="https://images.unsplash.com/photo-1615807713086-bfc4975801d0?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8Y2F0JTIwZmFjZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80" />
-          <div className="ListConversation-item-detail">
-            <div>
-              <LinesEllipsis
-                className="ListConversation-LinesEllipsis-userName"
-                text="User 1 "
-                maxLine="1"
-                ellipsis="..."
-                trimRight
-                basedOn="letters"
-              />
-            </div>
-            <div>
-              <LinesEllipsis
-                className="ListConversation-LinesEllipsis-lastMessage"
-                text="Last message"
-                maxLine="1"
-                ellipsis="..."
-                trimRight
-                basedOn="letters"
-              />
+            <div className="ListConversation-item-dateTime">
+              <p>{item.sendAt ? item.sendAt : ""}</p>
             </div>
           </div>
-          <div className="ListConversation-item-dateTime">
-            <p>10:23</p>
-          </div>
-        </div>
-        <div className="ListConversation-item">
-          <img src="https://images.unsplash.com/photo-1615807713086-bfc4975801d0?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8Y2F0JTIwZmFjZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80" />
-          <div className="ListConversation-item-detail">
-            <div>
-              <LinesEllipsis
-                className="ListConversation-LinesEllipsis-userName"
-                text="User 1 "
-                maxLine="1"
-                ellipsis="..."
-                trimRight
-                basedOn="letters"
-              />
-            </div>
-            <div>
-              <LinesEllipsis
-                className="ListConversation-LinesEllipsis-lastMessage"
-                text="Last message"
-                maxLine="1"
-                ellipsis="..."
-                trimRight
-                basedOn="letters"
-              />
-            </div>
-          </div>
-          <div className="ListConversation-item-dateTime">
-            <p>10:23</p>
-          </div>
-        </div>
+        ))}
       </div>
     </>
   );
