@@ -1,54 +1,131 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./Conversation.css";
 import ListConversation from "./ListConversation";
 import DetailConversation from "./DetailConversation";
 import conversationApi from "../../API/conversationApi";
-import { useParams } from "react-router-dom";
+import io from "socket.io-client";
+import { Route } from "react-router";
 
 function Conversation(props) {
   //STATE
-  const [conversationList, setConversationList] = useState([
-    {
-      conversationId: null,
-      partnerName: null,
-      partnerAvatar: null,
-      sender: null,
-      lastMessage: null,
-      sendAt: null,
-    },
-  ]);
-  //USE-PARAMS
-  const { conversationId } = useParams();
+  const [conversationList, setConversationList] = useState([]);
+  const [currentUserId, setCurrentUserId] = useState("");
+  const [newMessage, setNewMessage] = useState({});
+  const [newMessageSocket, setNewMessageSocket] = useState({});
+  const [trigger, setTrigger] = useState(0);
+  //USEREF
+  const socket = useRef();
 
   //USE-EFFECT
   useEffect(() => {
     //Get conversation list
     const getMyConversationList = async () => {
       try {
+        //get the conversation list
         const myConversationListRes = await conversationApi.myConversationList();
-        setConversationList(myConversationListRes);
+        //sort the conversation
+        const myConversationSort = myConversationListRes.conversationList.sort((a, b) => {
+          return (
+            new Date(
+              b.conversationDetails.length ? b.conversationDetails[0].createAt : b.createAt
+            ) -
+            new Date(a.conversationDetails.length ? a.conversationDetails[0].createAt : a.createAt)
+          );
+        });
+        setCurrentUserId(myConversationListRes.currentUserId);
+        setConversationList(myConversationSort);
       } catch (error) {
         console.log(error);
       }
     };
     getMyConversationList();
+  }, [trigger]);
+
+  //initial socket
+  useEffect(() => {
+    socket.current = io("ws://localhost:3002");
+    socket.current.on("getMessage", (message) => {
+      setNewMessageSocket(message);
+      setNewMessage(message);
+    });
+    // eslint-disable-next-line
   }, []);
 
+  //New-user
+  useEffect(() => {
+    socket.current.emit("addUser", currentUserId);
+  }, [currentUserId]);
+
+  useEffect(() => {
+    if (!conversationList.length) return;
+    if (!conversationList.some((item) => item.id === newMessageSocket?.conversationId)) {
+      setTrigger(trigger === 0 ? 1 : 0);
+    }
+    updateConversationList(newMessageSocket);
+  }, [newMessageSocket]);
+
   //FUNCTION
+  const updateConversationList = (message) => {
+    //get current conversation Message
+    const currentConversationData = conversationList.find(
+      (item) => item.id === message.conversationId
+    );
+    const newConversationData = {
+      conversationDetails: [
+        {
+          conversationId: message.conversationId,
+          createAt: message.createAt,
+          id: message.id,
+          message: message.message,
+          senderId: message.senderId,
+        },
+      ],
+      createAt: currentConversationData.createAt,
+      id: currentConversationData.id,
+      users: currentConversationData.users,
+    };
+    //delete current conversation Message
+    const newConversationList = conversationList.filter(
+      (item) => item.id !== message.conversationId
+    );
+    //push on top
+    newConversationList.unshift(newConversationData);
+    // setState
+    setConversationList(newConversationList);
+  };
   return (
     <div className="conversation-container">
       <div className="conversation-list-container">
-        <ListConversation conversationList={conversationList} />
+        <ListConversation conversationList={conversationList} currentUserId={currentUserId} />
       </div>
-      <div className="conversation-detail-container">
-        {conversationId ? (
-          <DetailConversation conversationId={parseInt(conversationId)} />
-        ) : (
-          <div className="null-conversation-detail">
-            <p>Select a chat to start texting</p>
+
+      <Route
+        exact
+        path="/Message"
+        render={() => (
+          <div className="conversation-detail-container">
+            <div className="null-conversation-detail">
+              <p>Select a chat to start texting</p>
+            </div>
           </div>
         )}
-      </div>
+      />
+
+      {socket.current && (
+        <Route
+          path="/Message/:conversationId"
+          render={() => (
+            <div className="conversation-detail-container">
+              <DetailConversation
+                updateConversationList={updateConversationList}
+                newMessageProp={newMessage}
+                socket={socket}
+              />
+            </div>
+          )}
+        />
+      )}
+
       <div className="conversation-media-container">media</div>
     </div>
   );

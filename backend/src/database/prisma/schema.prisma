@@ -82,6 +82,7 @@ model Conversations{
   id Int @id @default(autoincrement())
   users String[] @unique
   conversationDetails ConversationDetails[] 
+  createAt DateTime? @default(now())
 }
 
 model ConversationDetails{

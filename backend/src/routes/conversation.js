@@ -12,12 +12,30 @@ router.get(
   authenticationController.identifyUser,
   conversationController.myConversationList
 );
+///conversation/partnerInfo/:id
+router.get(
+  "/partnerInfo/:id",
+  authenticationController.identifyUser,
+  conversationController.getPartnerInfo
+);
 
 //conversation/getConversationDetail/:conversationId`
 router.get(
   "/getConversationDetail/:conversationId",
   authenticationController.identifyUser,
   conversationController.getConversationDetail
+);
+//conversation/sendMessage
+router.post(
+  "/sendMessage",
+  authenticationController.identifyUser,
+  conversationController.sendMessage
+);
+// /conversation/sendImgMessage
+router.post(
+  "/sendImgMessage/:conversationId",
+  authenticationController.identifyUser,
+  conversationController.sendImgMessage
 );
 
 module.exports = router;

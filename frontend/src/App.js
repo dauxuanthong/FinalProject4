@@ -54,15 +54,14 @@ function App() {
           <div className="main-container">
             <Switch>
               <Route exact path="/" component={Home} />
-              <Route exact path="/postDetail" component={PostDetails} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
               {userStatus === "" && <Redirect to="/login" />}
               <Route exact path="/profile" component={Profile} />
               <Route exact path="/post" component={Post} />
               <Route exact path="/postManage" component={PostManage} />
-              <Route exact path="/Message" component={Conversation} />
-              <Route exact path="/Message/:conversationId" component={Conversation} />
+              <Route path="/Message" component={Conversation} />
+              <Route exact path="/postDetail/post/:id" component={PostDetails} />
             </Switch>
           </div>
         </div>

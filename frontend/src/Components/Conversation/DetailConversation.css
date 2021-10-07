@@ -5,6 +5,7 @@
   background-color: white;
   box-shadow: rgba(151, 150, 150, 0.1) 0px 10px 50px;
   border-radius: 10px;
+  position: relative;
 }
 /*************************SEARCH**********************/
 .DetailConversation-info-div {
@@ -47,14 +48,14 @@
   margin-bottom: 10px;
 }
 .DetailConversation-display-message::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
 }
 .DetailConversation-display-message::-webkit-scrollbar-track {
-  background: rgb(201, 186, 216);
+  background: #dff1ffad;
   border-radius: 10px;
 }
 .DetailConversation-display-message::-webkit-scrollbar-thumb {
-  background: rgb(8, 63, 146);
+  background: #a3bae585;
   border-radius: 10px;
 }
 
@@ -67,15 +68,15 @@
   width: fit-content;
   height: fit-content;
   min-width: 11px;
+  min-height: 30px;
   border-radius: 10px;
-  background-color: #89a1ca;
-  padding: 6px 10px 6px 10px;
   max-width: 350px;
 }
 
 .DetailConversation-display-message-item p {
   font-size: 14px;
   color: white;
+  margin: 5px 10px 5px 10px;
 }
 
 /*********************SEND-MESSAGE***************************/
@@ -86,7 +87,7 @@
   flex-wrap: nowrap;
   justify-content: space-between;
   border-radius: 10px;
-  background-color: blue;
+  background-color: #01a39b;
   padding: 5px 5px 5px 5px;
   margin-bottom: 15px;
 }
@@ -104,6 +105,13 @@
   height: fit-content;
 }
 
+.DetailConversation-send-message-textarea-rightSection svg {
+  height: 42px;
+  font-size: 30px;
+  color: #6b6b6b;
+  cursor: pointer;
+}
+
 .DetailConversation-send-message-textarea-input::-webkit-scrollbar {
   display: none;
 }
@@ -116,7 +124,91 @@
   align-items: center;
   font-size: 25px;
   border-radius: 10px;
-  background-color: #89a1ca;
+  background-color: #6ae0b5;
+  color: white;
+  cursor: pointer;
+}
+
+/* Modal */
+.DetailConversation-modal-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.DetailConversation-modal-uploadImg {
+  margin-top: 50px;
+  height: 500px;
+  width: 400px;
+  border-radius: 10px;
+  background-color: #89a0cad3;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  box-shadow: #787879 0px 7px 29px 0px;
+}
+
+.DetailConversation-modal-uploadImg-img-area {
+  margin-top: 25px;
+  margin-bottom: 25px;
+  width: 350px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.DetailConversation-modal-uploadImg-img-area img {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.DetailConversation-modal-uploadImg-img-area div {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 550;
+  color: white;
+  border: 1px dotted white;
+}
+
+.DetailConversation-modal-uploadImg-dropZone {
+  width: 350px;
+  height: 50px;
+  border-radius: 10px;
+  border: dashed 1px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.DetailConversation-modal-uploadImg-dropZone:hover {
+  border: dashed 2px rgba(66, 66, 66, 0.822);
+}
+
+.DetailConversation-modal-uploadImg-button {
+  margin: 25px 0 25px 0;
+  /* padding: 0 25px 0 25px; */
+  width: 350px;
+  height: fit-content;
+  display: flex;
+  justify-content: space-between;
+}
+.DetailConversation-modal-uploadImg-button button {
+  width: 162.5px;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 560;
   color: white;
   cursor: pointer;
 }

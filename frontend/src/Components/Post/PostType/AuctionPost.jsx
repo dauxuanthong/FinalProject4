@@ -1,15 +1,7 @@
 import React, { useState } from "react";
 import "./AuctionPost.css";
 import { useForm } from "@mantine/hooks";
-import {
-  TextInput,
-  Button,
-  Tooltip,
-  MultiSelect,
-  NumberInput,
-  Modal,
-  Overlay,
-} from "@mantine/core";
+import { TextInput, Button, Tooltip, MultiSelect, NumberInput } from "@mantine/core";
 import { BsInfoCircle } from "react-icons/bs";
 import { AiOutlineTags } from "react-icons/ai";
 import { RiProductHuntLine, RiEyeLine } from "react-icons/ri";
@@ -83,7 +75,7 @@ function AuctionPost(props) {
   );
 
   //DROP-ZONE
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     accept: "image/jpeg, image/png, image/jpg",
     onDropAccepted: async (files) => {
       //add file to ImgListFile
@@ -130,7 +122,7 @@ function AuctionPost(props) {
     }
     let listFile = [];
     imgListFile.map((item) => {
-      listFile.push(item.imgFile);
+      return listFile.push(item.imgFile);
     });
     try {
       console.log("submit");
@@ -138,7 +130,7 @@ function AuctionPost(props) {
       let formData = new FormData();
       const listFile = [...imgListFile];
       listFile.map((item) => {
-        formData.append("listFile", item.imgFile);
+        return formData.append("listFile", item.imgFile);
       });
       const uploadListImgRes = await postApi.normalPostImg(formData);
       const data = {
@@ -351,7 +343,7 @@ function AuctionPost(props) {
             <div className="auction-post-show-img-list-div">
               {imgListUrl?.map((item) => (
                 <div key={item.index} className="auction-post-show-img-list-div-item">
-                  <img src={item.imgUrl}></img>
+                  <img src={item.imgUrl} alt="Product"></img>
                   <div className="auction-post-show-img-list-background">
                     <p></p>
                   </div>
@@ -425,7 +417,7 @@ function AuctionPost(props) {
               setOpened(false);
             }}
           >
-            <img className="auction-post-img-modal" src={modalImg}></img>
+            <img className="auction-post-img-modal" src={modalImg} alt="Product"></img>
           </div>
         </div>
       )}

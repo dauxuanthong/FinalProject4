@@ -40,7 +40,9 @@ function Nav(props) {
 
   return (
     <div className="nav-div">
-      <Link className="home-page" to="/"></Link>
+      <Link className="home-page" to="/">
+        SHW
+      </Link>
       {userStatus === "signIn" ? (
         <div className="nav-item-div-sign-in">
           <Menu

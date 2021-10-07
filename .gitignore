@@ -13,11 +13,11 @@ frontend/build
 frontend/.vscode
 frontend/.env
 
-
-
-
 frontend/.DS_Store
 frontend/.env.local
 frontend/.env.development.local
 frontend/.env.test.local
 frontend/.env.production.local
+
+socket/backend/node_modules
+socket/backend/.vscode

@@ -17,7 +17,6 @@ class PostController {
   normalUploadImg = async (req, res) => {
     const userId = req.session.userId;
     try {
-      console.log("pass 1");
       const dir = __basedir + `/public/${userId}`;
       //Check folder is existed and create
       !fs.existsSync(dir) && fs.mkdirSync(dir);
@@ -153,18 +152,21 @@ class PostController {
       const allMyPost = allPost.sort((a, b) => {
         return new Date(b.uploadAt) - new Date(a.uploadAt);
       });
-
+      console.log("allMyPost: ", allMyPost);
       //Statistic
+      allPost.map((item) => {
+        console.log("CAC: ", item.status);
+        console.log("CAC1: ", typeof item.status);
+        console.log(item.status === "Expired");
+      });
       const sumPost = allMyPost.length;
       const expiredPost = allMyPost.filter((item) => {
-        item.status === "Expired";
+        return item.status === "Expired";
       }).length;
-
       const statistic = {
         posts: sumPost,
         expired: expiredPost,
       };
-      console.log("PASSED");
       return res.json({ allMyPost, statistic });
     } catch (error) {
       return next(error);
@@ -235,6 +237,16 @@ class PostController {
         orderBy: { createAt: "desc" },
       });
       return res.json({ allNormalPost, allAuctionPost });
+    } catch (error) {
+      return next(error);
+    }
+  };
+  normalPostDetail = async (req, res, next) => {
+    try {
+      const normalPostDetail = await prisma.post.findUnique({
+        where: { id: parseInt(req.params.postId) },
+      });
+      return res.json(normalPostDetail);
     } catch (error) {
       return next(error);
     }

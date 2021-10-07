@@ -22,6 +22,7 @@ function PostManage(props) {
       setPostItem(myPostRes.allMyPost);
     };
     getMyPost(postItem);
+    // eslint-disable-next-line
   }, []);
 
   //EVENT
@@ -36,16 +37,16 @@ function PostManage(props) {
       console.log(typeof deletePostRes);
       if (deletePostRes === "OK") {
         //remove post in state list
-        const newPostItem = postItem.filter((item) => item.postId != postFocusId);
+        const newPostItem = postItem.filter((item) => item.postId !== postFocusId);
         setPostItem(newPostItem);
         //update statistic
-        const postFocus = postItem.find((item) => item.postId == postFocusId);
+        const postFocus = postItem.find((item) => item.postId === postFocusId);
         console.log(postFocus);
         if (postFocus?.status === "Expired") {
           console.log("Expired");
           setStatistic({
             posts: statistic.posts - 1,
-            expired: statistic.expired - 1 == 0 ? 0 : statistic.expired - 1,
+            expired: statistic.expired - 1 === 0 ? 0 : statistic.expired - 1,
           });
         } else {
           console.log("Active");
@@ -74,7 +75,7 @@ function PostManage(props) {
                 <Divider />
                 <div className="PostManage-post-list-item">
                   <div className="PostManage-post-list-item-img">
-                    <img src={item.imageUrl}></img>
+                    <img src={item.imageUrl} alt="Product"></img>
                   </div>
                   <div className="PostManage-post-list-item-info">
                     <LinesEllipsis

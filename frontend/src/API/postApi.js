@@ -48,6 +48,13 @@ const postApi = {
     const url = "/post/allPost";
     return axiosClient.get(url);
   },
+
+  normalPostDetail: (param) => {
+    const url = `/post/normalPostDetail/${param}`;
+    return axiosClient.get(url, {
+      withCredentials: true,
+    });
+  },
 };
 
 export default postApi;

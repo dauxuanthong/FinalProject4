@@ -35,4 +35,10 @@ router.get("/allPost", postController.getAllPost);
 
 // /post/delete
 router.delete("/delete", authenticationController.identifyUser, postController.delete);
+
+router.get(
+  "/normalPostDetail/:postId",
+  authenticationController.identifyUser,
+  postController.normalPostDetail
+);
 module.exports = router;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import "./DetailConversation.css";
 import { Divider } from "@mantine/core";
@@ -6,9 +6,15 @@ import { IoIosSend } from "react-icons/io";
 import { Textarea } from "@mantine/core";
 import conversationApi from "../../API/conversationApi";
 import { Avatar } from "@mantine/core";
+import { BsImages } from "react-icons/bs";
+import { useParams } from "react-router-dom";
+import { useDropzone } from "react-dropzone";
+import { useNotifications } from "@mantine/notifications";
 
 DetailConversation.propTypes = {
-  conversationId: PropTypes.number,
+  socket: PropTypes.object,
+  updateConversationList: PropTypes.func,
+  newMessageProp: PropTypes.object,
 };
 
 function DetailConversation(props) {
@@ -20,8 +26,21 @@ function DetailConversation(props) {
   });
   const [conversationDetail, setConversationDetail] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [scrollTriggerAuto, setScrollTriggerAuto] = useState(0);
+  const [imageButtonStatus, setImageButtonStatus] = useState(false);
+  const [imgFile, setImgFile] = useState({});
+  const [imgUrl, setImgUrl] = useState("");
   //PROP
-  const { conversationId } = props;
+  const { socket, updateConversationList, newMessageProp } = props;
+
+  //USER-REF
+  const scrollRef = useRef();
+
+  //USE-PARAMS
+  const { conversationId } = useParams();
+
+  //BASE-URL
+  const baseUrl = "http://localhost:3001//";
   //USE-EFFECT
   useEffect(() => {
     try {
@@ -31,17 +50,100 @@ function DetailConversation(props) {
         );
         setPartnerInfo(getConversationDetailRes.partnerInfo);
         setConversationDetail(getConversationDetailRes.conversationDetail);
+        // to myself in future: trigger Scroll for first times contact. Don't delete
+        setScrollTriggerAuto(scrollTriggerAuto === 0 ? 1 : 0);
       };
       getConversationDetail();
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [conversationId]);
+
+  useEffect(() => {
+    if (
+      Object.keys(newMessageProp).length &&
+      newMessageProp.conversationId === Number(conversationId)
+    ) {
+      const newPromise = new Promise((resolve, reject) => {
+        setConversationDetail((pre) => {
+          return [...pre, newMessageProp];
+        });
+        return resolve();
+      });
+      newPromise
+        .then(() => {
+          scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [newMessageProp]);
+
+  useEffect(() => {
+    if (conversationDetail.length !== 0) {
+      if (!scrollRef.current) {
+        setScrollTriggerAuto(scrollTriggerAuto === 0 ? 1 : 0);
+      }
+      setTimeout(() => {
+        scrollRef.current?.scrollIntoView({ behavior: "auto" });
+      }, 50);
+    }
+  }, [scrollTriggerAuto, conversationId]);
+
+  //USE-NOTIFICATION
+  const notifications = useNotifications();
+
+  //DROP-ZONE
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: "image/jpeg, image/png, image/jpg",
+    onDropAccepted: async (files) => {
+      //add file to ImgListFile
+      setImgFile(files[0]);
+      //File reader handle
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setImgUrl(reader.result);
+        }
+      };
+      return reader.readAsDataURL(files[0]);
+    },
+    onDropRejected: () => {
+      notifications.showNotification({
+        color: "red",
+        title: "Load file failed",
+        message: `File type is not accepted (.jpg/.jpeg/.png only)`,
+        autoClose: 3000,
+      });
+    },
+  });
+
+  //STYLE
+  const partnerMessageColor = "#a0a6b1";
+  const messageColor = "#768eb8";
 
   //function
-  const SendMessage = () => {
-    console.log(newMessage);
-    setNewMessage("");
+  const SendMessage = async () => {
+    try {
+      if (newMessage.trim().length > 0) {
+        const sendMessageRes = await conversationApi.sendMessage({ newMessage, conversationId });
+        //PROMISE
+        const promise = new Promise((resolve) => {
+          setConversationDetail([...conversationDetail, sendMessageRes]);
+          return resolve();
+        });
+        promise
+          .then(() => {
+            scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+          })
+          .catch((err) => console.log(err));
+        //socket send message
+        socket.current.emit("sendMessage", partnerInfo.id, sendMessageRes);
+        setNewMessage("");
+        updateConversationList(sendMessageRes);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handleKeypress = (e) => {
     //it triggers by pressing the enter key
@@ -49,6 +151,52 @@ function DetailConversation(props) {
       e.preventDefault();
       SendMessage();
     }
+  };
+  const sendImageMessage = async () => {
+    if (Object.keys(imgFile).length === 0 || imgUrl.length === 0) {
+      return notifications.showNotification({
+        color: "red",
+        title: "Send image failed",
+        message: `Drag and drop an image to send it`,
+        autoClose: 3000,
+      });
+    }
+    //Upload image
+    let formData = new FormData();
+    formData.append("imageFile", imgFile);
+    try {
+      const sendImageMessageRes = await conversationApi.sendImgMessage(formData, conversationId);
+      //set state & send to socket
+      socket.current.emit("sendMessage", partnerInfo.id, sendImageMessageRes);
+      //PROMISE
+      const promise = new Promise((resolve) => {
+        setConversationDetail([...conversationDetail, sendImageMessageRes]);
+        return resolve();
+      });
+      promise
+        .then(() => {
+          setTimeout(() => {
+            scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+          }, 50);
+        })
+        .catch((err) => console.log(err));
+      //socket send message
+      updateConversationList(sendImageMessageRes);
+      setImgFile({});
+      setImgUrl("");
+      setImageButtonStatus(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const checkIsImage = (message) => {
+    //get file tail
+    const fileTail = message.split(".")[message.split(".").length - 1];
+    const tail = ["jpg", "jpeg", "png"];
+    if (message.search(baseUrl) === 0 && tail.some((i) => i === fileTail)) {
+      return true;
+    } else return false;
   };
   return (
     <div className="DetailConversation">
@@ -61,25 +209,61 @@ function DetailConversation(props) {
         />
         <p>{partnerInfo.userName}</p>
       </div>
-      <Divider />
+      <Divider
+        styles={{
+          root: { color: "#A3BAE5" },
+        }}
+      />
       <div className="DetailConversation-message-div">
         <div className="DetailConversation-display-message">
           {/*messenger*/}
           {conversationDetail?.map((item) =>
             item.senderId === partnerInfo.id ? (
-              <div className="DetailConversation-display-message-item-div">
-                <div className="DetailConversation-display-message-item">
-                  <p>{item.message}</p>
-                </div>
+              <div
+                ref={scrollRef}
+                key={item.id}
+                className="DetailConversation-display-message-item-div"
+              >
+                {checkIsImage(item.message) ? (
+                  <div>
+                    <img
+                      style={{ maxWidth: 350, borderRadius: 10 }}
+                      src={item.message}
+                      alt="Image message"
+                    ></img>
+                  </div>
+                ) : (
+                  <div
+                    style={{ backgroundColor: partnerMessageColor }}
+                    className="DetailConversation-display-message-item"
+                  >
+                    <p>{item.message}</p>
+                  </div>
+                )}
               </div>
             ) : (
               <div
+                ref={scrollRef}
+                key={item.id}
                 style={{ justifyContent: "flex-end" }}
                 className="DetailConversation-display-message-item-div"
               >
-                <div className="DetailConversation-display-message-item">
-                  <p>{item.message}</p>
-                </div>
+                {checkIsImage(item.message) ? (
+                  <div>
+                    <img
+                      style={{ maxWidth: 350, borderRadius: 10 }}
+                      src={item.message}
+                      alt="Image message"
+                    ></img>
+                  </div>
+                ) : (
+                  <div
+                    style={{ backgroundColor: messageColor }}
+                    className="DetailConversation-display-message-item"
+                  >
+                    <p>{item.message}</p>
+                  </div>
+                )}
               </div>
             )
           )}
@@ -89,6 +273,7 @@ function DetailConversation(props) {
             classNames={{
               root: "DetailConversation-send-message-textarea-root",
               input: "DetailConversation-send-message-textarea-input",
+              rightSection: "DetailConversation-send-message-textarea-rightSection",
             }}
             autosize="true"
             minRows="1"
@@ -96,6 +281,7 @@ function DetailConversation(props) {
             multiline="true"
             placeholder="Write your message"
             value={newMessage}
+            rightSection={<BsImages onClick={() => setImageButtonStatus(true)} />}
             onChange={(e) => setNewMessage(e.currentTarget.value)}
             onKeyDown={handleKeypress}
           />
@@ -103,6 +289,55 @@ function DetailConversation(props) {
           <button onClick={SendMessage}>
             <IoIosSend />
           </button>
+        </div>
+      </div>
+      {/* Modal */}
+      <div
+        className="DetailConversation-modal-container"
+        style={{ zIndex: imageButtonStatus ? 5 : -5 }}
+      >
+        <div className="DetailConversation-modal-uploadImg">
+          <div className="DetailConversation-modal-uploadImg-img-area">
+            {imgUrl.length ? (
+              <img src={imgUrl} alt="Send image"></img>
+            ) : (
+              <div>
+                <p>SEND IMAGE</p>
+              </div>
+            )}
+          </div>
+          <div {...getRootProps({ className: "DetailConversation-modal-uploadImg-dropZone" })}>
+            <input {...getInputProps()} />
+            <p style={{ fontSize: 14, textAlign: "center" }}>
+              Drag 'n' drop here ,or click to select images. Only accept .jpg/.jpeg/.png files type
+            </p>
+          </div>
+          <div className="DetailConversation-modal-uploadImg-button">
+            <button
+              style={{
+                backgroundColor: "#FF4D4F",
+                boxShadow: "rgb(238, 96, 99) 0px 1px 2px 0px, rgb(221, 83, 86) 0px 1px 3px 1px;",
+              }}
+              onClick={() => {
+                setImageButtonStatus(false);
+                setImgFile({});
+                setImgUrl("");
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              style={{
+                backgroundColor: "#6ecfac",
+                boxShadow: "#71d3af 0px 1px 2px 0px, #71bea2 0px 1px 3px 1px;",
+              }}
+              onClick={() => {
+                sendImageMessage();
+              }}
+            >
+              Send
+            </button>
+          </div>
         </div>
       </div>
     </div>

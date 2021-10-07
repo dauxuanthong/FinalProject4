@@ -8,42 +8,50 @@
   /*  */
   /* border: 1px solid; */
 }
-.login-tittle{
+.login-tittle {
   font-size: 30px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  color: rgba(20, 61, 150, 0.747);
 }
 
-.login-form{
+.login-form {
   height: 450px;
   width: 500px;
-  border: 2px solid;
   border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background-color: #cccccc;
+  background-color: #b3bbc7;
+  /* #bac9e4 */
   margin-bottom: 100px;
+  box-shadow: rgba(82, 82, 82, 0.1) 0px 10px 50px;
 }
 
-.login-form-item{
+.login-form-item {
   width: 400px;
   height: 85px;
 }
 
 .login-form-item .label-d6-0-2-19,
-.login-form-item .label-d16-0-2-42{
-    font-size: 16px;
+.login-form-item .label-d16-0-2-42 {
+  font-size: 16px;
 }
 
-.login-form .filled-0-2-80{
-    margin-top: 10px;
-    width: 200px;
-    height: 40px;
+.login-form .filled-0-2-80 {
+  margin-top: 10px;
+  width: 200px;
+  height: 40px;
+}
+.login-button-root {
+  margin-top: 20px;
+}
+.login-button-inner {
+  width: 70px;
 }
 
-.options{
+.options {
   margin-top: 10px;
   width: 380px;
   height: 60px;
@@ -52,24 +60,21 @@
   align-items: center;
   flex-direction: row;
   flex-wrap: nowrap;
-/*   
-  border: 1px solid; */
 }
 
-.googleLogin button{
+.googleLogin button {
   border-radius: 10px;
 }
 
-
-.register-option{
+.register-option {
   background-color: white;
   border-radius: 2px;
   border: 1px solid transparent;
-  height: 46px;
-  width:170px;
+  height: 44px;
+  width: 180.35px;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.54);
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 2px 2px 0px; 
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 2px 2px 0px;
   cursor: pointer;
   opacity: 0.9;
   font-weight: 500;

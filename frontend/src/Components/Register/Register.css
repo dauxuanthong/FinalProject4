@@ -5,26 +5,25 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /*  */
-  /* border: 1px solid; */
 }
 
-.register-title{
+.register-title {
   font-size: 30px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  color: rgba(20, 61, 150, 0.747);
 }
 
 .register-form {
   height: 500px;
   width: 500px;
-  border: 2px solid;
   border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background-color: #cccccc;
+  background-color: #b3bbc7;
+  box-shadow: rgba(82, 82, 82, 0.1) 0px 10px 50px;
   margin-bottom: 100px;
 }
 
@@ -38,10 +37,16 @@
   font-size: 14px;
 }
 
-.register-form-item .label-d6-0-2-13, 
+.register-form-item .label-d6-0-2-13,
 .register-form-item .label-d16-0-2-36,
 .register-form-item .label-d26-0-2-54,
-.register-form-item .label-d36-0-2-90{
+.register-form-item .label-d36-0-2-90 {
   font-size: 16px;
 }
 
+.register-button-root {
+  margin-top: 15px;
+}
+.register-button-inner {
+  width: 70px;
+}

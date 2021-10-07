@@ -1,0 +1,48 @@
+.ListConversation-item {
+  width: 100%;
+  height: 60px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding-left: 5px;
+  margin-bottom: 2px;
+}
+.ListConversation-item-avatar-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.ListConversation-item-avatar-placeholder {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.ListConversation-item-detail {
+  margin-left: 6px;
+  height: 50px;
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+}
+.ListConversation-item-detail div {
+  width: 100%;
+}
+.ListConversation-LinesEllipsis-userName {
+  margin-top: 3px;
+  font-size: 14px;
+  font-weight: 550;
+}
+.ListConversation-LinesEllipsis-lastMessage {
+  margin-top: 5px;
+  font-size: 13px;
+}
+
+.ListConversation-item-dateTime {
+  height: 50px;
+  width: 40px;
+  font-size: 12px;
+  padding-top: 3px;
+  text-align: right;
+}

@@ -6,7 +6,7 @@
 }
 .PostManage-component {
   margin-top: 40px;
-  width: 1000px;
+  width: 1050px;
   height: fit-content;
   display: flex;
   flex-direction: row;
@@ -108,9 +108,9 @@
   align-items: flex-start;
   border-radius: 10px;
   background-color: #ffffff;
-  position: absolute;
+  position: sticky;
   top: 0;
-  left: 840px;
+  left: 0;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
 }
 .PostManage-statistic-title p {

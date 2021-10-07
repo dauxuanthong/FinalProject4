@@ -6,6 +6,7 @@ import { Divider } from "@mantine/core";
 import postApi from "../../API/postApi";
 import conversationApi from "../../API/conversationApi";
 import { useNotifications } from "@mantine/notifications";
+import { useHistory } from "react-router";
 
 function Home(props) {
   //USE-STATE
@@ -24,6 +25,9 @@ function Home(props) {
   //USE-NOTIFICATION
   const notifications = useNotifications();
 
+  //USE-history
+  const history = useHistory();
+
   //Event
   const contact = async (id, type) => {
     const data = {
@@ -40,11 +44,22 @@ function Home(props) {
           autoClose: 3000,
         });
       }
+      history.push(`/Message/${contactRes.conversationId}`);
       console.log(contactRes);
     } catch (error) {
       console.log(error);
     }
   };
+
+  const detail = (id, type) => {
+    if (type === "Post") {
+      return history.push(`/postDetail/post/${id}`);
+    }
+    if (type === "Auction") {
+      return history.push(`/postDetail/auction/${id}`);
+    }
+  };
+
   return (
     <div className="home-container">
       {/*header home page*/}
@@ -58,7 +73,7 @@ function Home(props) {
         }}
       >
         <div className="home-introduction-part">
-          <img src="https://c.pxhere.com/photos/0e/9e/technology_digital_tablet_digital_tablet_computer_device_black_white-1325876.jpg!d"></img>
+          <img src="https://image.archify.com/blog/l/73zpaujs.jpg" alt="Background"></img>
           <div className="home-trending-product-tag">
             <div className="home-trending-product-tag-item">
               <p></p>
@@ -89,13 +104,13 @@ function Home(props) {
           <div className="new-product-title">NEW PRODUCT</div>
           <div className="new-product-item-div">
             {allPost.length ? (
-              <Grid justify="space-between" gutter={10} columns={25} style={{ margin: 0 }}>
+              <Grid gutter={10} columns={25} style={{ margin: 0 }}>
                 {allPost?.map((item) => (
                   <div key={item.id}>
                     <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
                       <div className="new-product-card">
                         <div className="new-product-card-content">
-                          <img src={item.imageUrl[0]}></img>
+                          <img src={item.imageUrl[0]} alt="Product"></img>
                           <LinesEllipsis
                             className="new-product-card-content-ellipsis"
                             text={item.productName}
@@ -124,7 +139,13 @@ function Home(props) {
                           >
                             Contact
                           </button>
-                          <button>Detail</button>
+                          <button
+                            onClick={() => {
+                              detail(item.id, "Post");
+                            }}
+                          >
+                            Detail
+                          </button>
                         </div>
                       </div>
                     </Col>
@@ -151,13 +172,13 @@ function Home(props) {
           <div className="new-product-title">AUCTION PRODUCT</div>
           <div className="new-product-item-div">
             {auctionPost.length ? (
-              <Grid justify="space-between" gutter={10} columns={25} style={{ margin: 0 }}>
+              <Grid gutter={10} columns={25} style={{ margin: 0 }}>
                 {auctionPost.map((item) => (
                   <div key={item.id}>
                     <Col style={{ display: "flex", justifyContent: "center" }} span={5}>
                       <div className="auction-product-card">
                         <div className="new-product-card-content">
-                          <img src={item.imageUrl[0]}></img>
+                          <img src={item.imageUrl[0]} alt="Product"></img>
                           <LinesEllipsis
                             className="auction-product-card-content-ellipsis"
                             text={item.productName}
@@ -213,7 +234,13 @@ function Home(props) {
                           >
                             Contact
                           </button>
-                          <button>Detail</button>
+                          <button
+                            onClick={() => {
+                              detail(item.id, "Auction");
+                            }}
+                          >
+                            Detail
+                          </button>
                           <button>Bet</button>
                         </div>
                       </div>
@@ -237,6 +264,7 @@ function Home(props) {
                   <img
                     className="post-img"
                     src="https://i.natgeofe.com/n/3861de2a-04e6-45fd-aec8-02e7809f9d4e/02-cat-training-NationalGeographic_1484324.jpg"
+                    alt="Product"
                   ></img>
                   <LinesEllipsis
                     className="post-line-ellipsis"
@@ -268,6 +296,7 @@ function Home(props) {
                   <img
                     className="post-img"
                     src="https://resize.cdnbridge.com//resources/18/160536/Image/fat-scottish-fold-kitten-wallpaper-hd-700x468.jpg"
+                    alt="Product"
                   ></img>
                   <LinesEllipsis
                     className="post-line-ellipsis"
@@ -299,6 +328,7 @@ function Home(props) {
                   <img
                     className="post-img"
                     src="https://buzzsharer.com/wp-content/uploads/2015/07/Scottish-Fold-cute-cat.jpg"
+                    alt="Product"
                   ></img>
                   <LinesEllipsis
                     className="post-line-ellipsis"
@@ -330,6 +360,7 @@ function Home(props) {
                   <img
                     className="post-img"
                     src="https://petpricelist.com/wp-content/uploads/2017/12/scottish-fold-cat-1.jpg"
+                    alt="Product"
                   ></img>
                   <LinesEllipsis
                     className="post-line-ellipsis"

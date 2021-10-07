@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "@mantine/hooks";
-import { TextInput, NumberInput, Button, LoadingOverlay, Avatar } from "@mantine/core";
+import { TextInput, Button, Avatar } from "@mantine/core";
 import "./InfoManage.css";
 import { useNotifications } from "@mantine/notifications";
 import { RiFolderUserLine } from "react-icons/ri";

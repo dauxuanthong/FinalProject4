@@ -14,7 +14,6 @@
 .home-page:focus,
 .home-page:active {
   text-decoration: none;
-  color: inherit;
 }
 
 .home-page {
@@ -23,20 +22,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 20px;
+  font-size: 35px;
   font-weight: bold;
-  margin-left: 30px;
+  margin-left: 35px;
+  color: whitesmoke;
   /*  */
 }
 
 .nav-item-div {
-  height: 100%;
-  width: fit-content;
+  height: 90%;
+  width: 200px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   margin-right: 30px;
+  color: whitesmoke;
+  font-size: 17px;
 }
 
 .nav-item-div a,
@@ -48,14 +50,14 @@
 }
 
 .nav-item-div a {
-  height: 80%;
-  width: 100px;
   border: solid 1px;
   border-radius: 5px;
+  height: 80%;
+  width: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 7px 0 7px;
+  margin: 0 4px 0 4px;
 }
 
 .nav-item-div-sign-in {
@@ -67,22 +69,7 @@
   justify-content: flex-start;
   align-items: center;
   flex-wrap: nowrap;
-  /*  */
-  /* border: 1px solid; */
 }
-
-/* .label-of-menu {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 16px;
-  font-weight: 500;
-  color: rgb(134, 142, 150);
-}
-
-.item-label-of-menu{
-  
-} */
 
 .profile {
   display: flex;

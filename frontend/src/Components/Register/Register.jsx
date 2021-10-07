@@ -117,7 +117,15 @@ function Register(props) {
           />
         </div>
 
-        <Button type="submit">Submit</Button>
+        <Button
+          type="submit"
+          classNames={{
+            root: "register-button-root",
+            inner: "register-button-inner",
+          }}
+        >
+          Submit
+        </Button>
       </form>
     </div>
   );

@@ -96,7 +96,15 @@ function Login(props) {
             error={form.errors.password && "This field required"}
           />
         </div>
-        <Button type="submit">Login</Button>
+        <Button
+          type="submit"
+          classNames={{
+            root: "login-button-root",
+            inner: "login-button-inner",
+          }}
+        >
+          Login
+        </Button>
         <div className="options">
           <GoogleLogin
             className="googleLogin"
