@@ -3,6 +3,7 @@ import "./Conversation.css";
 import ListConversation from "./ListConversation";
 import DetailConversation from "./DetailConversation";
 import conversationApi from "../../API/conversationApi";
+import Media from "./Media";
 import io from "socket.io-client";
 import { Route } from "react-router";
 
@@ -13,6 +14,8 @@ function Conversation(props) {
   const [newMessage, setNewMessage] = useState({});
   const [newMessageSocket, setNewMessageSocket] = useState({});
   const [trigger, setTrigger] = useState(0);
+  const [currentConversation, setCurrentConversation] = useState();
+  const [newImageMedia, setNewImageMedia] = useState({});
   //USEREF
   const socket = useRef();
 
@@ -47,6 +50,9 @@ function Conversation(props) {
     socket.current.on("getMessage", (message) => {
       setNewMessageSocket(message);
       setNewMessage(message);
+      if (message.type === "image") {
+        setNewImageMedia({ message: message.message });
+      }
     });
     // eslint-disable-next-line
   }, []);
@@ -93,6 +99,14 @@ function Conversation(props) {
     // setState
     setConversationList(newConversationList);
   };
+
+  const getCurrentConversation = (data) => {
+    setCurrentConversation(Number(data));
+  };
+
+  const getImageMedia = (image) => {
+    setNewImageMedia(image);
+  };
   return (
     <div className="conversation-container">
       <div className="conversation-list-container">
@@ -120,13 +134,20 @@ function Conversation(props) {
                 updateConversationList={updateConversationList}
                 newMessageProp={newMessage}
                 socket={socket}
+                getCurrentConversation={getCurrentConversation}
+                getImageMedia={getImageMedia}
               />
             </div>
           )}
         />
       )}
 
-      <div className="conversation-media-container">media</div>
+      <div className="conversation-media-container">
+        <Media
+          currentConversation={currentConversation ? currentConversation : -1}
+          newImageMedia={newImageMedia}
+        />
+      </div>
     </div>
   );
 }

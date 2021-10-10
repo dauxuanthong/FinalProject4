@@ -91,5 +91,6 @@ model ConversationDetails{
   conversationId Int
   senderId String
   message String
+  type String
   createAt DateTime @default(now())
 }

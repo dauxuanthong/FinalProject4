@@ -40,5 +40,11 @@ const conversationApi = {
       withCredentials: true,
     });
   },
+  getImageListMedia: (param) => {
+    const url = `/conversation/getImageListMedia/${param}`;
+    return axiosClient.get(url, {
+      withCredentials: true,
+    });
+  },
 };
 export default conversationApi;

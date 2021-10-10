@@ -1,0 +1,94 @@
+.Media-div {
+  width: 350px;
+  margin-top: 20px;
+  margin-left: 5px;
+  height: 690px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+/**************IMAGE********************/
+.Media-image-area {
+  width: 335px;
+  height: 280px;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+}
+
+.Media-image-label {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 10px;
+}
+
+.Media-image-item {
+  width: 100%;
+  height: 220px;
+  display: flex;
+  flex-wrap: wrap;
+  overflow-x: auto;
+}
+
+.Media-image-item img {
+  width: 100px;
+  height: 90px;
+  object-fit: cover;
+  margin-left: 9px;
+  margin-bottom: 9px;
+  border-radius: 10px;
+}
+
+.Media-image-item::-webkit-scrollbar {
+  display: none;
+}
+
+/****************MAP******************/
+.Media-map-area {
+  position: relative;
+  overflow: hidden;
+  width: 335px;
+  height: 395px;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+}
+.Media-map-feature {
+  position: absolute;
+  top: 355px;
+  left: 0;
+  width: 335px;
+  height: 36px;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+}
+.map-feature-input-root {
+  width: 200px;
+}
+
+.map-feature-ping-bnt {
+  margin-top: 2px;
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  height: 100%;
+  font-size: 25px;
+  cursor: pointer;
+  text-align: center;
+}
+.map-feature-bnt {
+  height: 36px;
+  width: 36px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: 550;
+  font-size: 20px;
+  margin-left: 3px;
+  cursor: pointer;
+}

@@ -31,11 +31,16 @@ router.post(
   authenticationController.identifyUser,
   conversationController.sendMessage
 );
-// /conversation/sendImgMessage
+// /conversation/sendImgMessage/:conversationId
 router.post(
   "/sendImgMessage/:conversationId",
   authenticationController.identifyUser,
   conversationController.sendImgMessage
 );
-
+// /conversation/getImageListMedia/:conversationId
+router.get(
+  "/getImageListMedia/:conversationId",
+  authenticationController.identifyUser,
+  conversationController.getImageListMedia
+);
 module.exports = router;

@@ -15,6 +15,8 @@ DetailConversation.propTypes = {
   socket: PropTypes.object,
   updateConversationList: PropTypes.func,
   newMessageProp: PropTypes.object,
+  getCurrentConversation: PropTypes.func,
+  getImageMedia: PropTypes.func,
 };
 
 function DetailConversation(props) {
@@ -31,7 +33,8 @@ function DetailConversation(props) {
   const [imgFile, setImgFile] = useState({});
   const [imgUrl, setImgUrl] = useState("");
   //PROP
-  const { socket, updateConversationList, newMessageProp } = props;
+  const { socket, updateConversationList, newMessageProp, getCurrentConversation, getImageMedia } =
+    props;
 
   //USER-REF
   const scrollRef = useRef();
@@ -39,12 +42,11 @@ function DetailConversation(props) {
   //USE-PARAMS
   const { conversationId } = useParams();
 
-  //BASE-URL
-  const baseUrl = "http://localhost:3001//";
   //USE-EFFECT
   useEffect(() => {
     try {
       const getConversationDetail = async () => {
+        getCurrentConversation(conversationId); //for media
         const getConversationDetailRes = await conversationApi.getConversationDetail(
           conversationId
         );
@@ -85,7 +87,7 @@ function DetailConversation(props) {
       }
       setTimeout(() => {
         scrollRef.current?.scrollIntoView({ behavior: "auto" });
-      }, 50);
+      }, 200);
     }
   }, [scrollTriggerAuto, conversationId]);
 
@@ -177,26 +179,19 @@ function DetailConversation(props) {
         .then(() => {
           setTimeout(() => {
             scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-          }, 50);
+          }, 200);
         })
         .catch((err) => console.log(err));
       //socket send message
       updateConversationList(sendImageMessageRes);
       setImgFile({});
       setImgUrl("");
+      //update MEDIA
+      getImageMedia({ message: sendImageMessageRes.message });
       setImageButtonStatus(false);
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const checkIsImage = (message) => {
-    //get file tail
-    const fileTail = message.split(".")[message.split(".").length - 1];
-    const tail = ["jpg", "jpeg", "png"];
-    if (message.search(baseUrl) === 0 && tail.some((i) => i === fileTail)) {
-      return true;
-    } else return false;
   };
   return (
     <div className="DetailConversation">
@@ -224,7 +219,7 @@ function DetailConversation(props) {
                 key={item.id}
                 className="DetailConversation-display-message-item-div"
               >
-                {checkIsImage(item.message) ? (
+                {item.type === "image" && (
                   <div>
                     <img
                       style={{ maxWidth: 350, borderRadius: 10 }}
@@ -232,7 +227,8 @@ function DetailConversation(props) {
                       alt="Image message"
                     ></img>
                   </div>
-                ) : (
+                )}
+                {item.type === "text" && (
                   <div
                     style={{ backgroundColor: partnerMessageColor }}
                     className="DetailConversation-display-message-item"
@@ -248,7 +244,7 @@ function DetailConversation(props) {
                 style={{ justifyContent: "flex-end" }}
                 className="DetailConversation-display-message-item-div"
               >
-                {checkIsImage(item.message) ? (
+                {item.type === "image" && (
                   <div>
                     <img
                       style={{ maxWidth: 350, borderRadius: 10 }}
@@ -256,7 +252,8 @@ function DetailConversation(props) {
                       alt="Image message"
                     ></img>
                   </div>
-                ) : (
+                )}
+                {item.type === "text" && (
                   <div
                     style={{ backgroundColor: messageColor }}
                     className="DetailConversation-display-message-item"
@@ -316,7 +313,7 @@ function DetailConversation(props) {
             <button
               style={{
                 backgroundColor: "#FF4D4F",
-                boxShadow: "rgb(238, 96, 99) 0px 1px 2px 0px, rgb(221, 83, 86) 0px 1px 3px 1px;",
+                boxShadow: "rgb(238, 96, 99) 0px 1px 2px 0px, rgb(221, 83, 86) 0px 1px 3px 1px",
               }}
               onClick={() => {
                 setImageButtonStatus(false);
@@ -329,7 +326,7 @@ function DetailConversation(props) {
             <button
               style={{
                 backgroundColor: "#6ecfac",
-                boxShadow: "#71d3af 0px 1px 2px 0px, #71bea2 0px 1px 3px 1px;",
+                boxShadow: "#71d3af 0px 1px 2px 0px, #71bea2 0px 1px 3px 1px",
               }}
               onClick={() => {
                 sendImageMessage();

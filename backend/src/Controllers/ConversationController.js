@@ -135,6 +135,7 @@ class ConversationController {
         data: {
           conversationId: parseInt(req.body.conversationId),
           senderId: currentUserId,
+          type: "text",
           message: req.body.newMessage,
         },
       });
@@ -178,10 +179,27 @@ class ConversationController {
         data: {
           conversationId: parseInt(conversationId),
           senderId: userId,
+          type: "image",
           message: fileUrl,
         },
       });
       return res.json(imageMessage);
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  getImageListMedia = async (req, res, next) => {
+    const conversationId = parseInt(req.params.conversationId);
+    try {
+      const imageList = await prisma.conversationDetails.findMany({
+        where: { AND: [{ conversationId: conversationId }, { type: "image" }] },
+        select: {
+          id: true,
+          message: true,
+        },
+      });
+      return res.json(imageList);
     } catch (error) {
       return next(error);
     }
