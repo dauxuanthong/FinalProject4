@@ -8,6 +8,7 @@
   justify-content: space-between;
 }
 /**************IMAGE********************/
+
 .Media-image-area {
   width: 335px;
   height: 280px;
@@ -46,6 +47,7 @@
 }
 
 /****************MAP******************/
+
 .Media-map-area {
   position: relative;
   overflow: hidden;

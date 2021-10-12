@@ -9,10 +9,15 @@ import { IoIosSend } from "react-icons/io";
 import { Input } from "@mantine/core";
 import { IoMdSearch } from "react-icons/io";
 import { LoadingOverlay } from "@mantine/core";
+import { useParams } from "react-router-dom";
 
 Media.propTypes = {
-  currentConversation: PropTypes.number,
   newImageMedia: PropTypes.object,
+  updateConversationList: PropTypes.func,
+  getNewMapMessage: PropTypes.func,
+  socket: PropTypes.object,
+  partnerIdMedia: PropTypes.number,
+  newMarker: PropTypes.object,
 };
 
 function Media(props) {
@@ -27,22 +32,31 @@ function Media(props) {
     height: "100%",
     latitude: 16.047079,
     longitude: 108.20623,
-    zoom: 15,
+    zoom: 12,
     transitionDuration: 1000,
     transitionInterpolator: new FlyToInterpolator(),
   });
   const [currentPing, setCurrentPing] = useState({});
+  const [partnerPing, setPartnerPing] = useState({});
   //PROP
-  const { currentConversation, newImageMedia } = props;
+  const {
+    newImageMedia,
+    updateConversationList,
+    getNewMapMessage,
+    socket,
+    partnerIdMedia,
+    newMarker,
+  } = props;
+  //USE-PARAMS
+  const { conversationId } = useParams();
   //USE-EFFECT
   useEffect(() => {
-    if (currentConversation < 0) return;
     const getListImageMedia = async () => {
-      const listImageRes = await conversationApi.getImageListMedia(currentConversation);
+      const listImageRes = await conversationApi.getImageListMedia(conversationId);
       setListImage(listImageRes);
     };
     getListImageMedia();
-  }, [currentConversation]);
+  }, [conversationId]);
 
   //get message effect
   useEffect(() => {
@@ -51,6 +65,30 @@ function Media(props) {
     }
   }, [newImageMedia]);
 
+  //get new marker from conversationDetail
+  useEffect(() => {
+    if (newMarker.belongTo.length > 0) {
+      const newLocationOverwrite = {
+        latitude: Number(newMarker.location.latitude),
+        longitude: Number(newMarker.location.longitude),
+        zoom: 15,
+        transitionDuration: 1000,
+        transitionInterpolator: new FlyToInterpolator(),
+      };
+      if (newMarker.belongTo === "partner") {
+        setPartnerPing({
+          longitude: newLocationOverwrite.longitude,
+          latitude: newLocationOverwrite.latitude,
+        });
+      } else {
+        setCurrentPing({
+          longitude: newLocationOverwrite.longitude,
+          latitude: newLocationOverwrite.latitude,
+        });
+      }
+      return setViewport({ ...viewport, ...newLocationOverwrite });
+    }
+  }, [newMarker]);
   //MAP-BOX
   const mapRef = useRef();
   const handlePing = (e) => {
@@ -74,20 +112,56 @@ function Media(props) {
         transitionDuration: 1000,
         transitionInterpolator: new FlyToInterpolator(),
       };
-      setCurrentPing(newLocationOverwrite);
+      setCurrentPing({
+        longitude: newLocationOverwrite.longitude,
+        latitude: newLocationOverwrite.latitude,
+      });
       setViewport({ ...viewport, ...newLocationOverwrite });
     }
   };
 
   //FUNCTION
   const mineMarker = () => {
+    if (currentPing.latitude.length > 0 && currentPing.longitude.length > 0) {
+      return setViewport({
+        ...viewport,
+        ...currentPing,
+        zoom: 15,
+        transitionDuration: 1000,
+        transitionInterpolator: new FlyToInterpolator(),
+      });
+    }
+  };
+
+  const partnerMarker = () => {
     setViewport({
       ...viewport,
-      ...currentPing,
+      ...partnerPing,
       zoom: 15,
       transitionDuration: 1000,
       transitionInterpolator: new FlyToInterpolator(),
     });
+  };
+
+  const sendMapAddress = async () => {
+    // latt:longt
+    if (Object.keys(currentPing).length) {
+      const mapMessage = `${currentPing.latitude}:${currentPing.longitude}`;
+      const mapMessageJson = {
+        message: mapMessage,
+        conversationId: Number(conversationId),
+      };
+      const sendMapMessageRes = await conversationApi.sendMapMessage(mapMessageJson);
+      //Update conversation Detail
+      getNewMapMessage(sendMapMessageRes);
+      //Send to socket
+      socket.current.emit("sendMessage", partnerIdMedia, sendMapMessageRes);
+      //Update conversationList
+      updateConversationList(sendMapMessageRes);
+      console.log(sendMapMessageRes);
+    } else {
+      //Error notification
+    }
   };
   return (
     <div className="Media-div">
@@ -152,6 +226,16 @@ function Media(props) {
               <FaMapMarkerAlt style={{ fontSize: viewport.zoom * 2, color: "#687fa7" }} />
             </Marker>
           )}
+          {Object.keys(partnerPing).length > 0 && (
+            <Marker
+              latitude={partnerPing.latitude}
+              longitude={partnerPing.longitude}
+              offsetLeft={-10}
+              offsetTop={-20}
+            >
+              <FaMapMarkerAlt style={{ fontSize: viewport.zoom * 2, color: "#7e8188" }} />
+            </Marker>
+          )}
         </ReactMapGL>
         <div className="Media-map-feature">
           <div>
@@ -182,10 +266,18 @@ function Media(props) {
           >
             <FaMapMarkerAlt />
           </button>
-          <button style={{ color: "#7e8188" }} className="map-feature-ping-bnt">
+          <button
+            style={{ color: "#7e8188" }}
+            className="map-feature-ping-bnt"
+            onClick={() => partnerMarker()}
+          >
             <FaMapMarkerAlt />
           </button>
-          <button style={{ backgroundColor: "#6AE0B5" }} className="map-feature-bnt">
+          <button
+            style={{ backgroundColor: "#6AE0B5" }}
+            className="map-feature-bnt"
+            onClick={() => sendMapAddress()}
+          >
             <IoIosSend />
           </button>
           <button style={{ backgroundColor: "#b9c0ca" }} className="map-feature-bnt">

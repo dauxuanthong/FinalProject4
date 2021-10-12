@@ -14,8 +14,15 @@ function Conversation(props) {
   const [newMessage, setNewMessage] = useState({});
   const [newMessageSocket, setNewMessageSocket] = useState({});
   const [trigger, setTrigger] = useState(0);
-  const [currentConversation, setCurrentConversation] = useState();
   const [newImageMedia, setNewImageMedia] = useState({});
+  const [partnerIdMedia, setPartnerIdMedia] = useState(-1);
+  const [newMarker, setNewMarker] = useState({
+    belongTo: "",
+    location: {
+      latitude: "",
+      longitude: "",
+    },
+  });
   //USEREF
   const socket = useRef();
 
@@ -84,6 +91,7 @@ function Conversation(props) {
           id: message.id,
           message: message.message,
           senderId: message.senderId,
+          type: message.type,
         },
       ],
       createAt: currentConversationData.createAt,
@@ -100,19 +108,35 @@ function Conversation(props) {
     setConversationList(newConversationList);
   };
 
-  const getCurrentConversation = (data) => {
-    setCurrentConversation(Number(data));
-  };
-
+  //Media func
   const getImageMedia = (image) => {
     setNewImageMedia(image);
   };
+
+  const getNewMapMessage = (jsonData) => {
+    setNewMessage(jsonData);
+  };
+
+  const getPartnerId = (id) => {
+    setPartnerIdMedia(id);
+  };
+
+  const getMapMarkers = (stringData) => {
+    const splitStringData = stringData.location.split(":");
+    setNewMarker({
+      belongTo: stringData.belongTo,
+      location: {
+        latitude: splitStringData[0],
+        longitude: splitStringData[1],
+      },
+    });
+  };
+
   return (
     <div className="conversation-container">
       <div className="conversation-list-container">
         <ListConversation conversationList={conversationList} currentUserId={currentUserId} />
       </div>
-
       <Route
         exact
         path="/Message"
@@ -134,20 +158,46 @@ function Conversation(props) {
                 updateConversationList={updateConversationList}
                 newMessageProp={newMessage}
                 socket={socket}
-                getCurrentConversation={getCurrentConversation}
                 getImageMedia={getImageMedia}
+                getPartnerId={getPartnerId}
+                getMapMarkers={getMapMarkers}
               />
             </div>
           )}
         />
       )}
 
-      <div className="conversation-media-container">
-        <Media
-          currentConversation={currentConversation ? currentConversation : -1}
-          newImageMedia={newImageMedia}
-        />
-      </div>
+      <Route
+        exact
+        path="/Message"
+        render={() => (
+          <div className="conversation-media-container">
+            <div className="null-media-div">
+              <div className="null-Media-image-area">
+                <p></p>
+              </div>
+              <div className="null-Media-map-area">
+                <p></p>
+              </div>
+            </div>
+          </div>
+        )}
+      />
+      <Route
+        path="/Message/:conversationId"
+        render={() => (
+          <div className="conversation-media-container">
+            <Media
+              newImageMedia={newImageMedia}
+              updateConversationList={updateConversationList}
+              getNewMapMessage={getNewMapMessage}
+              socket={socket}
+              partnerIdMedia={partnerIdMedia}
+              newMarker={newMarker}
+            />
+          </div>
+        )}
+      />
     </div>
   );
 }

@@ -10,13 +10,15 @@ import { BsImages } from "react-icons/bs";
 import { useParams } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 import { useNotifications } from "@mantine/notifications";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 DetailConversation.propTypes = {
   socket: PropTypes.object,
   updateConversationList: PropTypes.func,
   newMessageProp: PropTypes.object,
-  getCurrentConversation: PropTypes.func,
   getImageMedia: PropTypes.func,
+  getPartnerId: PropTypes.func,
+  getMapMarkers: PropTypes.func,
 };
 
 function DetailConversation(props) {
@@ -33,8 +35,14 @@ function DetailConversation(props) {
   const [imgFile, setImgFile] = useState({});
   const [imgUrl, setImgUrl] = useState("");
   //PROP
-  const { socket, updateConversationList, newMessageProp, getCurrentConversation, getImageMedia } =
-    props;
+  const {
+    socket,
+    updateConversationList,
+    newMessageProp,
+    getImageMedia,
+    getPartnerId,
+    getMapMarkers,
+  } = props;
 
   //USER-REF
   const scrollRef = useRef();
@@ -46,11 +54,12 @@ function DetailConversation(props) {
   useEffect(() => {
     try {
       const getConversationDetail = async () => {
-        getCurrentConversation(conversationId); //for media
         const getConversationDetailRes = await conversationApi.getConversationDetail(
           conversationId
         );
         setPartnerInfo(getConversationDetailRes.partnerInfo);
+        //Get partnerID for media socket
+        getPartnerId(getConversationDetailRes.partnerInfo.id);
         setConversationDetail(getConversationDetailRes.conversationDetail);
         // to myself in future: trigger Scroll for first times contact. Don't delete
         setScrollTriggerAuto(scrollTriggerAuto === 0 ? 1 : 0);
@@ -87,7 +96,7 @@ function DetailConversation(props) {
       }
       setTimeout(() => {
         scrollRef.current?.scrollIntoView({ behavior: "auto" });
-      }, 200);
+      }, 300);
     }
   }, [scrollTriggerAuto, conversationId]);
 
@@ -179,7 +188,7 @@ function DetailConversation(props) {
         .then(() => {
           setTimeout(() => {
             scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-          }, 200);
+          }, 300);
         })
         .catch((err) => console.log(err));
       //socket send message
@@ -193,6 +202,7 @@ function DetailConversation(props) {
       console.log(error);
     }
   };
+
   return (
     <div className="DetailConversation">
       <div className="DetailConversation-info-div">
@@ -236,6 +246,22 @@ function DetailConversation(props) {
                     <p>{item.message}</p>
                   </div>
                 )}
+                {item.type === "map" && (
+                  <div
+                    style={{ backgroundColor: partnerMessageColor }}
+                    className="DetailConversation-display-message-item"
+                  >
+                    <div
+                      className="DetailConversation-display-map"
+                      onClick={() => {
+                        getMapMarkers({ belongTo: "partner", location: item.message });
+                      }}
+                    >
+                      <FaMapMarkerAlt />
+                      <p>Map marker</p>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div
@@ -259,6 +285,20 @@ function DetailConversation(props) {
                     className="DetailConversation-display-message-item"
                   >
                     <p>{item.message}</p>
+                  </div>
+                )}
+                {item.type === "map" && (
+                  <div
+                    style={{ backgroundColor: messageColor }}
+                    className="DetailConversation-display-message-item"
+                    onClick={() => {
+                      getMapMarkers({ belongTo: "mine", location: item.message });
+                    }}
+                  >
+                    <div className="DetailConversation-display-map">
+                      <FaMapMarkerAlt />
+                      <p>Map marker</p>
+                    </div>
                   </div>
                 )}
               </div>

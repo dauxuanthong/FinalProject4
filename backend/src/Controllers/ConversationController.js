@@ -204,6 +204,23 @@ class ConversationController {
       return next(error);
     }
   };
+
+  sendMapMessage = async (req, res, next) => {
+    const userId = req.session.userId;
+    try {
+      const mapMessage = await prisma.conversationDetails.create({
+        data: {
+          conversationId: req.body.conversationId,
+          senderId: userId,
+          message: req.body.message,
+          type: "map",
+        },
+      });
+      return res.json(mapMessage);
+    } catch (error) {
+      return next(error);
+    }
+  };
 }
 
 module.exports = new ConversationController();

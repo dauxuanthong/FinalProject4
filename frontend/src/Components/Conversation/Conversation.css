@@ -36,10 +36,34 @@
   color: #6e85ad;
 }
 
+/****************MEDIA*****************/
 .conversation-media-container {
   width: 25%;
   min-width: fit-content;
   display: flex;
   justify-content: center;
   height: 100%;
+}
+.null-media-div {
+  width: 350px;
+  margin-top: 20px;
+  margin-left: 5px;
+  height: 690px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.null-Media-image-area {
+  width: 335px;
+  height: 280px;
+  border-radius: 10px;
+  background-color: #e6f2fb;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+}
+.null-Media-map-area {
+  width: 335px;
+  height: 395px;
+  border-radius: 10px;
+  background-color: #e6f2fb;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
 }

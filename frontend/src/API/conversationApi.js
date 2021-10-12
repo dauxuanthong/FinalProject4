@@ -46,5 +46,11 @@ const conversationApi = {
       withCredentials: true,
     });
   },
+  sendMapMessage: (data) => {
+    const url = `/conversation/sendMapMessage`;
+    return axiosClient.post(url, data, {
+      withCredentials: true,
+    });
+  },
 };
 export default conversationApi;

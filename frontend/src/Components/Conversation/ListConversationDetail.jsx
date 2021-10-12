@@ -5,6 +5,7 @@ import LinesEllipsis from "react-lines-ellipsis";
 import { Avatar } from "@mantine/core";
 import ConversationApi from "../../API/conversationApi";
 import { useHistory, useLocation } from "react-router";
+import { render } from "@testing-library/react";
 ListConversationDetail.propTypes = {
   item: PropTypes.object,
   currentUserId: PropTypes.string,
@@ -35,6 +36,8 @@ function ListConversationDetail(props) {
   //STYLE
   const focusConversationColor = "#A3BAE5";
   const ConversationColor = "#e4f1fae0";
+
+  console.log(item);
 
   return (
     <div
@@ -73,7 +76,19 @@ function ListConversationDetail(props) {
           <LinesEllipsis
             className="ListConversation-LinesEllipsis-lastMessage"
             text={
-              item.conversationDetails.length ? item.conversationDetails[0].message : "No message"
+              item.conversationDetails.length > 0
+                ? item.conversationDetails[0].type === "map"
+                  ? item.conversationDetails[0].senderId === currentUserId
+                    ? "You: Map location"
+                    : "Map location"
+                  : item.conversationDetails[0].type === "image"
+                  ? item.conversationDetails[0].senderId === currentUserId
+                    ? "You: Image"
+                    : "Image"
+                  : item.conversationDetails[0].senderId === currentUserId
+                  ? `You: ${item.conversationDetails[0].message}`
+                  : item.conversationDetails[0].message
+                : "No message"
             }
             maxLine="1"
             ellipsis="..."

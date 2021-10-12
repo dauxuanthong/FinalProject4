@@ -25,6 +25,7 @@
   width: 150px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 .ListConversation-item-detail div {
   width: 100%;

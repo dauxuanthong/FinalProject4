@@ -43,4 +43,11 @@ router.get(
   authenticationController.identifyUser,
   conversationController.getImageListMedia
 );
+// /conversation/sendMapMessage
+router.post(
+  "/sendMapMessage",
+  authenticationController.identifyUser,
+  conversationController.sendMapMessage
+);
+
 module.exports = router;
