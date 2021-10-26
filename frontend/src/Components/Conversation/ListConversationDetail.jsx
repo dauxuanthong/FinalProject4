@@ -37,8 +37,6 @@ function ListConversationDetail(props) {
   const focusConversationColor = "#A3BAE5";
   const ConversationColor = "#e4f1fae0";
 
-  console.log(item);
-
   return (
     <div
       style={{

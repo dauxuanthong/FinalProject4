@@ -3,6 +3,7 @@
   height: fit-content;
   display: flex;
   justify-content: center;
+  padding-bottom: 10px;
 }
 .PostManage-component {
   margin-top: 40px;
@@ -15,6 +16,7 @@
 }
 /****************POSTS ITEM*************************/
 .PostManage-list {
+  margin-bottom: 40px;
   border-radius: 10px;
   background-color: #ffffff;
   width: 800px;

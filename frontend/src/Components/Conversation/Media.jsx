@@ -122,7 +122,7 @@ function Media(props) {
 
   //FUNCTION
   const mineMarker = () => {
-    if (currentPing.latitude.length > 0 && currentPing.longitude.length > 0) {
+    if (currentPing.latitude !== null && currentPing.longitude !== null) {
       return setViewport({
         ...viewport,
         ...currentPing,

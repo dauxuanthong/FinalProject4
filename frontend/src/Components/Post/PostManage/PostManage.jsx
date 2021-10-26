@@ -21,7 +21,7 @@ function PostManage(props) {
       setStatistic(myPostRes.statistic);
       setPostItem(myPostRes.allMyPost);
     };
-    getMyPost(postItem);
+    getMyPost();
     // eslint-disable-next-line
   }, []);
 
@@ -33,15 +33,12 @@ function PostManage(props) {
         postType: postFocusType,
       };
       const deletePostRes = await postApi.deletePost({ data });
-      console.log(deletePostRes);
-      console.log(typeof deletePostRes);
       if (deletePostRes === "OK") {
         //remove post in state list
         const newPostItem = postItem.filter((item) => item.postId !== postFocusId);
         setPostItem(newPostItem);
         //update statistic
         const postFocus = postItem.find((item) => item.postId === postFocusId);
-        console.log(postFocus);
         if (postFocus?.status === "Expired") {
           console.log("Expired");
           setStatistic({
@@ -49,7 +46,6 @@ function PostManage(props) {
             expired: statistic.expired - 1 === 0 ? 0 : statistic.expired - 1,
           });
         } else {
-          console.log("Active");
           setStatistic({
             posts: statistic.posts - 1,
             expired: statistic.expired,

@@ -1,0 +1,44 @@
+.auctionRoom-container {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+}
+
+/* LEFT */
+.auctionRoom-leftPart {
+  margin-top: 25px;
+  width: 810px;
+  height: 680px;
+  margin-left: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.auctionRoom-product-info {
+  width: 810px;
+  height: 455px;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.auctionRoom-function {
+  width: 810px;
+  height: 200px;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+/* RIGHT */
+.auctionRoom-rightPart {
+  background-color: aquamarine;
+  margin-top: 25px;
+  width: 600px;
+  height: 680px;
+  margin-right: 25px;
+}

@@ -32,7 +32,7 @@ function AuctionPost(props) {
   const [modalImg, setModalImg] = useState("");
   const [description, setDescription] = useState("");
   const [opacityDescription, setOpacityDescription] = useState(0);
-  const [datetime, setDatetime] = useState(new Date());
+  // const [datetime, setDatetime] = useState(new Date());
 
   //USE-FORM
   const form = useForm({
@@ -43,6 +43,8 @@ function AuctionPost(props) {
       productQuantity: 1,
       cost: 1000,
       stepPrice: 1000,
+      buyItNow: null,
+      datetime: new Date(),
     },
     validationRules: {
       productName: (value) => value.trim().length >= 1 && value.trim().length <= 50,
@@ -142,8 +144,10 @@ function AuctionPost(props) {
         imgListFile: uploadListImgRes,
         description: description,
         stepPrice: value.stepPrice.toString(),
-        auctionDatetime: datetime,
+        buyItNow: value.buyItNow.toString(),
+        auctionDatetime: value.datetime,
       };
+      console.log(data);
       const uploadAllInfo = await postApi.auctionPostInfo(data);
       if (uploadAllInfo.successMessage) {
         notifications.showNotification({
@@ -278,6 +282,21 @@ function AuctionPost(props) {
                   icon={<GiMoneyStack />}
                   min={1000}
                   hideControls
+                  onChange={(event) => form.setFieldValue("buyItNow", event)}
+                />
+              </div>
+              <div className="currency-unit">
+                <p>vnd</p>
+              </div>
+            </div>
+            {/*BUY IT NOW*/}
+            <div className="currency-area">
+              <div className="currency-input">
+                <NumberInput
+                  label="Buy it now"
+                  placeholder="Buy it now"
+                  icon={<GiMoneyStack />}
+                  hideControls
                   onChange={(event) => form.setFieldValue("stepPrice", event)}
                 />
               </div>
@@ -288,7 +307,7 @@ function AuctionPost(props) {
             {/* DATETIME */}
             <div className="auction-post-datetime-area">
               <div className="auction-post-datetime-label">
-                <p style={{ fontSize: 14, color: "#212529" }}>Auction starts at</p>
+                <p style={{ fontSize: 14, color: "#212529" }}>Auction ends at</p>
                 <p style={{ fontSize: 14, width: 11.36, color: "#F03E3E", marginLeft: 3 }}>*</p>
               </div>
               <div className="auction-post-datetime-input">
@@ -297,8 +316,9 @@ function AuctionPost(props) {
                   required={true}
                   disableClock={true}
                   minDate={new Date()}
-                  onChange={setDatetime}
-                  value={datetime}
+                  maxDate={new Date(new Date().setDate(new Date().getDate() + 6))}
+                  onChange={(event) => form.setFieldValue("datetime", event)}
+                  value={form.values.datetime}
                 />
               </div>
               <div style={{ width: 920, height: 50 }}>

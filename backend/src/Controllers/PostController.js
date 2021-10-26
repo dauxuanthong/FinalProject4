@@ -76,6 +76,7 @@ class PostController {
   auctionUploadInfo = async (req, res, next) => {
     const userId = req.session.userId;
     // uploadInfo
+    const buyItNow = req.body.buyItNow === 0 ? req.body.buyItNow : null;
     try {
       await prisma.auctionPost.create({
         data: {
@@ -88,6 +89,7 @@ class PostController {
           imageUrl: req.body.imgListFile,
           description: req.body.description,
           stepPrice: req.body.stepPrice,
+          buyItNow: buyItNow,
           auctionDatetime: req.body.auctionDatetime,
         },
       });
@@ -152,13 +154,8 @@ class PostController {
       const allMyPost = allPost.sort((a, b) => {
         return new Date(b.uploadAt) - new Date(a.uploadAt);
       });
-      console.log("allMyPost: ", allMyPost);
+
       //Statistic
-      allPost.map((item) => {
-        console.log("CAC: ", item.status);
-        console.log("CAC1: ", typeof item.status);
-        console.log(item.status === "Expired");
-      });
       const sumPost = allMyPost.length;
       const expiredPost = allMyPost.filter((item) => {
         return item.status === "Expired";

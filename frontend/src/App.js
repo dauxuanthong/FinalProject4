@@ -12,6 +12,9 @@ import PostDetails from "./Components/Post/PostDetail.jsx";
 import Post from "./Components/Post/Post.jsx";
 import PostManage from "./Components/Post/PostManage/PostManage";
 import Conversation from "./Components/Conversation/Conversation";
+import ManagePosts from "./Components/Post/PostManage/ManagePosts";
+import AuctionRoom from "./Components/AuctionRoom/AuctionRoom";
+
 function App() {
   //STATE
   const [updateTK, setUpdateTK] = useState({
@@ -62,6 +65,8 @@ function App() {
               <Route exact path="/postManage" component={PostManage} />
               <Route path="/Message" component={Conversation} />
               <Route exact path="/postDetail/post/:id" component={PostDetails} />
+              <Route exact path="/managePosts" component={ManagePosts} />
+              <Route path="/auctionRoom" component={AuctionRoom} />
             </Switch>
           </div>
         </div>

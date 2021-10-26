@@ -8,6 +8,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["referentialActions"]
 }
 
 model User {
@@ -27,14 +28,14 @@ model User {
 
 model Token {
   id Int @id @default(autoincrement())
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String 
   refreshToken String? 
 }
 
 model Setting{
   id Int @id @default(autoincrement())
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
   realName Boolean @default(false)
   address Boolean @default(false)
@@ -48,7 +49,7 @@ model ProductType{
 
 model Post{
   id Int @id @default(autoincrement())
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String 
   productName String 
   typeId Int[]
@@ -63,7 +64,7 @@ model Post{
 
 model AuctionPost{
   id Int @id @default(autoincrement())
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String 
   productName String 
   typeId Int[]
@@ -73,9 +74,10 @@ model AuctionPost{
   imageUrl String[]
   description String
   stepPrice String
+  buyItNow String?
   auctionDatetime DateTime
   createAt DateTime @default(now())
-  updateAt DateTime?
+  updateAt DateTime
 }
 
 model Conversations{
@@ -87,7 +89,7 @@ model Conversations{
 
 model ConversationDetails{
   id Int @id @default(autoincrement())
-  conversations Conversations @relation(fields: [conversationId], references: [id])
+  conversations Conversations @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   conversationId Int
   senderId String
   message String

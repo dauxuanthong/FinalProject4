@@ -1,5 +1,6 @@
 .auction-post-container {
   width: 100%;
+  height: fit-content;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -133,18 +134,15 @@
 
 .auction-post-show-img-list-div {
   width: 440px;
-  height: 485.5px;
+  height: 575px;
   border: solid 1px;
   border-color: rgb(206, 212, 218);
   border-radius: 4px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  flex-wrap: wrap;
   overflow: auto;
 }
 
 .auction-post-show-img-list-div-item {
+  display: inline-block;
   width: 120px;
   min-width: 120px;
   height: 90px;
