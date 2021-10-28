@@ -35,7 +35,7 @@ function Side(props) {
           <div
             className="item"
             onClick={() => {
-              history.push("/postManage");
+              history.push("/managePosts");
             }}
           >
             <div className="icon-item">

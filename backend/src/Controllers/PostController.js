@@ -75,8 +75,6 @@ class PostController {
 
   auctionUploadInfo = async (req, res, next) => {
     const userId = req.session.userId;
-    // uploadInfo
-    const buyItNow = req.body.buyItNow === 0 ? req.body.buyItNow : null;
     try {
       await prisma.auctionPost.create({
         data: {
@@ -89,9 +87,17 @@ class PostController {
           imageUrl: req.body.imgListFile,
           description: req.body.description,
           stepPrice: req.body.stepPrice,
-          buyItNow: buyItNow,
+          buyItNow: req.body.buyItNow,
           auctionDatetime: req.body.auctionDatetime,
+          updateAt: new Date(),
+          auctionRooms: {
+            create: {
+              currentPrice: req.body.firstPrice,
+              members: [userId],
+            },
+          },
         },
+        // include: { user: true },
       });
       return res.json({ successMessage: "Post successfully" });
     } catch (error) {

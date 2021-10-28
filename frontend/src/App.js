@@ -8,9 +8,10 @@ import Register from "./Components/Register/Register.jsx";
 import Login from "./Components/Login/Login.jsx";
 import userApi from "./API/userApi";
 import Profile from "./Components/layouts/Profile/Profile";
-import PostDetails from "./Components/Post/PostDetail.jsx";
+import PostDetails from "./Components/Post/Detail/PostDetail.jsx";
+import AuctionPostDetails from "./Components/Post/Detail/AuctionPostDetail";
 import Post from "./Components/Post/Post.jsx";
-import PostManage from "./Components/Post/PostManage/PostManage";
+// import PostManage from "./Components/Post/PostManage/PostManage";
 import Conversation from "./Components/Conversation/Conversation";
 import ManagePosts from "./Components/Post/PostManage/ManagePosts";
 import AuctionRoom from "./Components/AuctionRoom/AuctionRoom";
@@ -62,10 +63,13 @@ function App() {
               {userStatus === "" && <Redirect to="/login" />}
               <Route exact path="/profile" component={Profile} />
               <Route exact path="/post" component={Post} />
-              <Route exact path="/postManage" component={PostManage} />
+              {/* <Route exact path="/postManage" component={PostManage} /> */}
               <Route path="/Message" component={Conversation} />
+              {/*Post*/}
               <Route exact path="/postDetail/post/:id" component={PostDetails} />
+              <Route exact path="/postDetail/auctionPost/:id" component={AuctionPostDetails} />
               <Route exact path="/managePosts" component={ManagePosts} />
+              {/* Auction room */}
               <Route path="/auctionRoom" component={AuctionRoom} />
             </Switch>
           </div>

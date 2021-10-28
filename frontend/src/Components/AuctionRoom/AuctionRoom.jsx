@@ -1,6 +1,7 @@
 import React from "react";
 import "./AuctionRoom.css";
 import AuctFuction from "./AuctFuction";
+import AuctHistory from "./AuctHistory";
 
 function AuctionRoom(props) {
   return (
@@ -15,7 +16,7 @@ function AuctionRoom(props) {
       </div>
       <div className="auctionRoom-rightPart">
         <div className="auctionRoom-history">
-          <p>Right-top</p>
+          <AuctHistory />
         </div>
         <div className="auctionRoom-conversation">
           <p>Right-bottom</p>

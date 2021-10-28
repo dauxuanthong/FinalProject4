@@ -78,6 +78,7 @@ model AuctionPost{
   auctionDatetime DateTime
   createAt DateTime @default(now())
   updateAt DateTime
+  auctionRooms AuctionRooms?
 }
 
 model Conversations{
@@ -95,4 +96,12 @@ model ConversationDetails{
   message String
   type String
   createAt DateTime @default(now())
+}
+
+model AuctionRooms{
+  id Int @id @default(autoincrement())
+  auctionPost AuctionPost @relation(fields: [auctionPostId], references: [id], onDelete: Cascade)
+  auctionPostId Int @unique  
+  currentPrice String
+  members String[]
 }

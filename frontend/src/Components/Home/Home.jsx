@@ -56,7 +56,7 @@ function Home(props) {
       return history.push(`/postDetail/post/${id}`);
     }
     if (type === "Auction") {
-      return history.push(`/postDetail/auction/${id}`);
+      return history.push(`/postDetail/auctionPost/${id}`);
     }
   };
 

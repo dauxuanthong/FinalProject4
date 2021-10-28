@@ -1,0 +1,130 @@
+.AuctionPostDetail-container {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.AuctionPostDetail-div {
+  width: 1000px;
+  margin-top: 40px;
+  background-color: white;
+  border-radius: 10px;
+  height: 650px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  display: flex;
+  justify-content: space-between;
+}
+/*Image*/
+.AuctionPostDetail-image-area {
+  width: 500px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.AuctionPostDetail-main-img {
+  margin-top: 25px;
+  object-fit: cover;
+  width: 450px;
+  height: 400px;
+  border-radius: 10px;
+}
+
+.AuctionPostDetail-slider-div {
+  margin-top: 10px;
+  width: 450px;
+}
+.AuctionPostDetail-sub-image {
+  margin-left: 5px;
+  object-fit: cover;
+  width: 140px;
+  height: 100px;
+  border-radius: 10px;
+}
+/*Info*/
+.AuctionPostDetail-info-area {
+  width: 500px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.AuctionPostDetail-productName {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 475px;
+  height: 100px;
+  font-size: 24px;
+  font-weight: 550;
+  color: rgba(20, 61, 150, 0.829);
+}
+
+.AuctionPostDetail-type {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 550;
+  color: rgba(0, 0, 0, 0.767);
+}
+.AuctionPostDetail-type-item {
+  background-color: rgba(125, 181, 214, 0.671);
+  margin-left: 5px;
+  padding: 1px 3px 1px 3px;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.822);
+  border-radius: 5px;
+}
+.AuctionPostDetail-info-note {
+  margin-top: 5px;
+  width: 475px;
+  height: 220px;
+  overflow-y: auto;
+}
+.AuctionPostDetail-info-note::-webkit-scrollbar {
+  width: 3px;
+}
+.AuctionPostDetail-info-note::-webkit-scrollbar-track {
+  background: #dff1ffad;
+  border-radius: 10px;
+  margin-top: 5px;
+}
+.AuctionPostDetail-info-note::-webkit-scrollbar-thumb {
+  background: #a3bae585;
+  border-radius: 10px;
+}
+
+.AuctionPostDetail-info-price-label {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 550;
+  color: rgba(0, 0, 0, 0.767);
+}
+.AuctionPostDetail-info-price-number {
+  margin-left: 5px;
+  display: inline-block;
+  font-size: 22px;
+  font-weight: 550;
+  color: rgba(20, 61, 150, 0.733);
+}
+
+.AuctionPostDetail-button-div {
+  margin-top: 30px;
+  padding: 0 20px 0 20px;
+  width: 475px;
+  height: fit-content;
+  display: flex;
+  justify-content: space-between;
+}
+
+.AuctionPostDetail-button-div button {
+  width: 200px;
+  height: 40px;
+  font-size: 16px;
+  font-weight: 550;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+}

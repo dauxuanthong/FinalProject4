@@ -4,7 +4,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useParams } from "react-router-dom";
-import postApi from "../../API/postApi";
+import postApi from "../../../API/postApi";
 import parseHtml from "html-react-parser";
 
 function PostDetail(props) {

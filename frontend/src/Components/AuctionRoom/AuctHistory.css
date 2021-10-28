@@ -1,0 +1,11 @@
+.AuctHistory-container {
+  width: 600px;
+  height: 205px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.AuctHistory-table-div {
+  width: 99.5%;
+  height: 99%;
+}

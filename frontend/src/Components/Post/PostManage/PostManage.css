@@ -1,4 +1,4 @@
-.PostManage-container {
+/* .PostManage-container {
   width: 100%;
   height: fit-content;
   display: flex;
@@ -13,9 +13,9 @@
   flex-direction: row;
   justify-content: space-between;
   position: relative;
-}
+} */
 /****************POSTS ITEM*************************/
-.PostManage-list {
+/* .PostManage-list {
   margin-bottom: 40px;
   border-radius: 10px;
   background-color: #ffffff;
@@ -97,11 +97,11 @@
 }
 .PostManage-post-list-item-button button:hover {
   cursor: pointer;
-}
+} */
 /*________________________________________________*/
 
 /****************STATISTIC*************************/
-
+/* 
 .PostManage-statistic {
   width: 200px;
   height: 193px;
@@ -128,10 +128,10 @@
   margin-left: 10px;
   width: 100%;
   font-size: 15px;
-}
+} */
 /*_________________________________________*/
 /*****************DELETE Modal***************/
-.delete-modal-div {
+/* .delete-modal-div {
   width: 100%;
   height: fit-content;
 }
@@ -159,4 +159,4 @@
 
 .delete-modal-button button:hover {
   cursor: pointer;
-}
+} */
