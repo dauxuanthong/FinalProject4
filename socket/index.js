@@ -55,12 +55,40 @@ io.on("connection", (socket) => {
         io.to(receiver).emit("getMessage", message);
       }
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
+
+  //Join room
+  try {
+    socket.on("joinRoom", (roomId) => {
+      socket.join(roomId);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+  //bidUpdate
+  try {
+    socket.on("bidValueUpdateSever", (data) => {
+      io.to(data.roomId).emit("bidValueUpdateClient", data.currentValue);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+  //HistoryUpdate
+  try {
+    socket.on("historyUpdateSever", (data) => {
+      io.to(data.roomId).emit("historyUpdateClient", data.arrayData);
+    });
+  } catch (error) {
+    console.log(error);
+  }
 
   //disconnect
   socket.on("disconnect", () => {
     removeUser(socket.id);
-    console.log(users);
     console.log("user disconnected");
   });
 });

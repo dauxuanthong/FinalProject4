@@ -4,8 +4,12 @@ import ListConversation from "./ListConversation";
 import DetailConversation from "./DetailConversation";
 import conversationApi from "../../API/conversationApi";
 import Media from "./Media";
-import io from "socket.io-client";
+import PropTypes from "prop-types";
 import { Route } from "react-router";
+
+Conversation.propTypes = {
+  socket: PropTypes.object,
+};
 
 function Conversation(props) {
   //STATE
@@ -23,8 +27,9 @@ function Conversation(props) {
       longitude: "",
     },
   });
-  //USEREF
-  const socket = useRef();
+
+  //PROPS
+  const { socket } = props;
 
   //USE-EFFECT
   useEffect(() => {
@@ -53,8 +58,7 @@ function Conversation(props) {
 
   //initial socket
   useEffect(() => {
-    socket.current = io("ws://localhost:3002");
-    socket.current.on("getMessage", (message) => {
+    socket.current?.on("getMessage", (message) => {
       setNewMessageSocket(message);
       setNewMessage(message);
       if (message.type === "image") {
@@ -65,9 +69,9 @@ function Conversation(props) {
   }, []);
 
   //New-user
-  useEffect(() => {
-    socket.current.emit("addUser", currentUserId);
-  }, [currentUserId]);
+  // useEffect(() => {
+  //   socket.current.emit("addUser", currentUserId);
+  // }, [currentUserId]);
 
   useEffect(() => {
     if (!conversationList.length) return;

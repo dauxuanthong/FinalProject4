@@ -45,7 +45,6 @@ function Home(props) {
         });
       }
       history.push(`/Message/${contactRes.conversationId}`);
-      console.log(contactRes);
     } catch (error) {
       console.log(error);
     }
@@ -188,7 +187,7 @@ function Home(props) {
                             basedOn="letters"
                           />
                           <div className="auction-product-card-content-bottom">
-                            <p className="auction-product-card-content-title">Auction at</p>
+                            <p className="auction-product-card-content-title">Auction ends at</p>
                             <div
                               style={{
                                 display: "flex",

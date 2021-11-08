@@ -42,7 +42,7 @@ function NormalPost(props) {
       cost: 1000,
     },
     validationRules: {
-      productName: (value) => value.trim().length >= 1 && value.trim().length <= 50,
+      productName: (value) => value.trim().length >= 1 && value.trim().length <= 100,
       productType: (value) => value.length > 0,
       typeDetail: (value) => {
         if (form.values.productType.some((item) => item === 5)) {
@@ -144,7 +144,7 @@ function NormalPost(props) {
           autoClose: 5000,
         });
       }
-      return history.push("/postManage");
+      return history.push("/managePosts");
     } catch (error) {
       console.log(error);
     }

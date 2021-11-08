@@ -47,7 +47,7 @@ function AuctionPost(props) {
       datetime: new Date(),
     },
     validationRules: {
-      productName: (value) => value.trim().length >= 1 && value.trim().length <= 50,
+      productName: (value) => value.trim().length >= 1 && value.trim().length <= 100,
       productType: (value) => value.length > 0,
       typeDetail: (value) => {
         if (form.values.productType.some((item) => item === 5)) {
@@ -156,7 +156,7 @@ function AuctionPost(props) {
           autoClose: 5000,
         });
       }
-      return history.push("/postManage");
+      return history.push("/managePosts");
     } catch (error) {
       console.log(error);
     }
@@ -282,7 +282,7 @@ function AuctionPost(props) {
                   icon={<GiMoneyStack />}
                   min={1000}
                   hideControls
-                  onChange={(event) => form.setFieldValue("buyItNow", event)}
+                  onChange={(event) => form.setFieldValue("stepPrice", event)}
                 />
               </div>
               <div className="currency-unit">
@@ -297,7 +297,7 @@ function AuctionPost(props) {
                   placeholder="Buy it now"
                   icon={<GiMoneyStack />}
                   hideControls
-                  onChange={(event) => form.setFieldValue("stepPrice", event)}
+                  onChange={(event) => form.setFieldValue("buyItNow", event)}
                 />
               </div>
               <div className="currency-unit">

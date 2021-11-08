@@ -254,6 +254,38 @@ class PostController {
       return next(error);
     }
   };
+
+  auctionPostDetail = async (req, res, next) => {
+    try {
+      const auctionPostDetail = await prisma.auctionPost.findUnique({
+        where: { id: parseInt(req.params.postId) },
+        include: { auctionRooms: true },
+      });
+      const typeArr = await prisma.productType.findMany();
+      //Type detail
+      const typeDetail = auctionPostDetail.typeId.reduce((array, item) => {
+        const type = typeArr.find((filItem) => item == filItem.id);
+        array.push(type.type);
+        return array;
+      }, []);
+      const auctionDetailDestructuring = {
+        id: auctionPostDetail.id,
+        imageList: auctionPostDetail.imageUrl,
+        productName: auctionPostDetail.productName,
+        type: typeDetail,
+        quantity: auctionPostDetail.quantity,
+        description: auctionPostDetail.description,
+        firstPrice: auctionPostDetail.firstPrice,
+        stepPrice: auctionPostDetail.stepPrice,
+        buyItNow: auctionPostDetail.buyItNow,
+        endAt: auctionPostDetail.auctionDatetime,
+        auctionRoomsId: auctionPostDetail.auctionRooms.id,
+      };
+      return res.json(auctionDetailDestructuring);
+    } catch (error) {
+      return next(error);
+    }
+  };
 }
 
 module.exports = new PostController();

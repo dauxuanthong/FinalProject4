@@ -104,4 +104,25 @@ model AuctionRooms{
   auctionPostId Int @unique  
   currentPrice String
   members String[]
+  auctionRoomHistory AuctionRoomHistory[]
+  autoBid AutoBid[]
+}
+
+model AuctionRoomHistory{
+  id Int @id @default(autoincrement())
+  auctionRooms AuctionRooms @relation(fields: [auctionRoomId], references: [id],onDelete: Cascade)
+  auctionRoomId Int
+  bidTime DateTime @default(now())
+  bidAmount String
+  bidder String
+  tradeProduct String?
+}
+
+model AutoBid{
+  id Int @id @default(autoincrement())
+  auctionRooms AuctionRooms @relation(fields: [auctionRoomId], references: [id],onDelete: Cascade)
+  auctionRoomId Int
+  bidder String
+  highestPrice Int
+  createAt DateTime @default(now())
 }

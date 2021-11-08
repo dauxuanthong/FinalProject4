@@ -1,13 +1,200 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import "./AuctFuction.css";
 import { Divider } from "@mantine/core";
 import { Tabs, Tab } from "@mantine/core";
 import { NumberInput } from "@mantine/core";
+import auctionRoomApi from "../../API/auctionRoomApi";
+import { useNotifications } from "@mantine/notifications";
 
-AuctFuction.propTypes = {};
+AuctFuction.propTypes = {
+  roomId: PropTypes.number,
+  socket: PropTypes.object,
+};
 
 function AuctFuction(props) {
+  //STATE
+  const [functionData, setFunctionData] = useState({
+    currentValue: "",
+    endAt: "",
+    highestPrice: "N/A",
+  });
+  const [upPriceValue, setUpPriceValue] = useState(0);
+  const [highestPrice, setHighestPrice] = useState(0);
+
+  //Prop
+  const { roomId, socket } = props;
+  console.log("SOCKET: ", socket.current);
+  //EFFECT
+  useEffect(() => {
+    const getFunctionData = async () => {
+      const functionDataRes = await auctionRoomApi.functionData(roomId);
+      setFunctionData(functionDataRes);
+    };
+    getFunctionData();
+  }, [roomId]);
+
+  useEffect(() => {
+    socket.current?.on("bidValueUpdateClient", (value) => {
+      setFunctionData({ ...functionData, currentValue: value });
+    });
+    // eslint-disable-next-line
+  }, []);
+
+  //USE-NOTIFICATION
+  const notifications = useNotifications();
+
+  //FUNCTION
+  const bidFunction = async () => {
+    const bidFunctionRes = await auctionRoomApi.bid({ roomId: roomId });
+    if (bidFunctionRes.message === "DuplicateOwner") {
+      return notifications.showNotification({
+        color: "red",
+        title: "Bid failed",
+        message: `You have offered the highest price for the product`,
+        autoClose: 4000,
+      });
+    }
+    if (bidFunctionRes.message === "ERROR") {
+      return notifications.showNotification({
+        color: "red",
+        title: "System error",
+        message: `An error occurred during the transaction, please try again later!`,
+        autoClose: 4000,
+      });
+    }
+    setFunctionData({ ...functionData, currentValue: bidFunctionRes.data[0].bidAmount });
+    console.log(socket.current.id);
+    // socket value
+    socket.current.emit("bidValueUpdateSever", {
+      roomId: roomId.toString(),
+      currentValue: bidFunctionRes.data[0].bidAmount,
+    });
+    // socket history
+    socket.current.emit("historyUpdateSever", {
+      roomId: roomId.toString(),
+      arrayData: bidFunctionRes.data,
+    });
+    return notifications.showNotification({
+      color: "green",
+      title: "Bid successfully",
+      autoClose: 3000,
+    });
+  };
+  //upPrice
+  const upPrice = async () => {
+    if (upPriceValue < 1) {
+      return notifications.showNotification({
+        color: "red",
+        title: "Up price failed",
+        message: `You have offered the highest price for the product`,
+        autoClose: 4000,
+      });
+    }
+    const upPriceFunctionRes = await auctionRoomApi.upPrice({
+      roomId: roomId,
+      bidAmount: upPriceValue.toString(),
+    });
+    if (upPriceFunctionRes.message === "DuplicateOwner") {
+      return notifications.showNotification({
+        color: "red",
+        title: "Up price failed",
+        message: `You have offered the highest price for the product`,
+        autoClose: 4000,
+      });
+    }
+    if (upPriceFunctionRes.message === "ERROR") {
+      return notifications.showNotification({
+        color: "red",
+        title: "System error",
+        message: `An error occurred during the transaction, please try again later!`,
+        autoClose: 4000,
+      });
+    }
+    if (upPriceFunctionRes.message === "UpPriceInvalid") {
+      return notifications.showNotification({
+        color: "red",
+        title: "Up price failed",
+        message: `Bid value is lower than step value. Please increase the bid price and try again!`,
+        autoClose: 4000,
+      });
+    }
+    setFunctionData({ ...functionData, currentValue: upPriceFunctionRes.data[0].bidAmount });
+    // socket
+    socket.current.emit("bidValueUpdateSever", {
+      roomId: roomId.toString(),
+      currentValue: upPriceFunctionRes.data[0].bidAmount,
+    });
+    // socket history
+    socket.current.emit("historyUpdateSever", {
+      roomId: roomId.toString(),
+      arrayData: upPriceFunctionRes.data,
+    });
+    setUpPriceValue(0);
+    return notifications.showNotification({
+      color: "green",
+      title: "Up price successfully",
+      autoClose: 3000,
+    });
+  };
+
+  //auto bid
+  const applyAutoBid = async () => {
+    //check price
+    if (highestPrice <= Number(functionData.currentValue)) {
+      return notifications.showNotification({
+        color: "red",
+        title: "Up price failed",
+        message: `Highest value is lower than step value. Please increase the bid price and try again!`,
+        autoClose: 4000,
+      });
+    }
+    //Apply auto bid
+    const applyAutoBidRes = await auctionRoomApi.applyAutoBid({
+      roomId: roomId,
+      highestPrice: highestPrice.toString(),
+      currentValue: functionData.currentValue,
+    });
+    if (applyAutoBidRes.message === "ERROR") {
+      return notifications.showNotification({
+        color: "red",
+        title: "Up price failed",
+        message: `An error occurred during the transaction, please try again later!`,
+        autoClose: 4000,
+      });
+    }
+    if (applyAutoBidRes.message === "UpPriceInvalid") {
+      return notifications.showNotification({
+        color: "red",
+        title: "Up price failed",
+        message: `Highest value is lower than step value. Please increase the bid price and try again!`,
+        autoClose: 4000,
+      });
+    }
+    return notifications.showNotification({
+      color: "green",
+      title: `Highest price: ${applyAutoBidRes.highestPrice}`,
+      autoClose: 3000,
+    });
+    // setFunctionData({
+    //   ...functionData,
+    //   currentValue: applyAutoBidRes.bidAmount,
+    //   highestPrice: applyAutoBidRes.highestPrice,
+    // });
+    // // socket
+    // socket.current.emit("bidValueUpdateSever", {
+    //   roomId: roomId.toString(),
+    //   currentValue: applyAutoBidRes.bidAmount,
+    // });
+    // // socket history
+    // socket.current.emit("historyUpdateSever", {
+    //   id: applyAutoBidRes.id,
+    //   bidder: applyAutoBidRes.bidder,
+    //   bidAmount: applyAutoBidRes.bidAmount,
+    //   bidTime: applyAutoBidRes.bidTime,
+    //   roomId: roomId.toString(),
+    // });
+  };
   return (
     <div className="AuctFuction-container">
       <div className="AuctFuction-price-div">
@@ -33,7 +220,7 @@ function AuctFuction(props) {
             style: "currency",
             currency: "VND",
           })
-            .format("1000000000")
+            .format(functionData.currentValue)
             .split("₫")}
         </p>
         <div style={{ width: "95%" }}>
@@ -47,7 +234,7 @@ function AuctFuction(props) {
             color: "rgba(20, 61, 150, 0.747)",
           }}
         >
-          Ends at: 11/15/2021 12h30'
+          Ends at: {new Date(functionData.endAt).toLocaleString()}
         </p>
         <p
           style={{
@@ -65,9 +252,23 @@ function AuctFuction(props) {
           <Tab label="Basic">
             <div className="AuctFuction-btn-tab-item">
               <div className="AuctFuction-tab-basic">
-                <button className="AuctFuction-basic-button">Bid</button>
+                <button
+                  className="AuctFuction-basic-button"
+                  onClick={() => {
+                    bidFunction();
+                  }}
+                >
+                  Bid
+                </button>
                 <div style={{ display: "flex" }}>
-                  <button className="AuctFuction-basic-button" style={{ marginRight: 10 }}>
+                  <button
+                    disabled={upPriceValue <= Number(functionData.currentValue) ? true : false}
+                    className="AuctFuction-basic-button"
+                    style={{ marginRight: 10 }}
+                    onClick={() => {
+                      upPrice();
+                    }}
+                  >
                     Up price
                   </button>
                   <NumberInput
@@ -76,6 +277,10 @@ function AuctFuction(props) {
                     defaultValue={0}
                     styles={{
                       input: { height: 40, marginTop: 5 },
+                    }}
+                    value={upPriceValue}
+                    onChange={(value) => {
+                      setUpPriceValue(value);
                     }}
                   />
                   <p
@@ -124,6 +329,10 @@ function AuctFuction(props) {
                     styles={{
                       input: { marginLeft: 5 },
                     }}
+                    value={highestPrice}
+                    onChange={(value) => {
+                      setHighestPrice(value);
+                    }}
                   />
                   <p
                     style={{
@@ -153,6 +362,9 @@ function AuctFuction(props) {
                   <button
                     className="AuctFuction-autoBid-button"
                     style={{ backgroundColor: "#70dab6" }}
+                    onClick={() => {
+                      applyAutoBid();
+                    }}
                   >
                     Apply
                   </button>

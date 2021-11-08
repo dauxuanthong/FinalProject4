@@ -35,10 +35,16 @@ router.get("/allPost", postController.getAllPost);
 
 // /post/delete
 router.delete("/delete", authenticationController.identifyUser, postController.delete);
-
+// /post/normalPostDetail/:postId
 router.get(
   "/normalPostDetail/:postId",
   authenticationController.identifyUser,
   postController.normalPostDetail
+);
+// /post/auctionPostDetail/:postId
+router.get(
+  "/auctionPostDetail/:postId",
+  authenticationController.identifyUser,
+  postController.auctionPostDetail
 );
 module.exports = router;

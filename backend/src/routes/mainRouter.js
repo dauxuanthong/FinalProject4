@@ -1,6 +1,7 @@
 const user = require("./user");
 const post = require("./post");
 const conversation = require("./conversation");
+const auctionRoom = require("./auctionRoom");
 
 function router(app) {
   // /user
@@ -11,5 +12,8 @@ function router(app) {
 
   // /conversation
   app.use("/conversation", conversation);
+
+  // /auctionRoom
+  app.use("/auctionRoom", auctionRoom);
 }
 module.exports = router;

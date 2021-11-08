@@ -55,6 +55,13 @@ const postApi = {
       withCredentials: true,
     });
   },
+
+  auctionPostDetail: (param) => {
+    const url = `/post/auctionPostDetail/${param}`;
+    return axiosClient.get(url, {
+      withCredentials: true,
+    });
+  },
 };
 
 export default postApi;

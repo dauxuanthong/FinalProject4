@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 import Nav from "./Components/layouts/NavBar/Nav";
@@ -15,13 +15,16 @@ import Post from "./Components/Post/Post.jsx";
 import Conversation from "./Components/Conversation/Conversation";
 import ManagePosts from "./Components/Post/PostManage/ManagePosts";
 import AuctionRoom from "./Components/AuctionRoom/AuctionRoom";
+import io from "socket.io-client";
+const socketURL = "ws://localhost:3002";
 
 function App() {
   //STATE
   const [updateTK, setUpdateTK] = useState({
     value: 1,
   });
-  const [userStatus, setUserStatus] = useState();
+  const [userStatus, setUserStatus] = useState("");
+  const [currentUserId, setCurrentUserId] = useState("");
   //EFFECT
   useEffect(() => {
     refresh();
@@ -38,15 +41,32 @@ function App() {
     }, [600000]); // 10 minutes
   }, [updateTK]);
 
+  //setStatus
   useEffect(() => {
     setUserStatus(localStorage.getItem("status") || "");
+    const getCurrentUserId = async () => {
+      if (localStorage.getItem("status") === "signIn") {
+        const currentUserIdRes = await userApi.allInfo();
+        setCurrentUserId(currentUserIdRes.id);
+      }
+    };
+    getCurrentUserId();
   }, []);
+
+  useEffect(() => {
+    socket.current = io(socketURL);
+    socket.current.emit("addUser", currentUserId);
+  }, [userStatus, currentUserId]);
+
+  //USEREF
+  const socket = useRef();
 
   //Function
   const refresh = async () => {
     const newToken = await userApi.refreshToken();
     localStorage.setItem("accessToken", JSON.stringify(newToken));
   };
+  console.log("USER STATUS: ", userStatus);
   return (
     <Router>
       <div className="main-display">
@@ -60,17 +80,21 @@ function App() {
               <Route exact path="/" component={Home} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
-              {userStatus === "" && <Redirect to="/login" />}
+              {!userStatus && <Redirect to="/login" />}
               <Route exact path="/profile" component={Profile} />
               <Route exact path="/post" component={Post} />
               {/* <Route exact path="/postManage" component={PostManage} /> */}
-              <Route path="/Message" component={Conversation} />
+              <Route path="/Message" render={() => <Conversation socket={socket} />} />
               {/*Post*/}
               <Route exact path="/postDetail/post/:id" component={PostDetails} />
               <Route exact path="/postDetail/auctionPost/:id" component={AuctionPostDetails} />
               <Route exact path="/managePosts" component={ManagePosts} />
               {/* Auction room */}
-              <Route path="/auctionRoom" component={AuctionRoom} />
+              <Route
+                path="/auctionRoom/:roomId"
+                // render={() => Object.keys(socket).length > 0 && <AuctionRoom socket={socket} />}
+                render={() => <AuctionRoom socket={socket} />}
+              />
             </Switch>
           </div>
         </div>

@@ -299,7 +299,7 @@ class UserController {
     }
   };
 
-  allInfo = async (req, res) => {
+  allInfo = async (req, res, next) => {
     const userId = req.session.userId;
     try {
       const userInfo = await prisma.user.findUnique({
@@ -310,8 +310,7 @@ class UserController {
       });
       return res.json(userInfo);
     } catch (error) {
-      console.log(error);
-      return res.sendStatus(404);
+      return next(error);
     }
   };
 }

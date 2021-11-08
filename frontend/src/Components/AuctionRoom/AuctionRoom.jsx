@@ -1,9 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./AuctionRoom.css";
 import AuctFuction from "./AuctFuction";
 import AuctHistory from "./AuctHistory";
+import { useParams } from "react-router-dom";
+import PropTypes from "prop-types";
+import userApi from "../../API/userApi";
+
+AuctionRoom.propTypes = {
+  socket: PropTypes.object,
+};
 
 function AuctionRoom(props) {
+  //PARAM
+  const { roomId } = useParams();
+  //PROPS
+  const { socket } = props;
+  //STATE
+  const [trigger, setTrigger] = useState(0);
+  const [socketID, setSocketId] = useState("");
+  //EFFECT
+  useEffect(() => {
+    if (socket.current) {
+      setSocketId(socket.current.id);
+      return socket.current.emit("joinRoom", roomId);
+    }
+    setTrigger((prev) => {
+      let value;
+      prev === 0 ? (value = 1) : (value = 0);
+      return value;
+    });
+  }, [trigger, socketID]);
+
   return (
     <div className="auctionRoom-container">
       <div className="auctionRoom-leftPart">
@@ -11,12 +38,12 @@ function AuctionRoom(props) {
           <p>Left-top</p>
         </div>
         <div className="auctionRoom-function">
-          <AuctFuction />
+          <AuctFuction roomId={Number(roomId)} socket={socket} />
         </div>
       </div>
       <div className="auctionRoom-rightPart">
         <div className="auctionRoom-history">
-          <AuctHistory />
+          <AuctHistory roomId={Number(roomId)} socket={socket} />
         </div>
         <div className="auctionRoom-conversation">
           <p>Right-bottom</p>
