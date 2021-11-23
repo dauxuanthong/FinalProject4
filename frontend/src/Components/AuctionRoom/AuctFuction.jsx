@@ -24,11 +24,10 @@ function AuctFuction(props) {
 
   //Prop
   const { roomId, socket } = props;
-  console.log("SOCKET: ", socket.current);
   //EFFECT
   useEffect(() => {
     const getFunctionData = async () => {
-      const functionDataRes = await auctionRoomApi.functionData(roomId);
+      const functionDataRes = await auctionRoomApi.functionData(parseInt(roomId));
       setFunctionData(functionDataRes);
     };
     getFunctionData();
@@ -36,7 +35,9 @@ function AuctFuction(props) {
 
   useEffect(() => {
     socket.current?.on("bidValueUpdateClient", (value) => {
-      setFunctionData({ ...functionData, currentValue: value });
+      setFunctionData((prev) => {
+        return { ...prev, currentValue: value };
+      });
     });
     // eslint-disable-next-line
   }, []);
@@ -46,7 +47,7 @@ function AuctFuction(props) {
 
   //FUNCTION
   const bidFunction = async () => {
-    const bidFunctionRes = await auctionRoomApi.bid({ roomId: roomId });
+    const bidFunctionRes = await auctionRoomApi.bid({ roomId: parseInt(roomId) });
     if (bidFunctionRes.message === "DuplicateOwner") {
       return notifications.showNotification({
         color: "red",
@@ -63,8 +64,8 @@ function AuctFuction(props) {
         autoClose: 4000,
       });
     }
-    setFunctionData({ ...functionData, currentValue: bidFunctionRes.data[0].bidAmount });
-    console.log(socket.current.id);
+    // setFunctionData({ ...functionData, currentValue: bidFunctionRes.data[0].bidAmount });
+
     // socket value
     socket.current.emit("bidValueUpdateSever", {
       roomId: roomId.toString(),
@@ -92,7 +93,7 @@ function AuctFuction(props) {
       });
     }
     const upPriceFunctionRes = await auctionRoomApi.upPrice({
-      roomId: roomId,
+      roomId: parseInt(roomId),
       bidAmount: upPriceValue.toString(),
     });
     if (upPriceFunctionRes.message === "DuplicateOwner") {
@@ -119,7 +120,6 @@ function AuctFuction(props) {
         autoClose: 4000,
       });
     }
-    setFunctionData({ ...functionData, currentValue: upPriceFunctionRes.data[0].bidAmount });
     // socket
     socket.current.emit("bidValueUpdateSever", {
       roomId: roomId.toString(),
@@ -151,7 +151,7 @@ function AuctFuction(props) {
     }
     //Apply auto bid
     const applyAutoBidRes = await auctionRoomApi.applyAutoBid({
-      roomId: roomId,
+      roomId: parseInt(roomId),
       highestPrice: highestPrice.toString(),
       currentValue: functionData.currentValue,
     });
@@ -171,30 +171,67 @@ function AuctFuction(props) {
         autoClose: 4000,
       });
     }
+    //update highestPrice
+    setFunctionData((prev) => {
+      return {
+        ...prev,
+        highestPrice: highestPrice,
+      };
+    });
+    if (applyAutoBidRes.message === "OK") {
+      return notifications.showNotification({
+        color: "green",
+        title: `Highest price: ${highestPrice}`,
+        autoClose: 3000,
+      });
+    }
+    console.log(applyAutoBidRes);
+    // socket
+    socket.current.emit("bidValueUpdateSever", {
+      roomId: roomId.toString(),
+      currentValue: applyAutoBidRes.data[0].bidAmount,
+    });
+    // socket history
+    socket.current.emit("historyUpdateSever", {
+      roomId: roomId.toString(),
+      arrayData: applyAutoBidRes.data,
+    });
     return notifications.showNotification({
       color: "green",
-      title: `Highest price: ${applyAutoBidRes.highestPrice}`,
+      title: `Highest price: ${highestPrice}`,
       autoClose: 3000,
     });
-    // setFunctionData({
-    //   ...functionData,
-    //   currentValue: applyAutoBidRes.bidAmount,
-    //   highestPrice: applyAutoBidRes.highestPrice,
-    // });
-    // // socket
-    // socket.current.emit("bidValueUpdateSever", {
-    //   roomId: roomId.toString(),
-    //   currentValue: applyAutoBidRes.bidAmount,
-    // });
-    // // socket history
-    // socket.current.emit("historyUpdateSever", {
-    //   id: applyAutoBidRes.id,
-    //   bidder: applyAutoBidRes.bidder,
-    //   bidAmount: applyAutoBidRes.bidAmount,
-    //   bidTime: applyAutoBidRes.bidTime,
-    //   roomId: roomId.toString(),
-    // });
   };
+
+  //Reset AutoBid highest
+  const resetAutoBid = async () => {
+    const resetAutoBidRes = await auctionRoomApi.resetAutoBid({ roomId: parseInt(roomId) });
+    if (resetAutoBidRes.message === "ERROR") {
+      return notifications.showNotification({
+        color: "red",
+        title: "Reset failed",
+        message: `An error occurred during the transaction, please try again later!`,
+        autoClose: 3000,
+      });
+    }
+    if (resetAutoBidRes.message === "NOT FOUND") {
+      return notifications.showNotification({
+        color: "red",
+        title: "Reset failed",
+        message: `You have never set up automatic bidding`,
+        autoClose: 3000,
+      });
+    }
+    if (resetAutoBidRes.message === "SUCCESSFUL") {
+      setFunctionData({ ...functionData, highestPrice: "N/A" });
+      return notifications.showNotification({
+        color: "green",
+        title: "Reset successful",
+        autoClose: 3000,
+      });
+    }
+  };
+
   return (
     <div className="AuctFuction-container">
       <div className="AuctFuction-price-div">
@@ -309,7 +346,16 @@ function AuctFuction(props) {
                     color: "rgba(20, 61, 150, 0.747)",
                   }}
                 >
-                  Highest price: Not set
+                  Highest price:{" "}
+                  {functionData.highestPrice === "N/A"
+                    ? "N/A"
+                    : new Intl.NumberFormat("vi", {
+                        style: "currency",
+                        currency: "VND",
+                      })
+                        .format(functionData.highestPrice)
+                        .split("₫")}
+                  {functionData.highestPrice === "N/A" ? "" : "vnd"}
                 </p>
                 <div style={{ marginTop: 5, display: "flex", alignItems: "center" }}>
                   <p
@@ -356,6 +402,9 @@ function AuctFuction(props) {
                   <button
                     className="AuctFuction-autoBid-button"
                     style={{ backgroundColor: "#D55A5A" }}
+                    onClick={() => {
+                      resetAutoBid();
+                    }}
                   >
                     Reset
                   </button>
@@ -364,6 +413,7 @@ function AuctFuction(props) {
                     style={{ backgroundColor: "#70dab6" }}
                     onClick={() => {
                       applyAutoBid();
+                      setHighestPrice(0);
                     }}
                   >
                     Apply

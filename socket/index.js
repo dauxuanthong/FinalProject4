@@ -86,6 +86,15 @@ io.on("connection", (socket) => {
     console.log(error);
   }
 
+  //HistoryUpdateAll
+  try {
+    socket.on("historyUpdateAllSever", (data) => {
+      io.to(data.roomId).emit("historyUpdateAllClient");
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
   //disconnect
   socket.on("disconnect", () => {
     removeUser(socket.id);

@@ -42,6 +42,20 @@ const auctionRoomApi = {
       withCredentials: true,
     });
   },
+
+  auctionRoomProcess: (data) => {
+    const url = `/auctionRoom/autoBidProcess`;
+    return axiosClient.post(url, data, {
+      withCredentials: true,
+    });
+  },
+
+  resetAutoBid: (data) => {
+    const url = `/auctionRoom/resetAutoBid`;
+    return axiosClient.post(url, data, {
+      withCredentials: true,
+    });
+  },
 };
 
 export default auctionRoomApi;

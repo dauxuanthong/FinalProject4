@@ -1,0 +1,54 @@
+.AuctInfo-container {
+  width: 810px;
+  height: 455px;
+  display: flex;
+  flex-direction: row;
+}
+/* LEFT-PART */
+.AuctInfo-leftPart {
+  width: 360px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.AuctInfo-main-img {
+  margin-top: 20px;
+  border-radius: 10px;
+  width: 320px;
+  height: 290px;
+  margin-bottom: 20px;
+}
+.AuctInfo-slider {
+  width: 340px;
+  height: 135px;
+  padding-top: 10px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+.AuctInfo-sub-image {
+  border-radius: 10px;
+  width: 100px;
+  height: 80px;
+  margin-left: 6px;
+}
+/* RIGHT-PART */
+.AuctInfo-rightPart {
+  width: 450px;
+  height: 100%;
+  background-color: yellow;
+}
+.AuctInfo-product-name {
+}
+.AuctInfo-product-tag-div {
+}
+.AuctInfo-product-tag-label {
+}
+.AuctInfo-product-tag-item {
+}
+
+.AuctInfo-product-description-div {
+}
+
+.AuctInfo-product-button-div {
+}

@@ -5,6 +5,7 @@ import AuctHistory from "./AuctHistory";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import userApi from "../../API/userApi";
+import AuctInfo from "./AuctInfo";
 
 AuctionRoom.propTypes = {
   socket: PropTypes.object,
@@ -35,7 +36,7 @@ function AuctionRoom(props) {
     <div className="auctionRoom-container">
       <div className="auctionRoom-leftPart">
         <div className="auctionRoom-product-info">
-          <p>Left-top</p>
+          <AuctInfo />
         </div>
         <div className="auctionRoom-function">
           <AuctFuction roomId={Number(roomId)} socket={socket} />

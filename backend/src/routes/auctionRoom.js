@@ -28,4 +28,18 @@ router.post(
   auctionRoomController.applyAutoBid
 );
 
+// // /auctionRoom/autoBidProcess
+// router.post(
+//   "/autoBidProcess",
+//   authenticationController.identifyUser,
+//   auctionRoomController.autoBidProcess
+// );
+
+// /auctionRoom/resetAutoBid
+router.post(
+  "/resetAutoBid",
+  authenticationController.identifyUser,
+  auctionRoomController.resetAutoBid
+);
+
 module.exports = router;

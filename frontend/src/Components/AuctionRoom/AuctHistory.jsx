@@ -19,6 +19,7 @@ function AuctHistory(props) {
       bidTime: "",
     },
   ]);
+  // const [trigger, setTrigger] = useState(0);
   //props
   const { roomId, socket } = props;
 
@@ -33,20 +34,21 @@ function AuctHistory(props) {
   //socket updateHistory
   useEffect(() => {
     socket.current?.on("historyUpdateClient", (value) => {
-      // setHistoryData([...value, ...historyData.slice(0, 5 - value.length)]);
-      // console.log("TEST :", historyData.slice(0, 5 - value.length));
-      // console.log("VALUE: ", value);
-      // console.log("HISTORYDATA: ", historyData);
       setHistoryData((prev) => {
         const Arr = prev.slice(0, 5 - value.length);
         const newArr = [...value, ...Arr];
         return newArr;
       });
     });
-    // value = [item - 2, item - 1];
-    // historyData = [item1, item2, item3, item4, item5];
-    // historyData = [item - 2, item - 1, item1, item2, item3];
   }, []);
+  //socket updateAllHistory
+  // useEffect(() => {
+  //   socket.current?.on("historyUpdateAllClient", () => {
+  //     setTrigger((prev) => {
+  //       return prev === 0 ? 1 : 0;
+  //     });
+  //   });
+  // }, []);
 
   return (
     <div className="AuctHistory-container">
