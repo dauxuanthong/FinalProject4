@@ -12,11 +12,12 @@ import { Switch } from "@mantine/core";
 
 InfoManage.propTypes = {
   allInfo: PropTypes.object.isRequired,
+  updateInfoFunc: PropTypes.func,
 };
 
 function InfoManage(props) {
   //PROP
-  const { allInfo } = props;
+  const { allInfo, updateInfoFunc } = props;
 
   //STATE
   const [file, setFile] = useState(null);
@@ -82,12 +83,12 @@ function InfoManage(props) {
       formData.append("file", file);
       if (file) {
         const uploadAvatarRes = await userApi.uploadAvatar(formData);
-        if (uploadAvatarRes !== "OK") {
+        if (uploadAvatarRes.message === "ERROR") {
           return notifications.showNotification({
             color: "red",
             title: "Update profile failed!",
             message: "Some error occurred while updating Avatar. Please try again!",
-            autoClose: 10000,
+            autoClose: 1000,
           });
         }
       }
@@ -100,16 +101,27 @@ function InfoManage(props) {
         phoneNumberSetting: phoneNumberChecked,
       };
       const updateInfo = await userApi.updateInfo(data);
-      if (updateInfo !== "OK") {
+      if (updateInfo.message === "ERROR") {
         return notifications.showNotification({
           color: "red",
           title: "Update profile failed!",
           message:
             "Some error occurred while updating information. Please try to update your information again !",
-          autoClose: 10000,
+          autoClose: 1000,
         });
       }
-      return (window.location = "/profile");
+      const dataDes = {
+        ...updateInfo,
+        realNameSetting: realNameChecked,
+        addressSetting: addressChecked,
+        phoneNumberSetting: phoneNumberChecked,
+      };
+      updateInfoFunc(dataDes);
+      return notifications.showNotification({
+        color: "green",
+        title: "Update profile successfully!",
+        autoClose: 1000,
+      });
     } catch (error) {
       console.log(error);
     }

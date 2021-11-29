@@ -39,9 +39,13 @@ const postApi = {
 
   deletePost: (data) => {
     const url = "/post/delete";
-    return axiosClient.delete(url, data, {
-      withCredentials: true,
-    });
+    return axiosClient.delete(
+      url,
+      { data },
+      {
+        withCredentials: true,
+      }
+    );
   },
 
   getAllPost: () => {
@@ -58,6 +62,24 @@ const postApi = {
 
   auctionPostDetail: (param) => {
     const url = `/post/auctionPostDetail/${param}`;
+    return axiosClient.get(url, {
+      withCredentials: true,
+    });
+  },
+  auctionRoomPostDetail: (param) => {
+    const url = `/post/auctionRoomPostDetail/${param}`;
+    return axiosClient.get(url, {
+      withCredentials: true,
+    });
+  },
+  manageAllMyPost: () => {
+    const url = `/post/manageMyPost`;
+    return axiosClient.get(url, {
+      withCredentials: true,
+    });
+  },
+  normalPostDetailEdit: (param) => {
+    const url = `/post/normalPostDetailEdit/${param}`;
     return axiosClient.get(url, {
       withCredentials: true,
     });

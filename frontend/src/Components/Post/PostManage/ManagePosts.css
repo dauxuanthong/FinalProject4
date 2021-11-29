@@ -18,11 +18,13 @@
 
 /******************STATISTIC**********************/
 .ManagePost-statistic {
-  margin-left: 20px;
+  margin-left: 40px;
   width: 200px;
   height: 200px;
   border-radius: 10px;
   background-color: white;
+  position: sticky;
+  top: 40px;
 }
 
 .ManagePost-statistic-label {

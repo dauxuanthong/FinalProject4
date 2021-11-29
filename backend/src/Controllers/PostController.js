@@ -180,36 +180,23 @@ class PostController {
     try {
       //get file
       let files = [];
-      if (req.body.postType === "Post") {
-        const fileList = await prisma.post.findUnique({
-          where: { id: req.body.postID },
-          select: { imageUrl: true },
-        });
-        files = fileList.imageUrl;
-      } else {
-        const fileList = await prisma.auctionPost.findUnique({
-          where: { id: req.body.postID },
-          select: { imageUrl: true },
-        });
-        files = fileList.imageUrl;
-      }
+      const fileList = await prisma.post.findUnique({
+        where: { id: req.body.postId },
+        select: { imageUrl: true },
+      });
+      files = fileList.imageUrl;
       //delete file
       files.map((item) => {
         const fileName = __basedir + "/public" + item.slice(baseUrl.length);
         fs.unlinkSync(fileName);
       });
       //delete post
-      if (req.body.postType === "Post") {
-        await prisma.post.delete({
-          where: { id: req.body.postID },
-        });
-      } else {
-        await prisma.auctionPost.delete({
-          where: { id: req.body.postID },
-        });
-      }
-      return res.sendStatus(200);
+      await prisma.post.delete({
+        where: { id: req.body.postId },
+      });
+      return res.json({ message: "OK" });
     } catch (error) {
+      res.json({ message: "ERROR" });
       return next(error);
     }
   };
@@ -249,7 +236,23 @@ class PostController {
       const normalPostDetail = await prisma.post.findUnique({
         where: { id: parseInt(req.params.postId) },
       });
-      return res.json(normalPostDetail);
+      //get Type
+      const typeArr = await prisma.productType.findMany();
+      const typeDetail = normalPostDetail.typeId.reduce((array, item) => {
+        const type = typeArr.find((filItem) => item == filItem.id);
+        array.push(type.type);
+        return array;
+      }, []);
+      const normalPostDetailDestructuring = {
+        id: normalPostDetail.id,
+        productName: normalPostDetail.productName,
+        quantity: normalPostDetail.quantity,
+        price: normalPostDetail.price,
+        type: typeDetail,
+        description: normalPostDetail.description,
+        imageUrl: normalPostDetail.imageUrl,
+      };
+      return res.json(normalPostDetailDestructuring);
     } catch (error) {
       return next(error);
     }
@@ -282,6 +285,79 @@ class PostController {
         auctionRoomsId: auctionPostDetail.auctionRooms.id,
       };
       return res.json(auctionDetailDestructuring);
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  auctionRoomPostDetail = async (req, res, next) => {
+    try {
+      const auctionRoomPostDetail = await prisma.auctionRooms.findUnique({
+        where: { id: parseInt(req.params.roomId) },
+        include: { auctionPost: true },
+      });
+      const typeArr = await prisma.productType.findMany();
+      //Type detail
+      const typeDetail = auctionRoomPostDetail.auctionPost.typeId.reduce((array, item) => {
+        const type = typeArr.find((filItem) => item == filItem.id);
+        array.push(type.type);
+        return array;
+      }, []);
+      const auctionDetailDestructuring = {
+        postId: auctionRoomPostDetail.auctionPost.id,
+        imageList: auctionRoomPostDetail.auctionPost.imageUrl,
+        productName: auctionRoomPostDetail.auctionPost.productName,
+        type: typeDetail,
+        quantity: auctionRoomPostDetail.auctionPost.quantity,
+        description: auctionRoomPostDetail.auctionPost.description,
+      };
+      return res.json(auctionDetailDestructuring);
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  manageMyPost = async (req, res, next) => {
+    const userId = req.session.userId;
+    try {
+      //get list of post
+      const listOfPost = await prisma.post.findMany({
+        where: { userId: userId },
+      });
+      const numOfPost = listOfPost.length;
+      //let list of auction post
+      const listOfAuctionPost = await prisma.auctionPost.findMany({
+        where: { userId: userId },
+        include: { auctionRooms: true },
+      });
+      const numOfAuctionPost = listOfAuctionPost.length;
+      const numOfExpireAuctionPost = listOfAuctionPost.reduce((num, item) => {
+        if (item.auctionDatetime < Date.now()) {
+          num += 1;
+          return num;
+        }
+        return num;
+      }, 0);
+      const dataDestructuring = {
+        postList: listOfPost,
+        auctionPostList: listOfAuctionPost,
+        postNum: numOfPost,
+        auctionPostNum: numOfAuctionPost,
+        expired: numOfExpireAuctionPost,
+      };
+      return res.json(dataDestructuring);
+    } catch (error) {
+      res.json({ message: "ERROR" });
+      return next(error);
+    }
+  };
+
+  normalPostDetailEdit = async (req, res, next) => {
+    try {
+      const normalPostDetail = await prisma.post.findUnique({
+        where: { id: parseInt(req.params.id) },
+      });
+      return res.json(normalPostDetail);
     } catch (error) {
       return next(error);
     }

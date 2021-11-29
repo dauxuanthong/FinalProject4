@@ -16,13 +16,6 @@ AuctionPostDetail.propTypes = {};
 
 function AuctionPostDetail(props) {
   //STACK
-  // const [imageList, setImageList] = useState([
-  //   "https://i.pinimg.com/236x/df/4f/39/df4f3976af7b74014cc753bdc517064b--pusheen-cat-nyan-cat.jpg",
-  //   "https://i.pinimg.com/236x/df/4f/39/df4f3976af7b74014cc753bdc517064b--pusheen-cat-nyan-cat.jpg",
-  //   "https://i.pinimg.com/236x/df/4f/39/df4f3976af7b74014cc753bdc517064b--pusheen-cat-nyan-cat.jpg",
-  //   "https://i.pinimg.com/236x/df/4f/39/df4f3976af7b74014cc753bdc517064b--pusheen-cat-nyan-cat.jpg",
-  // ]);
-
   const [auctionData, setAuctionData] = useState({
     id: "",
     imageList: [],
@@ -37,6 +30,8 @@ function AuctionPostDetail(props) {
     auctionRoomsId: "",
   });
 
+  const [mainImg, setMainImg] = useState("");
+
   //PARAM
   const { id } = useParams();
 
@@ -50,8 +45,8 @@ function AuctionPostDetail(props) {
   useEffect(() => {
     const getAuctionDetail = async () => {
       const auctionDetailRes = await postApi.auctionPostDetail(id);
-      console.log(auctionDetailRes);
       setAuctionData(auctionDetailRes);
+      setMainImg(auctionDetailRes.imageList[0]);
     };
     getAuctionDetail();
   }, []);
@@ -100,15 +95,15 @@ function AuctionPostDetail(props) {
       });
     }
   };
+
+  const imgOnChange = (index) => {
+    setMainImg(auctionData.imageList[index]);
+  };
   return (
     <div className="AuctionPostDetail-container">
       <div className="AuctionPostDetail-div">
         <div className="AuctionPostDetail-image-area">
-          <img
-            className="AuctionPostDetail-main-img"
-            src={auctionData.imageList[0]}
-            alt="main product"
-          ></img>
+          <img className="AuctionPostDetail-main-img" src={mainImg} alt="main product"></img>
           <div className="AuctionPostDetail-slider-div">
             <div className="AuctionPostDetail-slider-div">
               <Slider {...settings}>
@@ -118,6 +113,7 @@ function AuctionPostDetail(props) {
                       className="AuctionPostDetail-sub-image"
                       src={item}
                       alt="main product"
+                      onClick={() => imgOnChange(auctionData.imageList.indexOf(item))}
                     ></img>
                   </div>
                 ))}

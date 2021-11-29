@@ -32,7 +32,6 @@ function AuctionPost(props) {
   const [modalImg, setModalImg] = useState("");
   const [description, setDescription] = useState("");
   const [opacityDescription, setOpacityDescription] = useState(0);
-  // const [datetime, setDatetime] = useState(new Date());
 
   //USE-FORM
   const form = useForm({
@@ -147,7 +146,6 @@ function AuctionPost(props) {
         buyItNow: value.buyItNow.toString(),
         auctionDatetime: value.datetime,
       };
-      console.log(data);
       const uploadAllInfo = await postApi.auctionPostInfo(data);
       if (uploadAllInfo.successMessage) {
         notifications.showNotification({

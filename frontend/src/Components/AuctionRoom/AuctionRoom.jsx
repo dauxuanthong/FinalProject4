@@ -36,7 +36,7 @@ function AuctionRoom(props) {
     <div className="auctionRoom-container">
       <div className="auctionRoom-leftPart">
         <div className="auctionRoom-product-info">
-          <AuctInfo />
+          <AuctInfo roomId={roomId} />
         </div>
         <div className="auctionRoom-function">
           <AuctFuction roomId={Number(roomId)} socket={socket} />
@@ -47,7 +47,7 @@ function AuctionRoom(props) {
           <AuctHistory roomId={Number(roomId)} socket={socket} />
         </div>
         <div className="auctionRoom-conversation">
-          <p>Right-bottom</p>
+          <p></p>
         </div>
       </div>
     </div>

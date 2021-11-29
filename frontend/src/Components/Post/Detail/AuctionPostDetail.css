@@ -59,6 +59,8 @@
   font-size: 24px;
   font-weight: 550;
   color: rgba(20, 61, 150, 0.829);
+  display: flex;
+  align-items: center;
 }
 
 .AuctionPostDetail-type {
@@ -69,8 +71,8 @@
 }
 .AuctionPostDetail-type-item {
   background-color: rgba(125, 181, 214, 0.671);
-  margin-left: 5px;
-  padding: 1px 3px 1px 3px;
+  margin-left: 8px;
+  padding: 1px 5px 1px 5px;
   display: inline-block;
   font-size: 14px;
   font-weight: 500;

@@ -4,46 +4,52 @@ import { RiAuctionLine } from "react-icons/ri";
 import { RiListCheck2 } from "react-icons/ri";
 import "./ManagePosts.css";
 import PostLists from "./PostLists";
-import AuctionRooms from "./AuctionRooms";
+import postApi from "../../../API/postApi";
+import AuctionPostList from "./AuctionPostList";
 
 function ManagePosts(props) {
   //STATE
-  const [statisticData, setStatisticData] = useState([]);
+  const [statisticData, setStatisticData] = useState({
+    post: 0,
+    auctionPost: 0,
+    expired: 0,
+  });
+  const [postList, setPostList] = useState([]);
+  const [auctionPostList, setAuctionPostList] = useState([]);
   //EFFECT
+  useEffect(() => {
+    const manageMyPost = async () => {
+      const manageAllMyPost = await postApi.manageAllMyPost();
+      setPostList(manageAllMyPost.postList);
+      setAuctionPostList(manageAllMyPost.auctionPostList);
+      console.log(manageAllMyPost.auctionPostList);
+      setStatisticData({
+        post: manageAllMyPost.postNum,
+        auctionPost: manageAllMyPost.auctionPostNum,
+        expired: manageAllMyPost.expired,
+      });
+    };
+    manageMyPost();
+  }, []);
 
-  //FUNCTION
-  const getStatistic = (jsonData) => {
-    const ArrayData = Object.entries(jsonData);
-    console.log("ArrayData: ", ArrayData);
-    setStatisticData(ArrayData);
-  };
-
-  const updateStatistic = (trigger) => {
-    if (trigger === "Expired") {
-      const newStatistic = [
-        [statisticData[0][0], statisticData[0][1] - 1],
-        [statisticData[1][0], statisticData[1][1] - 1],
-      ];
-      setStatisticData(newStatistic);
-    } else {
-      const newStatistic = [
-        [statisticData[0][0], statisticData[0][1] - 1],
-        [statisticData[1][0], statisticData[1][1]],
-      ];
-      setStatisticData(newStatistic);
-    }
-  };
   //EVENT
-
+  const deletePostUpdate = (postId) => {
+    setPostList((pre) => {
+      return pre.filter((item) => item.id !== postId);
+    });
+    setStatisticData((pre) => {
+      return { ...pre, post: pre.post - 1 };
+    });
+  };
   return (
     <div className="ManagePost-Container">
       <div className="ManagePost-Tabs-div">
         <Tabs>
-          <Tab label="All Posts" icon={<RiListCheck2 />}>
-            <PostLists getStatistic={getStatistic} updateStatistic={updateStatistic} />
+          <Tab label="Posts" icon={<RiListCheck2 />}>
+            <PostLists postList={postList} deletePostUpdate={deletePostUpdate} />
           </Tab>
-          <Tab label="Auction Room" icon={<RiAuctionLine />}>
-            <AuctionRooms />
+          <Tab label="Auction Posts" icon={<RiAuctionLine />}>
+            <AuctionPostList auctionPostList={auctionPostList} />
           </Tab>
         </Tabs>
       </div>
@@ -52,11 +58,17 @@ function ManagePosts(props) {
           <p>STATISTIC</p>
         </div>
         <div className="ManagePost-statistic-detail-div">
-          {statisticData?.map((item) => (
-            <p key={item[0]}>{`${item[0].charAt(0).toUpperCase() + item[0].slice(1)}: ${
-              item[1]
-            }`}</p>
-          ))}
+          {statisticData.post > 1 ? (
+            <p>Posts: {statisticData.post}</p>
+          ) : (
+            <p>Post: {statisticData.post}</p>
+          )}
+          {statisticData.auctionPost > 1 ? (
+            <p>Auction Posts: {statisticData.auctionPost}</p>
+          ) : (
+            <p>Auction Post: {statisticData.auctionPost}</p>
+          )}
+          <p>Expired: {statisticData.expired}</p>
         </div>
       </div>
     </div>

@@ -1,0 +1,109 @@
+.PostList-detail-div {
+  width: 100%;
+  height: fit-content;
+}
+/*************ITEM*************/
+.PostList-detail-item-div {
+  margin: 0 10px 10px 10px;
+  width: 780px;
+  height: 150px;
+  border-radius: 10px;
+  border: 1px solid #bcc3ca;
+  display: flex;
+  align-items: center;
+  transition: all 0.4s ease;
+}
+.PostList-detail-item-div:hover {
+  transform: translateY(-2px);
+}
+
+.PostList-detail-item-image {
+  height: 140px;
+  width: 170px;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+/*INFO*/
+.PostList-detail-item-info {
+  margin-left: 5px;
+  width: 460px;
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.PostList-detail-item-info-ellipsis {
+  width: inherit;
+  border-bottom: 0.5px solid rgb(206, 212, 218);
+  font-size: 14px;
+  margin: 4px 0 4px 0;
+}
+.PostList-detail-item-info p {
+  margin: 4px 0 4px 0;
+  width: 100%;
+  font-size: 14px;
+  border-bottom: 0.5px solid rgb(206, 212, 218);
+}
+/*FUNC*/
+.PostList-detail-item-func {
+  margin-left: 5px;
+  height: 140px;
+  width: 130px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  opacity: 0;
+}
+.PostList-detail-item-div:hover .PostList-detail-item-func {
+  opacity: 1;
+}
+
+.PostList-detail-item-func button {
+  width: 100px;
+  height: 40px;
+  outline: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 550;
+  color: white;
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+
+.PostList-detail-item-func button:hover {
+  transform: scale(1.05);
+}
+
+/**************Modal*************/
+.PostList-delete-modal-div {
+  width: 100%;
+  height: fit-content;
+}
+.PostList-delete-modal-div p {
+  font-size: 14px;
+  display: block;
+}
+.PostList-delete-modal-button {
+  margin-top: 20px;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.PostList-delete-modal-button button {
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 4px;
+  width: 90px;
+  height: 40px;
+  font-size: 14px;
+  color: whitesmoke;
+}
+
+.PostList-delete-modal-button button:hover {
+  cursor: pointer;
+}

@@ -42,12 +42,26 @@ function Profile(props) {
     getAllInfo();
   }, []);
 
+  const updateInfoFunc = (data) => {
+    setAllInfo({
+      userName: data.userName,
+      email: data.email,
+      avatar: data.avatar,
+      realName: data.realName,
+      address: data.address,
+      phoneNumber: data.phoneNumber,
+      realNameSetting: data.realNameSetting,
+      addressSetting: data.addressSetting,
+      phoneNumberSetting: data.phoneNumberSetting,
+    });
+  };
+
   return (
     <div className="profile-container">
       <div className="profile-display">
         <div className="public-profile">
-          <Avatar size={150} radius="md" src={allInfo.avatar} />
-          <p>{allInfo.userName}</p>
+          <Avatar size={170} radius="md" src={allInfo.avatar} />
+          <p style={{ fontSize: 18 }}>{allInfo.userName}</p>
         </div>
         <div className="private-profile">
           <div className="private-profile-item">
@@ -105,7 +119,7 @@ function Profile(props) {
           variant="pills"
         >
           <Tab label="Manage Profile">
-            <InfoManage allInfo={allInfo} />
+            <InfoManage allInfo={allInfo} updateInfoFunc={updateInfoFunc} />
           </Tab>
           <Tab label="Manage Account">
             <AccountManage />

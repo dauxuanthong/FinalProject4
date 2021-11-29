@@ -1,65 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import "./PostLists.css";
+import "./AuctionPostList.css";
 import LinesEllipsis from "react-lines-ellipsis";
-import { Modal } from "@mantine/core";
 import { useHistory } from "react-router";
-import postApi from "../../../API/postApi";
-import { useNotifications } from "@mantine/notifications";
 
-PostLists.propTypes = {
-  postList: PropTypes.array,
-  deletePostUpdate: PropTypes.func,
+AuctionPostList.propTypes = {
+  auctionPostList: PropTypes.array,
 };
 
-function PostLists(props) {
-  //STATE
-  // const [postItem, setPostItem] = useState([]);
-  const [deleteModal, setDeleteModal] = useState(false);
-  const [focusPost, setFocusPost] = useState({
-    postId: 0,
-    postName: "",
-  });
+function AuctionPostList(props) {
   //PROPS
-  const { postList, deletePostUpdate } = props;
+  const { auctionPostList } = props;
 
   //USE-history
   const history = useHistory();
 
-  //USE-NOTIFICATION
-  const notifications = useNotifications();
-
-  const deletePost = async () => {
-    try {
-      const deletePostRes = await postApi.deletePost({ postId: focusPost.postId });
-      if (deletePostRes.message === "ERROR") {
-        return notifications.showNotification({
-          color: "red",
-          title: "System error",
-          message: `An error occurred during the transaction, please try again later!`,
-          autoClose: 3000,
-        });
-      }
-      deletePostUpdate(focusPost.postId);
-      setDeleteModal(false);
-      setFocusPost({
-        postId: 0,
-        postName: "",
-      });
-      return notifications.showNotification({
-        color: "green",
-        title: "Remove post successfully",
-        autoClose: 1500,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <>
       <div className="PostList-detail-div">
-        {postList.map((item) => (
+        {auctionPostList.map((item) => (
           <div className="PostList-detail-item-div" key={item.id}>
             <img className="PostList-detail-item-image" src={item.imageUrl[0]} alt="Product"></img>
             <div className="PostList-detail-item-info">
@@ -71,15 +30,23 @@ function PostLists(props) {
                 trimRight
                 basedOn="letters"
               />
-              <p>Quantity: {item.quantity}</p>
               <p>
-                Price:{" "}
+                Buy it now:{" "}
                 {new Intl.NumberFormat("vi", {
                   style: "currency",
                   currency: "VND",
-                }).format(item.price)}
+                }).format(item.buyItNow)}
               </p>
-              <p>{`Upload at: ${new Date(new Date(item.createAt))
+              <p>
+                Current Price:{" "}
+                {new Intl.NumberFormat("vi", {
+                  style: "currency",
+                  currency: "VND",
+                }).format(item.auctionRooms.currentPrice)}
+              </p>
+              <p
+                style={{ color: new Date(item.auctionDatetime) < new Date() ? "#FF4D4F" : "black" }}
+              >{`End at: ${new Date(new Date(item.auctionDatetime))
                 .toLocaleString()
                 .replace(",", "")}`}</p>
             </div>
@@ -87,7 +54,7 @@ function PostLists(props) {
               <button
                 style={{ backgroundColor: "rgb(86, 173, 133)" }}
                 onClick={() => {
-                  history.push(`/postDetail/post/${item.id}`);
+                  history.push(`/postDetail/auctionPost/${item.id}`);
                 }}
               >
                 Detail
@@ -95,28 +62,28 @@ function PostLists(props) {
               <button
                 style={{ backgroundColor: "rgb(86, 127, 173)" }}
                 onClick={() => {
-                  history.push(`/managePosts/edit/${item.id}`);
+                  history.push(`/auctionRoom/${item.auctionRooms.id}`);
                 }}
               >
-                Edit
+                Join Room
               </button>
-              <button
+              {/* <button
                 style={{ backgroundColor: "#FF4D4F" }}
-                onClick={() => {
-                  setFocusPost({
-                    postId: item.id,
-                    postName: item.productName,
-                  });
-                  setDeleteModal(true);
-                }}
+                // onClick={() => {
+                //   setFocusPost({
+                //     postId: item.id,
+                //     postName: item.productName,
+                //   });
+                //   setDeleteModal(true);
+                // }}
               >
                 Delete
-              </button>
+              </button> */}
             </div>
           </div>
         ))}
       </div>
-      <Modal
+      {/* <Modal
         hideCloseButton
         opened={deleteModal}
         onClose={() => {
@@ -153,9 +120,9 @@ function PostLists(props) {
             </button>
           </div>
         </div>
-      </Modal>
+      </Modal> */}
     </>
   );
 }
 
-export default PostLists;
+export default AuctionPostList;

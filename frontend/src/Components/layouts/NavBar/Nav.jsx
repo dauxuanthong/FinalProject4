@@ -57,10 +57,6 @@ function Nav(props) {
             styles={{
               label: { fontSize: "16px", textAlign: "center" },
             }}
-            // classNames={{
-            //   label: 'label-of-menu',
-            //   itemLabel: 'item-label-of-menu'
-            // }}
           >
             <MenuLabel>{userName}</MenuLabel>
             <Divider />

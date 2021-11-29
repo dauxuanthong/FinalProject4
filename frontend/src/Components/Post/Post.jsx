@@ -47,7 +47,6 @@ function Post(props) {
           </Tab>
         </Tabs>
       </div>
-      <p></p>
     </div>
   );
 }

@@ -101,7 +101,7 @@ function AuctFuction(props) {
         color: "red",
         title: "Up price failed",
         message: `You have offered the highest price for the product`,
-        autoClose: 4000,
+        autoClose: 3000,
       });
     }
     if (upPriceFunctionRes.message === "ERROR") {
@@ -109,7 +109,7 @@ function AuctFuction(props) {
         color: "red",
         title: "System error",
         message: `An error occurred during the transaction, please try again later!`,
-        autoClose: 4000,
+        autoClose: 3000,
       });
     }
     if (upPriceFunctionRes.message === "UpPriceInvalid") {
@@ -117,7 +117,7 @@ function AuctFuction(props) {
         color: "red",
         title: "Up price failed",
         message: `Bid value is lower than step value. Please increase the bid price and try again!`,
-        autoClose: 4000,
+        autoClose: 3000,
       });
     }
     // socket

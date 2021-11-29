@@ -1,0 +1,99 @@
+.Search-component {
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.Search-main {
+  width: 1200px;
+  border-radius: 10px;
+  height: 200px;
+  background-color: white;
+  box-shadow: rgb(151 150 150 / 10%) 0px 10px 50px;
+  display: flex;
+}
+/* LEFT PART */
+.Search-leftPart {
+  width: 800px;
+  height: 100%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.Search-leftPart-tab {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+}
+.Search-leftPart-tab-item {
+  width: fit-content;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.Search-leftPart-tab-item p {
+  margin-left: 5px;
+  margin-right: 5px;
+  font-weight: 550;
+  font-size: 17px;
+}
+
+/* FILTER */
+.Search-leftPart-filter {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+.Search-leftPart-func {
+  margin-top: 10px;
+  width: 100%;
+  height: fit-content;
+  flex-direction: row;
+  display: flex;
+}
+
+.Search-leftPart-item {
+  width: 200px;
+  margin-right: 20px;
+}
+
+/* RIGHT PART */
+.Search-rightPart {
+  width: 400px;
+  height: 100%;
+}
+
+.Search-rightPart-search {
+  padding: 10px 10px 0 10px;
+}
+.Search-rightPart-div {
+  padding-left: 10px;
+  margin-top: 20px;
+  width: inherit;
+  height: 120px;
+  border-left: 1px solid #a1a1a1;
+  display: flex;
+  flex-direction: column;
+}
+.Search-rightPart-div p {
+  margin-bottom: 3px;
+  font-size: 14px;
+}
+/* SEARCH INFO */
+.Search-info {
+  width: 1200px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 40px;
+}

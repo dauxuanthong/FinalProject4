@@ -11,10 +11,11 @@ import Profile from "./Components/layouts/Profile/Profile";
 import PostDetails from "./Components/Post/Detail/PostDetail.jsx";
 import AuctionPostDetails from "./Components/Post/Detail/AuctionPostDetail";
 import Post from "./Components/Post/Post.jsx";
-// import PostManage from "./Components/Post/PostManage/PostManage";
 import Conversation from "./Components/Conversation/Conversation";
 import ManagePosts from "./Components/Post/PostManage/ManagePosts";
 import AuctionRoom from "./Components/AuctionRoom/AuctionRoom";
+import EditPost from "./Components/Post/PostManage/EditPost";
+import Search from "./Components/Search/Search";
 import io from "socket.io-client";
 const socketURL = "ws://localhost:3002";
 
@@ -23,7 +24,7 @@ function App() {
   const [updateTK, setUpdateTK] = useState({
     value: 1,
   });
-  const [userStatus, setUserStatus] = useState("");
+  const [userStatus, setUserStatus] = useState("signIn");
   const [currentUserId, setCurrentUserId] = useState("");
   //EFFECT
   useEffect(() => {
@@ -83,18 +84,16 @@ function App() {
               {!userStatus && <Redirect to="/login" />}
               <Route exact path="/profile" component={Profile} />
               <Route exact path="/post" component={Post} />
-              {/* <Route exact path="/postManage" component={PostManage} /> */}
               <Route path="/Message" render={() => <Conversation socket={socket} />} />
               {/*Post*/}
               <Route exact path="/postDetail/post/:id" component={PostDetails} />
               <Route exact path="/postDetail/auctionPost/:id" component={AuctionPostDetails} />
               <Route exact path="/managePosts" component={ManagePosts} />
+              <Route exact path="/managePosts/edit/:id" component={EditPost} />
               {/* Auction room */}
-              <Route
-                path="/auctionRoom/:roomId"
-                // render={() => Object.keys(socket).length > 0 && <AuctionRoom socket={socket} />}
-                render={() => <AuctionRoom socket={socket} />}
-              />
+              <Route path="/auctionRoom/:roomId" render={() => <AuctionRoom socket={socket} />} />
+              {/* SEARCH */}
+              <Route exact path="/search/" component={Search} />
             </Switch>
           </div>
         </div>

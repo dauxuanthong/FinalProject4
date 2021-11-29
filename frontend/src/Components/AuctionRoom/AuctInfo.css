@@ -36,19 +36,77 @@
 .AuctInfo-rightPart {
   width: 450px;
   height: 100%;
-  background-color: yellow;
 }
 .AuctInfo-product-name {
+  display: flex;
+  align-items: center;
+  width: 450px;
+  height: 85px;
+  font-size: 21px;
+  font-weight: 550;
+  overflow: hidden;
+  color: rgba(20, 61, 150, 0.829);
 }
 .AuctInfo-product-tag-div {
+  display: flex;
+  height: 20px;
+  width: 100%;
 }
 .AuctInfo-product-tag-label {
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.767);
+  font-weight: 550;
 }
 .AuctInfo-product-tag-item {
+  background-color: rgba(125, 181, 214, 0.671);
+  margin-left: 5px;
+  padding: 1px 3px 1px 3px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.822);
+  border-radius: 5px;
+  height: fit-content;
 }
 
+.AuctInfo-product-quantity {
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.767);
+  font-weight: 550;
+  margin-bottom: 10px;
+}
 .AuctInfo-product-description-div {
+  height: 300px;
+  width: 450px;
+  overflow-y: auto;
+}
+.AuctInfo-product-description-div::-webkit-scrollbar {
+  width: 3px;
+}
+.AuctInfo-product-description-div::-webkit-scrollbar-track {
+  background: #dff1ffad;
+  border-radius: 10px;
+  margin-top: 5px;
+}
+.AuctInfo-product-description-div::-webkit-scrollbar-thumb {
+  background: #a3bae585;
+  border-radius: 10px;
 }
 
 .AuctInfo-product-button-div {
+  width: 450px;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.AuctInfo-product-button-div button {
+  background-color: #a3b6da;
+  border-radius: 10px;
+  width: 180px;
+  height: 40px;
+  font-size: 16px;
+  font-weight: 550;
+  color: white;
+  cursor: pointer;
 }

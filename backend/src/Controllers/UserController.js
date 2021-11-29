@@ -205,8 +205,6 @@ class UserController {
         select: { password: true },
       });
       //check old password
-      console.log(userPassword);
-      console.log(req.body.oldPassword);
       const checkPass = await bcrypt.compareSync(req.body.oldPassword, userPassword.password);
       if (checkPass === false)
         return res.json({ errMessage: "Old password is not correct. Please try again!" });
@@ -218,7 +216,8 @@ class UserController {
       return res.json({ successMessage: "Change password successfully!" });
     } catch (error) {
       console.log(error);
-      return res.sendStatus(404);
+      res.sendStatus(404);
+      return next(error);
     }
   };
 
@@ -270,14 +269,15 @@ class UserController {
       return res.sendStatus(200);
     } catch (error) {
       console.log(error);
-      return res.sendStatus(404);
+      res.json({ message: "ERROR" });
+      return next(error);
     }
   };
 
   updateInfo = async (req, res) => {
     const userId = req.session.userId;
     try {
-      await prisma.user.update({
+      const update = await prisma.user.update({
         where: { id: userId },
         data: {
           realName: req.body.realName || null,
@@ -292,10 +292,10 @@ class UserController {
           },
         },
       });
-      return res.sendStatus(200);
+      return res.json(update);
     } catch (error) {
-      console.log(error);
-      return res.sendStatus(404);
+      res.json({ message: "ERROR" });
+      return next(error);
     }
   };
 

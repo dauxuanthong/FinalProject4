@@ -47,4 +47,22 @@ router.get(
   authenticationController.identifyUser,
   postController.auctionPostDetail
 );
+
+// /post/auctionRoomPostDetail/:postId
+router.get(
+  "/auctionRoomPostDetail/:roomId",
+  authenticationController.identifyUser,
+  postController.auctionRoomPostDetail
+);
+
+// /post/manageMyPost
+router.get("/manageMyPost", authenticationController.identifyUser, postController.manageMyPost);
+
+// /post/normalPostDetailEdit/:id
+router.get(
+  "/normalPostDetailEdit/:id",
+  authenticationController.identifyUser,
+  postController.normalPostDetailEdit
+);
+
 module.exports = router;
