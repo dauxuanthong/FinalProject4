@@ -221,6 +221,31 @@ class ConversationController {
       return next(error);
     }
   };
+
+  getUserContact = async (req, res, next) => {
+    const currentUserId = req.session.userId;
+    try {
+      //Check currentUserId === postOwnerId?
+      if (currentUserId === req.body.userId) {
+        return res.json({ message: "duplicated userId" });
+      }
+      //Check Conversation is existed
+      const checkConversation = await prisma.conversations.findMany({
+        where: { users: { hasEvery: [currentUserId, req.body.userId] } },
+      });
+      if (Object.keys(checkConversation).length === 0) {
+        const conversation = await prisma.conversations.create({
+          data: {
+            users: [currentUserId, req.body.userId],
+          },
+        });
+        return res.json({ conversationId: conversation.id });
+      }
+      return res.json({ conversationId: checkConversation[0].id });
+    } catch (error) {
+      return next(error);
+    }
+  };
 }
 
 module.exports = new ConversationController();

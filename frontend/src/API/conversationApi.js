@@ -52,5 +52,11 @@ const conversationApi = {
       withCredentials: true,
     });
   },
+  getUserContact: (data) => {
+    const url = "/conversation/getUserContact";
+    return axiosClient.post(url, data, {
+      withCredentials: true,
+    });
+  },
 };
 export default conversationApi;

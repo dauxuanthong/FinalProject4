@@ -49,5 +49,11 @@ router.post(
   authenticationController.identifyUser,
   conversationController.sendMapMessage
 );
+// /conversation/getUserContact
+router.post(
+  "/getUserContact",
+  authenticationController.identifyUser,
+  conversationController.getUserContact
+);
 
 module.exports = router;

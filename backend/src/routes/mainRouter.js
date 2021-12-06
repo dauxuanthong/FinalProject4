@@ -2,6 +2,7 @@ const user = require("./user");
 const post = require("./post");
 const conversation = require("./conversation");
 const auctionRoom = require("./auctionRoom");
+const search = require("./search");
 
 function router(app) {
   // /user
@@ -15,5 +16,8 @@ function router(app) {
 
   // /auctionRoom
   app.use("/auctionRoom", auctionRoom);
+
+  // /search
+  app.use("/search", search);
 }
 module.exports = router;

@@ -7,11 +7,15 @@ import postApi from "../../API/postApi";
 import conversationApi from "../../API/conversationApi";
 import { useNotifications } from "@mantine/notifications";
 import { useHistory } from "react-router";
+import auctionRoomApi from "../../API/auctionRoomApi";
+import { Input } from "@mantine/core";
+import { BiSearchAlt } from "react-icons/bi";
 
 function Home(props) {
   //USE-STATE
   const [allPost, setAllPost] = useState({});
   const [auctionPost, setAuctionPost] = useState({});
+  const [searchValue, setSearchValue] = useState("");
   //USE-EFFECT
   useEffect(() => {
     const getAllPost = async () => {
@@ -59,6 +63,32 @@ function Home(props) {
     }
   };
 
+  const joinRoom = async (roomId) => {
+    const joinRoomRes = await auctionRoomApi.joinAuctionRoom({ roomId: roomId });
+    if (joinRoomRes.message === "OK") {
+      return history.push(`/auctionRoom/${roomId}`);
+    } else {
+      return notifications.showNotification({
+        color: "red",
+        title: "Error",
+        message: `system error! Please try again later`,
+        autoClose: 2000,
+      });
+    }
+  };
+
+  const handleKeypress = (e) => {
+    //it triggers by pressing the enter key
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      search();
+    }
+  };
+
+  const search = () => {
+    history.push(`/search/${searchValue}`);
+  };
+
   return (
     <div className="home-container">
       {/*header home page*/}
@@ -74,8 +104,17 @@ function Home(props) {
         <div className="home-introduction-part">
           <img src="https://image.archify.com/blog/l/73zpaujs.jpg" alt="Background"></img>
           <div className="home-trending-product-tag">
-            <div className="home-trending-product-tag-item">
-              <p></p>
+            <div className="Home-rightPart-search">
+              <Input
+                placeholder="Search"
+                radius="md"
+                rightSection={<BiSearchAlt />}
+                value={searchValue}
+                onChange={(e) => {
+                  setSearchValue(e.target.value);
+                }}
+                onKeyDown={handleKeypress}
+              />
             </div>
             <div className="home-trending-product-tag-item">
               <p></p>
@@ -240,7 +279,13 @@ function Home(props) {
                           >
                             Detail
                           </button>
-                          <button>Bet</button>
+                          <button
+                            onClick={() => {
+                              joinRoom(item.auctionRooms.id);
+                            }}
+                          >
+                            Join
+                          </button>
                         </div>
                       </div>
                     </Col>

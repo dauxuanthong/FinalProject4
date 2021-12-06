@@ -205,7 +205,7 @@ class PostController {
     try {
       //Normal post
       const allNormalPost = await prisma.post.findMany({
-        take: 20,
+        take: 10,
         select: {
           id: true,
           productName: true,
@@ -223,6 +223,7 @@ class PostController {
           firstPrice: true,
           auctionDatetime: true,
           imageUrl: true,
+          auctionRooms: true,
         },
         orderBy: { createAt: "desc" },
       });

@@ -93,7 +93,7 @@ function App() {
               {/* Auction room */}
               <Route path="/auctionRoom/:roomId" render={() => <AuctionRoom socket={socket} />} />
               {/* SEARCH */}
-              <Route exact path="/search/" component={Search} />
+              <Route exact path="/search/:value" component={Search} />
             </Switch>
           </div>
         </div>
