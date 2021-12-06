@@ -2,26 +2,34 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import "./PostLists.css";
 import LinesEllipsis from "react-lines-ellipsis";
-import { Modal } from "@mantine/core";
+import { Modal, NumberInput, Divider } from "@mantine/core";
 import { useHistory } from "react-router";
 import postApi from "../../../API/postApi";
 import { useNotifications } from "@mantine/notifications";
+import { FiArchive } from "react-icons/fi";
+import { GiMoneyStack } from "react-icons/gi";
 
 PostLists.propTypes = {
   postList: PropTypes.array,
   deletePostUpdate: PropTypes.func,
+  updatePostList: PropTypes.func,
 };
 
 function PostLists(props) {
   //STATE
   // const [postItem, setPostItem] = useState([]);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
   const [focusPost, setFocusPost] = useState({
     postId: 0,
     postName: "",
   });
+  const [focusPostEdit, setFocusEdit] = useState({
+    quantity: 0,
+    price: 0,
+  });
   //PROPS
-  const { postList, deletePostUpdate } = props;
+  const { postList, deletePostUpdate, updatePostList } = props;
 
   //USE-history
   const history = useHistory();
@@ -56,8 +64,33 @@ function PostLists(props) {
     }
   };
 
+  const editPost = async () => {
+    const data = {
+      postId: focusPost.postId,
+      quantity: focusPostEdit.quantity,
+      price: String(focusPostEdit.price),
+    };
+    const editPostRes = await postApi.editPost(data);
+    console.log(editPostRes);
+    updatePostList(editPostRes);
+    setEditModal(false);
+    setFocusPost({
+      postId: 0,
+      postName: "",
+    });
+    setFocusEdit({
+      quantity: 0,
+      price: 0,
+    });
+    return notifications.showNotification({
+      color: "green",
+      title: "Edit post successfully",
+      autoClose: 1500,
+    });
+  };
+
   return (
-    <>
+    <div>
       <div className="PostList-detail-div">
         {postList.map((item) => (
           <div className="PostList-detail-item-div" key={item.id}>
@@ -94,8 +127,19 @@ function PostLists(props) {
               </button>
               <button
                 style={{ backgroundColor: "rgb(86, 127, 173)" }}
+                // onClick={() => {
+                //   history.push(`/managePosts/edit/${item.id}`);
+                // }}
                 onClick={() => {
-                  history.push(`/managePosts/edit/${item.id}`);
+                  setFocusPost({
+                    postId: item.id,
+                    postName: item.productName,
+                  });
+                  setFocusEdit({
+                    quantity: Number(item.quantity),
+                    price: Number(item.price),
+                  });
+                  setEditModal(true);
                 }}
               >
                 Edit
@@ -154,7 +198,75 @@ function PostLists(props) {
           </div>
         </div>
       </Modal>
-    </>
+      <Modal
+        hideCloseButton
+        opened={editModal}
+        onClose={() => {
+          setEditModal(false);
+          setFocusPost({
+            postId: 0,
+            postName: "",
+          });
+          setFocusEdit({
+            quantity: 0,
+            price: 0,
+          });
+        }}
+        title={`Edit ${focusPost.postName} post`}
+      >
+        <div className="PostList-edit-modal-div">
+          <NumberInput
+            defaultValue={focusPostEdit.quantity}
+            placeholder="Quantity"
+            label="Current Quantity"
+            radius="md"
+            required
+            hideControls
+            min={1}
+            icon={<FiArchive />}
+            onChange={(val) => setFocusEdit({ ...focusPostEdit, quantity: val })}
+          />
+          <NumberInput
+            style={{ marginTop: 15 }}
+            defaultValue={focusPostEdit.price}
+            placeholder="Price your product"
+            label="Price (Vnd)"
+            radius="md"
+            required
+            hideControls
+            min={1000}
+            icon={<GiMoneyStack />}
+            onChange={(val) => setFocusEdit({ ...focusPostEdit, price: val })}
+          />
+        </div>
+        <div className="PostList-delete-modal-button">
+          <button
+            style={{ backgroundColor: "#228BE6", marginRight: 30 }}
+            onClick={() => {
+              setEditModal(false);
+              setFocusPost({
+                postId: 0,
+                postName: "",
+              });
+              setFocusEdit({
+                quantity: 0,
+                price: 0,
+              });
+            }}
+          >
+            Cancel
+          </button>
+          <button
+            style={{ backgroundColor: "#FF4D4F", marginLeft: 30 }}
+            onClick={() => {
+              editPost();
+            }}
+          >
+            Edit
+          </button>
+        </div>
+      </Modal>
+    </div>
   );
 }
 

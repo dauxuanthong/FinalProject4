@@ -52,7 +52,7 @@ function AuctionPostList(props) {
             </div>
             <div className="PostList-detail-item-func">
               <button
-                style={{ backgroundColor: "rgb(86, 173, 133)" }}
+                style={{ backgroundColor: "rgb(86, 173, 133)", marginTop: 15 }}
                 onClick={() => {
                   history.push(`/postDetail/auctionPost/${item.id}`);
                 }}
@@ -60,7 +60,7 @@ function AuctionPostList(props) {
                 Detail
               </button>
               <button
-                style={{ backgroundColor: "rgb(86, 127, 173)" }}
+                style={{ backgroundColor: "rgb(86, 127, 173)", marginBottom: 15 }}
                 onClick={() => {
                   history.push(`/auctionRoom/${item.auctionRooms.id}`);
                 }}

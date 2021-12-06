@@ -64,5 +64,7 @@ router.get(
   authenticationController.identifyUser,
   postController.normalPostDetailEdit
 );
+// /post/edit
+router.patch("/edit", authenticationController.identifyUser, postController.edit);
 
 module.exports = router;

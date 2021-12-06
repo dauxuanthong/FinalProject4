@@ -45,7 +45,9 @@ class AuctionRoomController {
             : "N/A"
           : "N/A",
       };
-      return res.json(dataDestructuring);
+      // check owner
+      const CheckOwnerAuctionRoom = userId === data.auctionPost.userId ? true : false;
+      return res.json({ dataDestructuring, CheckOwnerAuctionRoom });
     } catch (error) {
       return next(error);
     }

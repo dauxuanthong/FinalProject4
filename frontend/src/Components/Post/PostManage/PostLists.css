@@ -77,7 +77,7 @@
   transform: scale(1.05);
 }
 
-/**************Modal*************/
+/**************Delete Modal*************/
 .PostList-delete-modal-div {
   width: 100%;
   height: fit-content;
@@ -106,4 +106,10 @@
 
 .PostList-delete-modal-button button:hover {
   cursor: pointer;
+}
+
+/**************Edit Modal*************/
+.PostList-edit-modal-div {
+  width: 100%;
+  height: fit-content;
 }

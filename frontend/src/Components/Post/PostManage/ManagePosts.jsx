@@ -32,6 +32,14 @@ function ManagePosts(props) {
     manageMyPost();
   }, []);
 
+  const updatePostList = (post) => {
+    setPostList((prev) => {
+      const index = prev.findIndex((item) => item.id === post.id);
+      prev[index] = post;
+      return prev;
+    });
+  };
+
   //EVENT
   const deletePostUpdate = (postId) => {
     setPostList((pre) => {
@@ -46,7 +54,11 @@ function ManagePosts(props) {
       <div className="ManagePost-Tabs-div">
         <Tabs>
           <Tab label="Posts" icon={<RiListCheck2 />}>
-            <PostLists postList={postList} deletePostUpdate={deletePostUpdate} />
+            <PostLists
+              postList={postList}
+              updatePostList={updatePostList}
+              deletePostUpdate={deletePostUpdate}
+            />
           </Tab>
           <Tab label="Auction Posts" icon={<RiAuctionLine />}>
             <AuctionPostList auctionPostList={auctionPostList} />

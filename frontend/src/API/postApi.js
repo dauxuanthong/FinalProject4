@@ -84,6 +84,12 @@ const postApi = {
       withCredentials: true,
     });
   },
+  editPost: (data) => {
+    const url = "/post/edit";
+    return axiosClient.patch(url, data, {
+      withCredentials: true,
+    });
+  },
 };
 
 export default postApi;

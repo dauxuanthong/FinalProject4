@@ -363,6 +363,21 @@ class PostController {
       return next(error);
     }
   };
+
+  edit = async (req, res, next) => {
+    try {
+      const postUpdate = await prisma.post.update({
+        where: { id: req.body.postId },
+        data: {
+          quantity: req.body.quantity,
+          price: req.body.price,
+        },
+      });
+      return res.json(postUpdate);
+    } catch (error) {
+      return next(error);
+    }
+  };
 }
 
 module.exports = new PostController();

@@ -21,6 +21,7 @@ function AuctFuction(props) {
   });
   const [upPriceValue, setUpPriceValue] = useState(0);
   const [highestPrice, setHighestPrice] = useState(0);
+  const [currentOwner, setCurrentOwner] = useState(false);
 
   //Prop
   const { roomId, socket } = props;
@@ -28,7 +29,8 @@ function AuctFuction(props) {
   useEffect(() => {
     const getFunctionData = async () => {
       const functionDataRes = await auctionRoomApi.functionData(parseInt(roomId));
-      setFunctionData(functionDataRes);
+      setFunctionData(functionDataRes.dataDestructuring);
+      setCurrentOwner(functionDataRes.CheckOwnerAuctionRoom);
     };
     getFunctionData();
   }, [roomId]);
@@ -285,144 +287,148 @@ function AuctFuction(props) {
         </p>
       </div>
       <div className="AuctFuction-btn-div">
-        <Tabs>
-          <Tab label="Basic">
-            <div className="AuctFuction-btn-tab-item">
-              <div className="AuctFuction-tab-basic">
-                <button
-                  className="AuctFuction-basic-button"
-                  onClick={() => {
-                    bidFunction();
-                  }}
-                >
-                  Bid
-                </button>
-                <div style={{ display: "flex" }}>
+        {currentOwner ? (
+          ""
+        ) : (
+          <Tabs>
+            <Tab label="Basic">
+              <div className="AuctFuction-btn-tab-item">
+                <div className="AuctFuction-tab-basic">
                   <button
-                    disabled={upPriceValue <= Number(functionData.currentValue) ? true : false}
                     className="AuctFuction-basic-button"
-                    style={{ marginRight: 10 }}
                     onClick={() => {
-                      upPrice();
+                      bidFunction();
                     }}
                   >
-                    Up price
+                    Bid
                   </button>
-                  <NumberInput
-                    hideControls
-                    radius="md"
-                    defaultValue={0}
-                    styles={{
-                      input: { height: 40, marginTop: 5 },
-                    }}
-                    value={upPriceValue}
-                    onChange={(value) => {
-                      setUpPriceValue(value);
-                    }}
-                  />
-                  <p
-                    style={{
-                      fontSize: 18,
-                      fontWeight: 550,
-                      color: "rgba(20, 61, 150, 0.747)",
-                      marginLeft: 5,
-                      marginTop: 13,
-                    }}
-                  >
-                    Vnd
-                  </p>
+                  <div style={{ display: "flex" }}>
+                    <button
+                      disabled={upPriceValue <= Number(functionData.currentValue) ? true : false}
+                      className="AuctFuction-basic-button"
+                      style={{ marginRight: 10 }}
+                      onClick={() => {
+                        upPrice();
+                      }}
+                    >
+                      Up price
+                    </button>
+                    <NumberInput
+                      hideControls
+                      radius="md"
+                      defaultValue={0}
+                      styles={{
+                        input: { height: 40, marginTop: 5 },
+                      }}
+                      value={upPriceValue}
+                      onChange={(value) => {
+                        setUpPriceValue(value);
+                      }}
+                    />
+                    <p
+                      style={{
+                        fontSize: 18,
+                        fontWeight: 550,
+                        color: "rgba(20, 61, 150, 0.747)",
+                        marginLeft: 5,
+                        marginTop: 13,
+                      }}
+                    >
+                      Vnd
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </Tab>
-          <Tab label="Auto bid">
-            <div className="AuctFuction-btn-tab-item">
-              <div className="AuctFuction-tab-autoBid">
-                <p
-                  style={{
-                    margin: "5px 0 0 10px",
-                    fontSize: 17,
-                    fontWeight: 550,
-                    color: "rgba(20, 61, 150, 0.747)",
-                  }}
-                >
-                  Highest price:{" "}
-                  {functionData.highestPrice === "N/A"
-                    ? "N/A"
-                    : new Intl.NumberFormat("vi", {
-                        style: "currency",
-                        currency: "VND",
-                      })
-                        .format(functionData.highestPrice)
-                        .split("₫")}
-                  {functionData.highestPrice === "N/A" ? "" : "vnd"}
-                </p>
-                <div style={{ marginTop: 5, display: "flex", alignItems: "center" }}>
+            </Tab>
+            <Tab label="Auto bid">
+              <div className="AuctFuction-btn-tab-item">
+                <div className="AuctFuction-tab-autoBid">
                   <p
                     style={{
-                      marginLeft: 10,
-                      fontSize: 16,
-                      fontWeight: 510,
-                      color: "rgba(0, 0, 0, 0.651)",
-                    }}
-                  >
-                    Set highest price
-                  </p>
-                  <NumberInput
-                    hideControls
-                    radius="md"
-                    defaultValue={0}
-                    styles={{
-                      input: { marginLeft: 5 },
-                    }}
-                    value={highestPrice}
-                    onChange={(value) => {
-                      setHighestPrice(value);
-                    }}
-                  />
-                  <p
-                    style={{
-                      marginLeft: 10,
-                      fontSize: 16,
+                      margin: "5px 0 0 10px",
+                      fontSize: 17,
                       fontWeight: 550,
                       color: "rgba(20, 61, 150, 0.747)",
                     }}
                   >
-                    Vnd
+                    Highest price:{" "}
+                    {functionData.highestPrice === "N/A"
+                      ? "N/A"
+                      : new Intl.NumberFormat("vi", {
+                          style: "currency",
+                          currency: "VND",
+                        })
+                          .format(functionData.highestPrice)
+                          .split("₫")}
+                    {functionData.highestPrice === "N/A" ? "" : "vnd"}
                   </p>
-                </div>
-                <div
-                  style={{
-                    marginTop: 15,
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  <button
-                    className="AuctFuction-autoBid-button"
-                    style={{ backgroundColor: "#D55A5A" }}
-                    onClick={() => {
-                      resetAutoBid();
+                  <div style={{ marginTop: 5, display: "flex", alignItems: "center" }}>
+                    <p
+                      style={{
+                        marginLeft: 10,
+                        fontSize: 16,
+                        fontWeight: 510,
+                        color: "rgba(0, 0, 0, 0.651)",
+                      }}
+                    >
+                      Set highest price
+                    </p>
+                    <NumberInput
+                      hideControls
+                      radius="md"
+                      defaultValue={0}
+                      styles={{
+                        input: { marginLeft: 5 },
+                      }}
+                      value={highestPrice}
+                      onChange={(value) => {
+                        setHighestPrice(value);
+                      }}
+                    />
+                    <p
+                      style={{
+                        marginLeft: 10,
+                        fontSize: 16,
+                        fontWeight: 550,
+                        color: "rgba(20, 61, 150, 0.747)",
+                      }}
+                    >
+                      Vnd
+                    </p>
+                  </div>
+                  <div
+                    style={{
+                      marginTop: 15,
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
                     }}
                   >
-                    Reset
-                  </button>
-                  <button
-                    className="AuctFuction-autoBid-button"
-                    style={{ backgroundColor: "#70dab6" }}
-                    onClick={() => {
-                      applyAutoBid();
-                      setHighestPrice(0);
-                    }}
-                  >
-                    Apply
-                  </button>
+                    <button
+                      className="AuctFuction-autoBid-button"
+                      style={{ backgroundColor: "#D55A5A" }}
+                      onClick={() => {
+                        resetAutoBid();
+                      }}
+                    >
+                      Reset
+                    </button>
+                    <button
+                      className="AuctFuction-autoBid-button"
+                      style={{ backgroundColor: "#70dab6" }}
+                      onClick={() => {
+                        applyAutoBid();
+                        setHighestPrice(0);
+                      }}
+                    >
+                      Apply
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </Tab>
-        </Tabs>
+            </Tab>
+          </Tabs>
+        )}
       </div>
     </div>
   );
