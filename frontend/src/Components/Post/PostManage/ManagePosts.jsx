@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, Tab } from "@mantine/core";
-import { RiAuctionLine } from "react-icons/ri";
+import { RiAuctionLine, RiAuctionFill } from "react-icons/ri";
 import { RiListCheck2 } from "react-icons/ri";
 import "./ManagePosts.css";
 import PostLists from "./PostLists";
@@ -13,20 +13,23 @@ function ManagePosts(props) {
     post: 0,
     auctionPost: 0,
     expired: 0,
+    recentAuctionNum: 0,
   });
   const [postList, setPostList] = useState([]);
   const [auctionPostList, setAuctionPostList] = useState([]);
+  const [recentAuction, setRecentAuction] = useState([]);
   //EFFECT
   useEffect(() => {
     const manageMyPost = async () => {
       const manageAllMyPost = await postApi.manageAllMyPost();
       setPostList(manageAllMyPost.postList);
       setAuctionPostList(manageAllMyPost.auctionPostList);
-      console.log(manageAllMyPost.auctionPostList);
+      setRecentAuction(manageAllMyPost.recentAuction);
       setStatisticData({
         post: manageAllMyPost.postNum,
         auctionPost: manageAllMyPost.auctionPostNum,
         expired: manageAllMyPost.expired,
+        recentAuctionNum: manageAllMyPost.recentAuctionNum,
       });
     };
     manageMyPost();
@@ -63,6 +66,9 @@ function ManagePosts(props) {
           <Tab label="Auction Posts" icon={<RiAuctionLine />}>
             <AuctionPostList auctionPostList={auctionPostList} />
           </Tab>
+          <Tab label="Recent Auctions" icon={<RiAuctionFill />}>
+            <AuctionPostList auctionPostList={recentAuction} />
+          </Tab>
         </Tabs>
       </div>
       <div className="ManagePost-statistic">
@@ -81,6 +87,7 @@ function ManagePosts(props) {
             <p>Auction Post: {statisticData.auctionPost}</p>
           )}
           <p>Expired: {statisticData.expired}</p>
+          <p>Recent Auctions: {statisticData.recentAuctionNum}</p>
         </div>
       </div>
     </div>

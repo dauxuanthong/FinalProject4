@@ -46,6 +46,13 @@
   transition: all 0.5s ease-in-out;
 }
 
+.home-trending-product-tag-item img {
+  border-radius: 10px;
+  height: inherit;
+  width: inherit;
+  object-fit: cover;
+}
+
 .home-trending-product-tag-item:hover {
   transform: translate(-3px, -3px);
   cursor: pointer;
@@ -85,8 +92,7 @@
   width: 200px;
   height: 300px;
   border-radius: 10px;
-  margin-top: 15px;
-  margin-bottom: 5px;
+  margin-top: 10px;
   box-shadow: rgba(151, 150, 150, 0.1) 0px 10px 50px;
   transition: all 0.5s ease-in-out;
 }
@@ -193,8 +199,7 @@
   width: 200px;
   height: 330px;
   border-radius: 10px;
-  margin-top: 15px;
-  margin-bottom: 5px;
+  margin-top: 10px;
   box-shadow: rgba(151, 150, 150, 0.1) 0px 10px 50px;
   transition: all 0.5s ease-in-out;
 }

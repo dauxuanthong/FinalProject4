@@ -130,8 +130,7 @@
   width: 200px;
   height: 300px;
   border-radius: 10px;
-  margin-top: 15px;
-  margin-bottom: 5px;
+  margin-top: 10px;
   box-shadow: rgba(151, 150, 150, 0.1) 0px 10px 50px;
   transition: all 0.5s ease-in-out;
 }
@@ -239,8 +238,7 @@
   width: 200px;
   height: 250px;
   border-radius: 10px;
-  margin-top: 15px;
-  margin-bottom: 5px;
+  margin-top: 10px;
   box-shadow: rgba(151, 150, 150, 0.1) 0px 10px 50px;
   transition: all 0.5s ease-in-out;
 }

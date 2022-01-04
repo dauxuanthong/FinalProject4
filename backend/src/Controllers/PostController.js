@@ -216,7 +216,7 @@ class PostController {
       });
       //Auction post
       const allAuctionPost = await prisma.auctionPost.findMany({
-        take: 20,
+        take: 10,
         select: {
           id: true,
           productName: true,
@@ -326,9 +326,14 @@ class PostController {
         where: { userId: userId },
       });
       const numOfPost = listOfPost.length;
-      //let list of auction post
+      //get list of auction post
       const listOfAuctionPost = await prisma.auctionPost.findMany({
         where: { userId: userId },
+        include: { auctionRooms: true },
+      });
+      //get recent auction
+      const recentAuction = await prisma.auctionPost.findMany({
+        where: { auctionRooms: { members: { hasEvery: [userId] } } },
         include: { auctionRooms: true },
       });
       const numOfAuctionPost = listOfAuctionPost.length;
@@ -339,12 +344,15 @@ class PostController {
         }
         return num;
       }, 0);
+      const numOfRecentAuction = recentAuction.length;
       const dataDestructuring = {
         postList: listOfPost,
         auctionPostList: listOfAuctionPost,
         postNum: numOfPost,
+        recentAuctionNum: numOfRecentAuction,
         auctionPostNum: numOfAuctionPost,
         expired: numOfExpireAuctionPost,
+        recentAuction: recentAuction,
       };
       return res.json(dataDestructuring);
     } catch (error) {

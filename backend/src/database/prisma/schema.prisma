@@ -126,3 +126,4 @@ model AutoBid{
   highestPrice Int
   createAt DateTime @default(now())
 }
+

@@ -6,6 +6,7 @@ import { Tabs, Tab } from "@mantine/core";
 import { NumberInput } from "@mantine/core";
 import auctionRoomApi from "../../API/auctionRoomApi";
 import { useNotifications } from "@mantine/notifications";
+import Countdown from "react-countdown";
 
 AuctFuction.propTypes = {
   roomId: PropTypes.number,
@@ -16,9 +17,9 @@ function AuctFuction(props) {
   //STATE
   const [functionData, setFunctionData] = useState({
     currentValue: "",
-    endAt: "",
     highestPrice: "N/A",
   });
+  const [auctionDatetime, setAuctionDatetime] = useState("");
   const [upPriceValue, setUpPriceValue] = useState(0);
   const [highestPrice, setHighestPrice] = useState(0);
   const [currentOwner, setCurrentOwner] = useState(false);
@@ -31,6 +32,7 @@ function AuctFuction(props) {
       const functionDataRes = await auctionRoomApi.functionData(parseInt(roomId));
       setFunctionData(functionDataRes.dataDestructuring);
       setCurrentOwner(functionDataRes.CheckOwnerAuctionRoom);
+      setAuctionDatetime(functionDataRes.dataDestructuring.endAt);
     };
     getFunctionData();
   }, [roomId]);
@@ -66,7 +68,6 @@ function AuctFuction(props) {
         autoClose: 4000,
       });
     }
-    // setFunctionData({ ...functionData, currentValue: bidFunctionRes.data[0].bidAmount });
 
     // socket value
     socket.current.emit("bidValueUpdateSever", {
@@ -234,6 +235,39 @@ function AuctFuction(props) {
     }
   };
 
+  // Renderer callback with condition
+  const remainDate = ({ days, hours, minutes, seconds, completed }) => {
+    if (completed) {
+      // Render a complete state
+      return (
+        <p
+          style={{
+            marginTop: 5,
+            fontSize: 18,
+            fontWeight: "550",
+            color: "rgba(207, 67, 67, 0.877)",
+          }}
+        >
+          Auction has ended
+        </p>
+      );
+    } else {
+      // Render a countdown
+      return (
+        <p
+          style={{
+            marginTop: 5,
+            fontSize: 18,
+            fontWeight: "550",
+            color: "rgba(207, 67, 67, 0.877)",
+          }}
+        >
+          {days} days - {hours}:{minutes}:{seconds}
+        </p>
+      );
+    }
+  };
+
   return (
     <div className="AuctFuction-container">
       <div className="AuctFuction-price-div">
@@ -273,21 +307,14 @@ function AuctFuction(props) {
             color: "rgba(20, 61, 150, 0.747)",
           }}
         >
-          Ends at: {new Date(functionData.endAt).toLocaleString()}
+          Ends at: {new Date(auctionDatetime).toLocaleString()}
         </p>
-        <p
-          style={{
-            marginTop: 5,
-            fontSize: 18,
-            fontWeight: "550",
-            color: "rgba(207, 67, 67, 0.877)",
-          }}
-        >
-          6 days - 20:15
-        </p>
+        <Countdown date={new Date(auctionDatetime)} renderer={remainDate} />
       </div>
       <div className="AuctFuction-btn-div">
         {currentOwner ? (
+          ""
+        ) : new Date(auctionDatetime) < new Date() ? (
           ""
         ) : (
           <Tabs>

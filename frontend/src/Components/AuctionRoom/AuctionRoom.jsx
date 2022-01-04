@@ -4,7 +4,7 @@ import AuctFuction from "./AuctFuction";
 import AuctHistory from "./AuctHistory";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
-import userApi from "../../API/userApi";
+// import userApi from "../../API/userApi";
 import AuctInfo from "./AuctInfo";
 
 AuctionRoom.propTypes = {

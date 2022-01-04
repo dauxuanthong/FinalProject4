@@ -117,13 +117,13 @@ function Home(props) {
               />
             </div>
             <div className="home-trending-product-tag-item">
-              <p></p>
+              <img src="https://cdn.mobilesyrup.com/wp-content/uploads/2020/12/all-the-phones-wm.jpg"></img>
             </div>
             <div className="home-trending-product-tag-item">
-              <p></p>
+              <img src="https://assets.vogue.com/photos/5bc4b1d2c40dad2d0ce74c60/master/w_2560%2Cc_limit/00-story-just-married.jpg"></img>
             </div>
             <div className="home-trending-product-tag-item">
-              <p></p>
+              <img src="https://thumbs.dreamstime.com/b/stylish-clothing-store-dark-ceiling-hanging-luminous-lamps-brick-walls-there-many-stands-hangers-different-colorful-144488763.jpg"></img>
             </div>
           </div>
         </div>
@@ -298,7 +298,7 @@ function Home(props) {
           </div>
         </div>
       </div>
-      {/*___________________________________*/}
+      {/* ___________________________________
       <div className="display-posts">
         <Grid gutter="xl" columns={24} style={{ margin: "0 10px 0 10px" }}>
           <Col span={6}>
@@ -430,7 +430,7 @@ function Home(props) {
             </div>
           </Col>
         </Grid>
-      </div>
+      </div> */}
     </div>
   );
 }
